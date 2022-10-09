@@ -1,0 +1,9 @@
+{
+  "commands": {
+      "simple": ["latency", "kill", "prune"],
+      "deck": ["portallink"],
+      "DB": ["IQ", "show_dict"],
+      "other": ["check_reaction"]
+    },
+    "events": ["ready", "btnClick", "detect"]
+}

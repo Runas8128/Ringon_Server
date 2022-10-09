@@ -1,0 +1,3 @@
+TODO: 덱 commands - + 메시지중 사진 검사
+TODO: 감지 기능: 메시지에서 검사
+TODO: "금칙어" 명령어 삭제, 금칙어는 "Automod"로 이동
