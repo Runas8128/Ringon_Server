@@ -63,7 +63,6 @@ module.exports = {
    * @param {ChatInputCommandInteraction} interaction
    */
   async execute(interaction) {
-    // TODO: Fill this feature
     const URL = interaction.options.getString('url');
     const message = parseURL(URL, interaction.client.channels);
     if (!message) {
