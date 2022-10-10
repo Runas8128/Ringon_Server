@@ -9,6 +9,8 @@ module.exports = {
    * @param {Message} message
    */
   async execute(message) {
+    if (message.author.bot) return;
+
     const detect_result = detect.get_result(message.content);
     if (detect_result) {
       await message.channel.send(detect_result);
