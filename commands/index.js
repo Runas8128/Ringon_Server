@@ -2,6 +2,7 @@ const path = require('path');
 const { Client, REST, Routes, PermissionFlagsBits, SlashCommandBuilder } = require('discord.js');
 
 const { config, config_common } = require('../config');
+const { reply } = require('../util');
 const logger = require('../util/logger').getLogger(__filename);
 
 /**
@@ -79,12 +80,10 @@ function add_command_listener(client, commands) {
       await command.execute(interaction);
     }
     catch (error) {
-      const msg = {
+      await reply(interaction, {
         content: `${interaction.commandName} 커맨드를 처리하는 동안 오류가 발생했습니다.`,
         ephemeral: true,
-      };
-      if (interaction.replied || interaction.deferred) await interaction.editReply(msg);
-      else await interaction.reply(msg);
+      });
       console.log(error);
     }
   });

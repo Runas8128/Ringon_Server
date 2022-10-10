@@ -28,7 +28,7 @@ async function reply(interaction, msg) {
  */
 async function catch_timeout(interaction, callback, try_count) {
   if (try_count > 5) {
-    return reply(interaction, {
+    return await reply(interaction, {
       content: '재시도 횟수가 5회를 초과했습니다. 요청을 취소합니다.',
       ephemeral: true,
     });
@@ -39,7 +39,7 @@ async function catch_timeout(interaction, callback, try_count) {
   }
   catch (err) {
     if (isRetryable(err)) {
-      reply(interaction, {
+      await reply(interaction, {
         content: `요청에 실패했습니다. 재시도중... (${try_count} / 5)`,
         ephemeral: true,
       });
@@ -116,4 +116,5 @@ async function load_all(database_id, ...properties) {
 module.exports = {
   load_all: load_all,
   catch_timeout: catch_timeout,
+  reply: reply,
 };
