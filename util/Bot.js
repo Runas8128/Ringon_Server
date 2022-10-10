@@ -1,4 +1,4 @@
-const { Client, GatewayIntentBits, Intents } = require('discord.js');
+const { Client, GatewayIntentBits } = require('discord.js');
 
 const setup_event = require('../events');
 const setup_commands = require('../commands');
