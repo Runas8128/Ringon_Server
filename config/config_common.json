@@ -5,5 +5,6 @@
       "DB": ["IQ", "show_dict"],
       "other": ["check_reaction"]
     },
-    "events": ["ready", "btnClick", "detect"]
+    "events": ["ready", "btnClick", "detect"],
+    "pages": ["log"]
 }
