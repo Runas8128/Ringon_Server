@@ -1,6 +1,8 @@
 const { ChatInputCommandInteraction } = require('discord.js');
-const { config } = require('../config');
+
 const { _load } = require('./_load');
+
+const { config } = require('../config');
 const { catch_timeout } = require('../util/notion');
 const logger = require('../util/Logger').getLogger(__filename);
 

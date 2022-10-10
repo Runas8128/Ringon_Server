@@ -1,4 +1,6 @@
-const { SlashCommandBuilder, ChannelManager, Message, User, ChatInputCommandInteraction, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, ChatInputCommandInteraction } = require('discord.js');
+const { ChannelManager, Message, User, EmbedBuilder } = require('discord.js');
+
 const { config } = require('../../config');
 
 /**

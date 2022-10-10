@@ -1,7 +1,7 @@
 const path = require('path');
 const { Client, REST, Routes, PermissionFlagsBits, SlashCommandBuilder } = require('discord.js');
-const { config, config_common } = require('../config');
 
+const { config, config_common } = require('../config');
 const logger = require('../util/logger').getLogger(__filename);
 
 /**

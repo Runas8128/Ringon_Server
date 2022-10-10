@@ -1,5 +1,7 @@
 const https = require('https');
-const { SlashCommandBuilder, ChatInputCommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const { SlashCommandBuilder, ChatInputCommandInteraction } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+
 const logger = require('../../util/Logger').getLogger(__filename);
 
 module.exports = {

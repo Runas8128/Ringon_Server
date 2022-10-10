@@ -1,4 +1,5 @@
 const { Message } = require('discord.js');
+
 const { detect } = require('../database');
 
 module.exports = {

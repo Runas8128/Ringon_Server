@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, ChatInputCommandInteraction } = require('discord.js');
+
 const { detect } = require('../../database');
 
 module.exports = {

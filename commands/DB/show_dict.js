@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, ChatInputCommandInteraction, APIEmbedField } = require('discord.js');
+
 const { detect } = require('../../database');
 const { EmbedView } = require('../../util/View');
 
