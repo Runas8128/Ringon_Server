@@ -1,6 +1,5 @@
 const manager = require('../database');
-const Logger = require('../util/Logger');
-const logger = Logger.getLogger(__filename);
+const logger = require('../util/Logger').getLogger(__filename);
 
 module.exports = {
   name: 'ready',

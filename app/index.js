@@ -2,8 +2,7 @@ const path = require('path');
 const express = require('express');
 
 const { config_common } = require('../config');
-const Logger = require('../util/Logger');
-const logger = Logger.getLogger(__filename);
+const logger = require('../util/Logger').getLogger(__filename);
 
 /**
  *  @typedef Page
