@@ -2,11 +2,6 @@ const path = require('path');
 const winston = require('winston');
 const { combine, timestamp, printf, colorize, label } = winston.format;
 
-/*
- * Log Level
- * error: 0, warn: 1, info: 2, http: 3, verbose: 4, debug: 5, silly: 6
- */
-
 /**
  * @param {string} _label
  */
@@ -49,19 +44,22 @@ function format_console(_label) {
 
 class Logger {
   /**
- * @param {string} root
- */
+   * @param {string} root
+   */
   constructor() {
     this.root = '';
   }
 
+  /**
+   * @param {string} root
+   */
   setRoot(root) {
     this.root = root;
   }
 
   /**
- * @param {string} file
- */
+   * @param {string} file
+   */
   getLogger(file) {
     const _label = path.relative(this.root, file);
 

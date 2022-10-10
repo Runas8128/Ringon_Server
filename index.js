@@ -1,6 +1,3 @@
 require('./config').init();
-
-const Logger = require('./util/Logger');
-Logger.setRoot(__dirname);
-
+require('./util/Logger').setRoot(__dirname);
 require('./app').start();
