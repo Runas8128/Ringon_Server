@@ -1,0 +1,121 @@
+{
+  /*
+	코드조각 템플릿 밑 각 부분 설명
+
+	"": {					// 이 코드조각의 이름. 아래 description이 생략되었다면 검색시 이름이 사용됨.
+		"prefix": "",		// 어떤걸 쳤을 때 body부분을 삽입할건지 (일부 키워드만으로도 검색 가능)
+		"body": [			// 어떤 코드조각을 삽입할건지 (각 문자열별로 자동 개행)
+			"",				// $n ($1, $2, ...)로 탭했을 때 커서의 위치 지정 가능
+							// $0 -> 마지막 커서 지정. 이 위치에 도달하고 나서 snippet 모드가 꺼지므로 필수
+			...				// ${n, default}로 해당 위치에 기본값 사용 가능 (default에 들어갈 내용은 바꿀 수 있음. ex> ${1, ls})
+		],
+		"description": ""	// 이 코드조각의 설명. IntelliSense 부분에 표시됨
+	}
+	*/
+
+  // Templates
+
+  "simple command template": {
+    "prefix": "gen_command",
+    "body": [
+      "const { SlashCommandBuilder, ChatInputCommandInteraction } = require('discord.js');",
+      "",
+      "module.exports = {",
+      "  perm: ${1|'member', 'admin', 'dev'|},",
+      "  data: new SlashCommandBuilder()",
+      "    .setName('${2:name}')",
+      "    .setDescription('${3:description}'),",
+      "  /**",
+      "   * @param {ChatInputCommandInteraction} interaction",
+      "   */",
+      "  async execute(interaction) {",
+      "    await interaction.reply('ping');",
+      "  },",
+      "};",
+      "$0"
+    ]
+  },
+
+  "simple database template": {
+    "prefix": "gen_database",
+    "body": [
+      "const { ChatInputCommandInteraction } = require('discord.js');",
+      "",
+      "const { config } = require('../config');",
+      "const { load_all, catch_timeout } = require('../util');",
+      "const logger = require('../util/Logger').getLogger(__filename);",
+      "",
+      "class $1 {",
+      "  constructor() {",
+      "    this.last_sync = 0;",
+      "",
+      "    this.id_map = config.id.notion.$2;",
+      "  }",
+      "",
+      "  /**",
+      "   * @param {ChatInputCommandInteraction} interaction",
+      "   */",
+      "  async load(interaction) {",
+      "    const sync_start = Date.now();",
+      "    if (sync_start - this.last_sync <= 60 * 60 * 1000) return;",
+      "",
+      "    await catch_timeout(interaction, async () => await this._load(sync_start));",
+      "  }",
+      "",
+      "  /**",
+      "   * @param {number} sync_start",
+      "   */",
+      "  async _load(sync_start) {",
+      "    // TODO: Fill database stuff loader",
+      "",
+      "    this.last_sync = Date.now();",
+      "    logger.info(`syncing success. time duration: ${this.last_sync - sync_start}ms`);",
+      "  }",
+      "}",
+      "",
+      "module.exports = $1;",
+      "$0"
+    ]
+  },
+
+  "simple event template": {
+    "prefix": "gen_event",
+    "body": [
+      "module.exports = {",
+      "  name: '${1:name}',",
+      "  once: ${2|true,false|},",
+      "  async execute() {",
+      "    ",
+      "  },",
+      "};",
+
+      "$0"
+    ]
+  },
+
+  // Require shortcuts
+
+  "require button related stuffs": {
+    "prefix": "require_button",
+    "body": [
+      "const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');",
+      "$0"
+    ]
+  },
+
+  "require logger": {
+    "prefix": "require_logger",
+    "body": [
+      "const logger = require('../../util/Logger').getLogger(__filename);",
+      "$0"
+    ]
+  },
+
+  "require database stuffs": {
+    "prefix": "require_database",
+    "body": [
+      "const { ${1:database_name} } = require('../../database');",
+      "$0"
+    ]
+  },
+}
