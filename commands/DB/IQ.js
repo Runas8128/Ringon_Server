@@ -11,11 +11,9 @@ module.exports = {
    * @param {ChatInputCommandInteraction} interaction
    */
   async execute(interaction) {
-    await interaction.deferReply();
-    await detect.load(interaction);
-
     const count = detect.full.length + new Set(detect.prob.map((obj) => obj.target)).size;
     const msg = `링곤 사전을 보니, 저의 아이큐는 ${count}이라고 하네요!`;
     await interaction.editReply(msg);
   },
+  database: [detect],
 };

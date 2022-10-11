@@ -12,9 +12,6 @@ module.exports = {
    * @param {ChatInputCommandInteraction} interaction
    */
   async execute(interaction) {
-    await interaction.deferReply();
-    await detect.load(interaction);
-
     /** @type {APIEmbedField[]} */
     const fields = detect.full
       .map(({ target, result }) => ({ name: target, value: result, inline: true }));
@@ -39,4 +36,5 @@ module.exports = {
         [{ name: '엥 비어있네요', value: '왜지...', inline: true }],
     ).get_updated_msg());
   },
+  database: [detect],
 };

@@ -1,5 +1,5 @@
 const path = require('path');
-const { Client, REST, Routes, PermissionFlagsBits, SlashCommandBuilder } = require('discord.js');
+const { Client, REST, Routes, PermissionFlagsBits, SlashCommandBuilder, ChatInputCommandInteraction } = require('discord.js');
 
 const { config, config_common } = require('../config');
 const { reply } = require('../util');
@@ -8,12 +8,20 @@ const logger = require('../util/logger').getLogger(__filename);
 /**
  *  @callback CommandExecute
  *    @param {ChatInputCommandInteraction} interaction
- *    @returns {any}
+ *    @returns {Promise<any>}
+ *
+ *  @callback DB_Loader
+ *    @param {ChatInputCommandInteraction} interaction
+ *    @returns {Promise<void>}
+ *
+ *  @typedef Database
+ *    @property {DB_Loader} load
  *
  *  @typedef Command
  *    @property {'member' | 'admin' | 'dev'} perm
  *    @property {SlashCommandBuilder} data
  *    @property {CommandExecute} execute
+ *    @property {Database[]?} database
  */
 
 /**
@@ -77,6 +85,10 @@ function add_command_listener(client, commands) {
     if (!command) return;
 
     try {
+      if (command.database) {
+        await interaction.deferReply();
+        command.database.forEach(async db => await db.load(interaction));
+      }
       await command.execute(interaction);
     }
     catch (error) {

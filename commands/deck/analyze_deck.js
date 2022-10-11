@@ -12,11 +12,9 @@ module.exports = {
    */
   async execute(interaction) {
     // TODO: Fill this feature
-    await interaction.deferReply();
-    await decklist.load(interaction);
-
     await interaction.editReply({
       embeds: [decklist.analyze()],
     });
   },
+  database: [decklist],
 };
