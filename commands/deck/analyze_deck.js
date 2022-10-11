@@ -11,7 +11,6 @@ module.exports = {
    * @param {ChatInputCommandInteraction} interaction
    */
   async execute(interaction) {
-    // TODO: Fill this feature
     await interaction.editReply({
       embeds: [decklist.analyze()],
     });
