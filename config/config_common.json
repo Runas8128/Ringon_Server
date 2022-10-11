@@ -1,10 +1,20 @@
 {
   "commands": {
-      "simple": ["latency", "kill", "prune"],
-      "deck": ["portallink"],
-      "DB": ["IQ", "show_dict"],
-      "other": ["check_reaction"]
-    },
-    "events": ["ready", "btnClick", "detect"],
-    "pages": ["log"]
+    "simple": ["latency", "kill", "prune"],
+    "deck": ["portallink", "analyze_deck"],
+    "DB": ["IQ", "show_dict"],
+    "other": ["check_reaction"]
+  },
+  "events": ["ready", "btnClick", "detect"],
+  "pages": ["log"],
+  "classes": {
+    "엘프": "805678671527936010",
+    "로얄": "1004600684517261422",
+    "위치": "1004600687688163418",
+    "드래곤": "1004600677751848961",
+    "네크로맨서": "1004600681266675782",
+    "뱀파이어": "1004600685985271859",
+    "비숍": "1004600676053155860",
+    "네메시스": "1004600682902462465"
+  }
 }
