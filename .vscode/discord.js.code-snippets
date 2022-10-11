@@ -42,7 +42,8 @@
       "const { ChatInputCommandInteraction } = require('discord.js');",
       "",
       "const { config } = require('../config');",
-      "const { load_all, catch_timeout } = require('../util');",
+      "const { catch_timeout } = require('../util');",
+      "const { load_all } = require('../util/Notion');",
       "const logger = require('../util/Logger').getLogger(__filename);",
       "",
       "class $1 {",
@@ -100,6 +101,13 @@
     "body": [
       "const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');",
       "$0"
+    ]
+  },
+
+  "require discord.js stuffs": {
+    "prefix": "require_discord",
+    "body": [
+      "const { $0 } = require('discord.js');",
     ]
   },
 
