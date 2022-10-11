@@ -66,6 +66,23 @@ async function load_all(database_id, ...properties) {
   return data;
 }
 
+async function load_block_string(block_id) {
+  const result = await notion.blocks.retrieve({
+    block_id: block_id,
+  });
+
+  return result.paragraph.rich_text[0].plain_text;
+}
+
+async function update_block_string(block_id, new_string) {
+  await notion.blocks.update({
+    block_id: block_id,
+    paragraph: { 'rich_text': [{ 'text': { 'content': new_string } }] },
+  });
+}
+
 module.exports = {
   load_all: load_all,
+  load_block_string: load_block_string,
+  update_block_string: update_block_string,
 };
