@@ -9,7 +9,7 @@ const notion = new Client({ auth: process.env.notion });
  *  @typedef Select
  *    @property {string} name
  *
- *  @typedef {'rich_text' | 'title' | 'number' | 'select'} PropertyType
+ *  @typedef {'page_id' | 'rich_text' | 'title' | 'number' | 'select'} PropertyType
  *
  *  @typedef Property
  *    @property {PropertyType} type
@@ -56,7 +56,12 @@ async function load_all(database_id, ...properties) {
       const obj = {};
 
       properties.forEach((property) => {
-        obj[property.name] = unwrap_property(result.properties[property.name]);
+        if (property.type == 'page_id') {
+          obj[property.name] = result.id;
+        }
+        else {
+          obj[property.name] = unwrap_property(result.properties[property.name]);
+        }
       });
       data.push(obj);
     });
