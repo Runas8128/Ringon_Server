@@ -1,7 +1,7 @@
 const { EmbedBuilder, ButtonInteraction, ButtonStyle, ActionRowBuilder, APIEmbedField } = require('discord.js');
 const { eventHandler } = require('../events/btnClick');
 
-class EmbedView {
+class StudiedEmbedView {
   /**
    * @param {string} customID
    * @param {string} title
@@ -83,5 +83,5 @@ class EmbedView {
 }
 
 module.exports = {
-  EmbedView: EmbedView,
+  StudiedEmbedView: StudiedEmbedView,
 };

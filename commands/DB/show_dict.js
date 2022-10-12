@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, ChatInputCommandInteraction, APIEmbedField } = require('discord.js');
 
 const { detect } = require('../../database');
-const { EmbedView } = require('../../util/View');
+const { StudiedEmbedView: EmbedView } = require('../../util/View');
 
 module.exports = {
   perm: 'member',
