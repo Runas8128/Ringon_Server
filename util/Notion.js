@@ -71,6 +71,12 @@ async function load_all(database_id, ...properties) {
   return data;
 }
 
+async function delete_page(page_id) {
+  await notion.blocks.delete({
+    block_id: page_id,
+  });
+}
+
 async function load_block_string(block_id) {
   const result = await notion.blocks.retrieve({
     block_id: block_id,
@@ -88,6 +94,7 @@ async function update_block_string(block_id, new_string) {
 
 module.exports = {
   load_all: load_all,
+  delete_page: delete_page,
   load_block_string: load_block_string,
   update_block_string: update_block_string,
 };

@@ -2,7 +2,7 @@ const { ChatInputCommandInteraction, EmbedBuilder, Guild, TextChannel } = requir
 
 const { config, config_common } = require('../config');
 const { catch_timeout } = require('../util');
-const { load_all, update_block_string } = require('../util/Notion');
+const { load_all, update_block_string, delete_page } = require('../util/Notion');
 const logger = require('../util/Logger').getLogger(__filename);
 
 /**
@@ -104,11 +104,9 @@ class DeckList {
     deck_info.setImage(deck.image_url);
     deck_info.setFooter({ text: `ID: ${deck.deck_id}` });
 
-    await this.history.send({
-      embeds: [deck_info],
-    });
+    await this.history.send({ embeds: [deck_info] });
 
-    // TODO: delete page with provided id
+    await delete_page(deck.page_id);
   }
 
   /**
