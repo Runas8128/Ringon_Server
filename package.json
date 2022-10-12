@@ -4,7 +4,8 @@
   "description": "The server for Ringon, discord bot for Shadowverse deck maintaining",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node test",
+    "start": "node ."
   },
   "author": "Runas",
   "license": "ISC",
