@@ -1,4 +1,6 @@
-const { SlashCommandBuilder, ChatInputCommandInteraction } = require('discord.js');
+const { SlashCommandBuilder, ChatInputCommandInteraction, ComponentType, EmbedBuilder, ActionRowBuilder, ButtonBuilder } = require('discord.js');
+
+const { decklist } = require('../../database');
 
 module.exports = {
   perm: 'admin',
@@ -12,5 +14,35 @@ module.exports = {
    */
   async execute(interaction) {
     // TODO: Fill this feature
+    await interaction.editReply({
+      embeds: [new EmbedBuilder()
+        .setTitle('⚠️ 해당 명령어 사용시, 현재 등록된 덱리가 모두 삭제됩니다.')
+        .setDescription('사용하시려면 `확인`을 입력해주세요! 1분 후 자동으로 취소됩니다.'),
+      ],
+      components: [new ActionRowBuilder()
+        .addComponents(
+          new ButtonBuilder()
+            .setCustomId('PackChecker')
+            .setLabel('확인'),
+        ),
+      ],
+    });
+
+    try {
+      const checker = await interaction.channel.awaitMessageComponent({
+        componentType: ComponentType.Button,
+        time: 60 * 1000,
+        filter: (button) => button.customId == 'PackChecker',
+      });
+
+      await checker.deferUpdate();
+      await decklist.update_pack(interaction.options.getString('이름'));
+    }
+    catch (err) {
+      await interaction.editReply({
+        content: '팩 변경을 취소합니다.',
+      });
+    }
   },
+  database: [decklist],
 };
