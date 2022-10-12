@@ -48,6 +48,9 @@ class DeckList {
     return embed;
   }
 
+  /**
+   * @param {string} new_pack
+   */
   async update_pack(new_pack) {
     this.decklist.forEach((deck) => {
       this._delete_deck(deck);
