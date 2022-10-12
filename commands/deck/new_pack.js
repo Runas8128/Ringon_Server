@@ -13,7 +13,8 @@ module.exports = {
    * @param {ChatInputCommandInteraction} interaction
    */
   async execute(interaction) {
-    // TODO: Fill this feature
+    const timestamp = Date.now();
+
     await interaction.editReply({
       embeds: [new EmbedBuilder()
         .setTitle('⚠️ 해당 명령어 사용시, 현재 등록된 덱리가 모두 삭제됩니다.')
@@ -22,7 +23,7 @@ module.exports = {
       components: [new ActionRowBuilder()
         .addComponents(
           new ButtonBuilder()
-            .setCustomId('PackChecker')
+            .setCustomId(`PackChecker_${timestamp}`)
             .setLabel('확인'),
         ),
       ],
@@ -32,7 +33,7 @@ module.exports = {
       const checker = await interaction.channel.awaitMessageComponent({
         componentType: ComponentType.Button,
         time: 60 * 1000,
-        filter: (button) => button.customId == 'PackChecker',
+        filter: (button) => button.customId == `PackChecker_${timestamp}`,
       });
 
       await checker.deferUpdate();
