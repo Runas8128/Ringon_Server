@@ -1,4 +1,5 @@
-const { SlashCommandBuilder, ChatInputCommandInteraction, ComponentType, EmbedBuilder, ActionRowBuilder, ButtonBuilder } = require('discord.js');
+const { SlashCommandBuilder, ChatInputCommandInteraction } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder, EmbedBuilder, ComponentType } = require('discord.js');
 
 const { decklist } = require('../../database');
 
