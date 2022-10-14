@@ -1,7 +1,7 @@
 {
   "commands": {
     "simple": ["latency", "kill", "prune"],
-    "deck": ["portallink", "analyze_deck"],
+    "deck": ["portallink", "analyze_deck", "search_deck"],
     "DB": ["IQ", "show_dict"],
     "other": ["check_reaction"]
   },

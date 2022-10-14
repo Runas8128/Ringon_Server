@@ -5,8 +5,6 @@ module.exports = {
   name: 'ready',
   once: true,
   async execute() {
-    logger.info('Loading database stuffs');
-    await manager.load_all();
     logger.info('Bot is ready!');
   },
 };

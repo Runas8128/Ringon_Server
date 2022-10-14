@@ -38,7 +38,10 @@ module.exports = {
       });
 
       await checker.deferUpdate();
-      await decklist.update_pack(interaction.options.getString('이름'));
+      await decklist.update_pack(
+        interaction.options.getString('이름'),
+        interaction.guild,
+      );
     }
     catch (err) {
       await interaction.editReply({

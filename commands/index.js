@@ -87,7 +87,9 @@ function add_command_listener(client, commands) {
     try {
       if (command.database) {
         await interaction.deferReply();
-        command.database.forEach(async db => await db.load(interaction));
+        for (let i = 0; i < command.database.length; i++) {
+          await command.database[i].load(interaction);
+        }
       }
       await command.execute(interaction);
     }

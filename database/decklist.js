@@ -50,10 +50,11 @@ class DeckList {
 
   /**
    * @param {string} new_pack
+   * @param {Guild} guild
    */
-  async update_pack(new_pack) {
+  async update_pack(new_pack, guild) {
     this.decklist.forEach((deck) => {
-      this._delete_deck(deck);
+      this._delete_deck(deck, guild);
     });
     update_block_string(this.id_map.pack, new_pack);
   }
@@ -63,6 +64,15 @@ class DeckList {
    * @param {Guild} guild
    */
   async _delete_deck(deck, guild) {
+    await this.history.send({ embeds: [this.make_deck_embed(deck, guild)] });
+    await delete_page(deck.page_id);
+  }
+
+  /**
+   * @param {Deck} deck
+   * @param {Guild} guild
+   */
+  make_deck_embed(deck, guild) {
     const deck_info = new EmbedBuilder()
       .setTitle(deck.name)
       .addFields(
@@ -90,8 +100,7 @@ class DeckList {
       if (contribs.length > 0) {
         deck_info.addFields({
           name: '기여자 목록',
-          value: contribs.map(obj =>
-            member_cache.find(m => m.id == obj.ContribID) ?? '(정보 없음)').join(', '),
+          value: contribs.map(obj => member_cache.find(m => m.id == obj.ContribID) ?? '(정보 없음)').join(', '),
         });
       }
     }
@@ -99,17 +108,14 @@ class DeckList {
     if (deck.desc.length > 0) {
       deck_info.addFields({ name: '덱 설명', value: deck.desc, inline: false });
       const hashtags = deck.desc.match(/#(\w+)/g);
-      if (hashtags.length > 0) {
+      if (hashtags) {
         deck_info.addFields({ name: '해시태그', value: hashtags.join(', ') });
       }
     }
 
     deck_info.setImage(deck.image_url);
     deck_info.setFooter({ text: `ID: ${deck.deck_id}` });
-
-    await this.history.send({ embeds: [deck_info] });
-
-    await delete_page(deck.page_id);
+    return deck_info;
   }
 
   /**
