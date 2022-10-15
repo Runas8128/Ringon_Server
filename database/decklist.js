@@ -132,7 +132,7 @@ class DeckList {
       { name: 'image_url', type: 'rich_text' },
       { name: 'timestamp', type: 'rich_text' },
       { name: 'version', type: 'number' },
-    );
+    ).sort((a, b) => a.deck_id < b.deck_id);
 
     /** @type {Contrib[]} */
     this.contrib = await load_all(
