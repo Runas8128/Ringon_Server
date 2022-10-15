@@ -15,5 +15,5 @@ module.exports = {
     const msg = `링곤 사전을 보니, 저의 아이큐는 ${count}이라고 하네요!`;
     await interaction.editReply(msg);
   },
-  database: [detect],
+  database: ['detect'],
 };

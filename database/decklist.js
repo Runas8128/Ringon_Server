@@ -1,9 +1,7 @@
-const { ChatInputCommandInteraction, EmbedBuilder, Guild, TextChannel } = require('discord.js');
+const { EmbedBuilder, Guild, TextChannel } = require('discord.js');
 
 const { config, config_common } = require('../config');
-const { catch_timeout } = require('../util');
 const { load_all, update_block_string, delete_page } = require('../util/Notion');
-const logger = require('../util/Logger').getLogger(__filename);
 
 /**
  *  @typedef Deck
@@ -24,9 +22,10 @@ const logger = require('../util/Logger').getLogger(__filename);
 
 class DeckList {
   constructor() {
-    this.last_sync = 0;
-
     this.id_map = config.id.notion.deck;
+
+    /** @type {TextChannel} */
+    this.history = undefined;
   }
 
   analyze() {
@@ -53,9 +52,7 @@ class DeckList {
    * @param {Guild} guild
    */
   async update_pack(new_pack, guild) {
-    this.decklist.forEach((deck) => {
-      this._delete_deck(deck, guild);
-    });
+    this.decklist.forEach(async (deck) => await this._delete_deck(deck, guild));
     update_block_string(this.id_map.pack, new_pack);
   }
 
@@ -64,6 +61,10 @@ class DeckList {
    * @param {Guild} guild
    */
   async _delete_deck(deck, guild) {
+    if (this.history === undefined) {
+      this.history = guild.channels.cache.find((ch) =>
+        ch.id == config.id.discord.channel.history);
+    }
     await this.history.send({ embeds: [this.make_deck_embed(deck, guild)] });
     await delete_page(deck.page_id);
   }
@@ -118,23 +119,7 @@ class DeckList {
     return deck_info;
   }
 
-  /**
-   * @param {ChatInputCommandInteraction} interaction
-   */
-  async load(interaction) {
-    const sync_start = Date.now();
-    if (sync_start - this.last_sync <= 60 * 60 * 1000) return;
-
-    await catch_timeout(interaction, async () => await this._load(sync_start));
-    /** @type {TextChannel} */
-    this.history = interaction.client.channels.cache.find((ch) =>
-      ch.id == config.id.discord.channel.history);
-  }
-
-  /**
-   * @param {number} sync_start
-   */
-  async _load(sync_start) {
+  async load() {
     /** @type {Deck[]} */
     this.decklist = await load_all(
       this.id_map.list,
@@ -155,9 +140,6 @@ class DeckList {
       { name: 'DeckID', type: 'number' },
       { name: 'ContribID', type: 'rich_text' },
     );
-
-    this.last_sync = Date.now();
-    logger.info(`syncing success. time duration: ${this.last_sync - sync_start}ms`);
   }
 }
 

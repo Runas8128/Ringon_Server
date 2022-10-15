@@ -29,54 +29,32 @@
       "   * @param {ChatInputCommandInteraction} interaction",
       "   */",
       "  async execute(interaction) {",
-      "    await interaction.reply('ping');",
+      "    await interaction.reply('ping');$0",
       "  },",
       "  database: []",
       "};",
-      "$0"
+      ""
     ]
   },
 
   "simple database template": {
     "prefix": "gen_database",
     "body": [
-      "const { ChatInputCommandInteraction } = require('discord.js');",
-      "",
       "const { config } = require('../config');",
-      "const { catch_timeout } = require('../util');",
       "const { load_all } = require('../util/Notion');",
-      "const logger = require('../util/Logger').getLogger(__filename);",
       "",
       "class $1 {",
       "  constructor() {",
-      "    this.last_sync = 0;",
-      "",
-      "    this.id_map = config.id.notion.$2;",
+      "    this.id_map = config.id.notion.$0;",
       "  }",
       "",
-      "  /**",
-      "   * @param {ChatInputCommandInteraction} interaction",
-      "   */",
-      "  async load(interaction) {",
-      "    const sync_start = Date.now();",
-      "    if (sync_start - this.last_sync <= 60 * 60 * 1000) return;",
-      "",
-      "    await catch_timeout(interaction, async () => await this._load(sync_start));",
-      "  }",
-      "",
-      "  /**",
-      "   * @param {number} sync_start",
-      "   */",
-      "  async _load(sync_start) {",
+      "  async load() {",
       "    // TODO: Fill database stuff loader",
-      "",
-      "    this.last_sync = Date.now();",
-      "    logger.info(`syncing success. time duration: ${this.last_sync - sync_start}ms`);",
       "  }",
       "}",
       "",
       "module.exports = $1;",
-      "$0"
+      ""
     ]
   },
 
@@ -87,18 +65,17 @@
       "  name: '${1:name}',",
       "  once: ${2|true,false|},",
       "  async execute() {",
-      "    ",
+      "    $0",
       "  },",
       "};",
-
-      "$0"
+      ""
     ]
   },
 
   // Require shortcuts
 
   "require button related stuffs": {
-    "prefix": "require_button",
+    "prefix": "req_button",
     "body": [
       "const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');",
       "$0"
@@ -106,14 +83,14 @@
   },
 
   "require discord.js stuffs": {
-    "prefix": "require_discord",
+    "prefix": "req_discord",
     "body": [
       "const { $0 } = require('discord.js');",
     ]
   },
 
   "require logger": {
-    "prefix": "require_logger",
+    "prefix": "req_logger",
     "body": [
       "const logger = require('../../util/Logger').getLogger(__filename);",
       "$0"
@@ -121,7 +98,7 @@
   },
 
   "require database stuffs": {
-    "prefix": "require_database",
+    "prefix": "req_database",
     "body": [
       "const { ${1:database_name} } = require('../../database');",
       "$0"

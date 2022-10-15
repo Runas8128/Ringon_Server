@@ -23,5 +23,5 @@ module.exports = {
         .get_updated_msg(interaction),
     );
   },
-  database: [decklist],
+  database: ['decklist'],
 };

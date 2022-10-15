@@ -1,9 +1,5 @@
-const { ChatInputCommandInteraction } = require('discord.js');
-
 const { config } = require('../config');
-const { catch_timeout } = require('../util');
 const { load_all } = require('../util/Notion');
-const logger = require('../util/Logger').getLogger(__filename);
 
 /**
  * @param {Array<T>} targets
@@ -38,45 +34,12 @@ function select_weight(targets, weights) {
  */
 class Detect {
   constructor() {
-    this.last_sync = 0;
-
     this.id_map = config.id.notion.detect;
 
     /** @type {FullDetectObj[]} */
     this.full = [];
     /** @type {ProbDetectObj[]} */
     this.prob = [];
-  }
-
-  /**
-   * @param {ChatInputCommandInteraction} interaction
-   */
-  async load(interaction) {
-    const sync_start = Date.now();
-    if (sync_start - this.last_sync <= 60 * 60 * 1000) return;
-
-    await catch_timeout(interaction, async () => await this._load(sync_start));
-  }
-
-  /**
-   * @param {number} sync_start
-   */
-  async _load(sync_start) {
-    this.full = await load_all(
-      this.id_map.full,
-      { name: 'target', type: 'title' },
-      { name: 'result', type: 'rich_text' },
-    );
-
-    this.prob = await load_all(
-      this.id_map.prob,
-      { name: 'target', type: 'title' },
-      { name: 'result', type: 'rich_text' },
-      { name: 'ratio', type: 'number' },
-    );
-
-    this.last_sync = Date.now();
-    logger.info(`syncing success. time duration: ${this.last_sync - sync_start}ms`);
   }
 
   /**
@@ -97,6 +60,21 @@ class Detect {
     }
 
     return null;
+  }
+
+  async load() {
+    this.full = await load_all(
+      this.id_map.full,
+      { name: 'target', type: 'title' },
+      { name: 'result', type: 'rich_text' },
+    );
+
+    this.prob = await load_all(
+      this.id_map.prob,
+      { name: 'target', type: 'title' },
+      { name: 'result', type: 'rich_text' },
+      { name: 'ratio', type: 'number' },
+    );
   }
 }
 

@@ -15,5 +15,5 @@ module.exports = {
       embeds: [decklist.analyze()],
     });
   },
-  database: [decklist],
+  database: ['decklist'],
 };

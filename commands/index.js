@@ -2,6 +2,7 @@ const path = require('path');
 const { Client, REST, Routes, PermissionFlagsBits, SlashCommandBuilder, ChatInputCommandInteraction } = require('discord.js');
 
 const { config, config_common } = require('../config');
+const DBManager = require('../database');
 const { reply } = require('../util');
 const logger = require('../util/logger').getLogger(__filename);
 
@@ -85,12 +86,7 @@ function add_command_listener(client, commands) {
     if (!command) return;
 
     try {
-      if (command.database) {
-        await interaction.deferReply();
-        for (let i = 0; i < command.database.length; i++) {
-          await command.database[i].load(interaction);
-        }
-      }
+      await DBManager.load(interaction, command.database);
       await command.execute(interaction);
     }
     catch (error) {

@@ -49,5 +49,5 @@ module.exports = {
       });
     }
   },
-  database: [decklist],
+  database: ['decklist'],
 };

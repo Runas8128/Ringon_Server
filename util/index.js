@@ -21,19 +21,22 @@ async function reply(interaction, msg) {
 
 /**
  * @param {ChatInputCommandInteraction} interaction
- * @param {() => Promise<any>} callback
+ * @param {() => Promise<void>} callback
  * @param {Number} try_count
+ * @returns {Promise<boolean>}
  */
 async function catch_timeout(interaction, callback, try_count) {
   if (try_count > 5) {
-    return await reply(interaction, {
+    await reply(interaction, {
       content: '재시도 횟수가 5회를 초과했습니다. 요청을 취소합니다.',
       ephemeral: true,
     });
+    return false;
   }
   try {
     try_count = (try_count ?? 0) + 1;
-    return await callback();
+    await callback();
+    return true;
   }
   catch (err) {
     if (isRetryable(err)) {
@@ -45,8 +48,9 @@ async function catch_timeout(interaction, callback, try_count) {
       await timer(100);
       return await catch_timeout(interaction, callback, try_count);
     }
-
-    throw err;
+    else {
+      throw err;
+    }
   }
 }
 
