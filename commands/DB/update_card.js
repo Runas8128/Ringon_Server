@@ -16,7 +16,7 @@ module.exports = {
       embeds: [
         new EmbedBuilder()
           .setTitle('🔄 카드 DB를 업데이트하는 중입니다.')
-          .setDescription('예상 시간: 약 10~20초')
+          .setDescription('예상 시간: 약 20~40초')
           .setTimestamp(start_time),
       ],
     });

@@ -60,7 +60,7 @@ class Cards {
       { name: 'evo_atk', type: 'number' },
       { name: 'evo_life', type: 'number' },
       { name: 'evo_desc', type: 'rich_text' },
-    ));
+    )).sort((a, b) => a.card_id < b.card_id);
   }
 
   async update() {
@@ -68,7 +68,7 @@ class Cards {
     const resp = await axios.get('https://shadowverse-portal.com/api/v1/cards?format=json&lang=ko');
     /** @type {card_payload[]} */
     const result = resp.data.data.cards;
-    this._update(result);
+    await this._update(result);
     return this.cards.length;
   }
 
