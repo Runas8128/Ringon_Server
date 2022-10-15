@@ -15,16 +15,15 @@ function wrap_property(prop) {
   if (prop.type == 'title' || prop.type == 'rich_text') {
     obj = [ { text: { content: prop.value } } ];
   }
-  else if (prop.type == 'number') {
+  else if (prop.type == 'select') {
     obj = { name: prop.value };
   }
-  else if (prop.type == 'select') {
+  else if (prop.type == 'number') {
     obj = prop.value;
   }
 
   const data = {};
-  data[prop.name] = {};
-  data[prop.name][prop.type] = obj;
+  data[prop.type] = obj;
   return data;
 }
 
@@ -102,12 +101,17 @@ async function load_all(database_id, ...properties) {
  * @param {PropertyPayload[]} stuffs
  */
 async function add_all(database_id, ...stuffs) {
+  const properties = {};
+  for (const stuff of stuffs) {
+    properties[stuff.name] = wrap_property(stuff);
+  }
+
   await notion.pages.create({
     parent: {
       type: 'database_id',
       database_id: database_id,
     },
-    properties: stuffs.map(wrap_property),
+    properties: properties,
   });
 }
 

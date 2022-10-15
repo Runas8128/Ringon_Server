@@ -1,4 +1,5 @@
 const https = require('https');
+const axios = require('axios');
 
 const { config } = require('../config');
 const { load_all, delete_page, add_all } = require('../util/Notion');
@@ -46,7 +47,7 @@ class Cards {
   }
 
   async load() {
-    this.cards = await load_all(
+    this.cards = (await load_all(
       this.id_map.cards,
       { name: 'page_id', type: 'page_id' },
       { name: 'card_id', type: 'number' },
@@ -59,30 +60,16 @@ class Cards {
       { name: 'evo_atk', type: 'number' },
       { name: 'evo_life', type: 'number' },
       { name: 'evo_desc', type: 'rich_text' },
-    );
+    ));
   }
 
   async update() {
-    // TODO: Add code returning collected card length
-    https.get('https://shadowverse-portal.com/api/v1/cards?format=json&lang=ko', (resp) => {
-      let rst = '';
-
-      resp.on('readable', () => {
-        /** @type {string} */
-        let chunk;
-        while ((chunk = resp.read()) !== null) {
-          rst += chunk;
-        }
-      });
-      resp.on('error', (err) => {
-        console.error(err);
-      });
-      resp.on('end', async () => {
-        const result = JSON.parse(rst);
-        console.log(Object.keys(result.data.cards[0]));
-        this._update(result.data.cards);
-      });
-    });
+    console.log('updating card db');
+    const resp = await axios.get('https://shadowverse-portal.com/api/v1/cards?format=json&lang=ko');
+    /** @type {card_payload[]} */
+    const result = resp.data.data.cards;
+    this._update(result);
+    return this.cards.length;
   }
 
   /**
@@ -93,13 +80,22 @@ class Cards {
       await delete_page(card.page_id);
     }
 
-    for (const payload of card_payloads) {
+    const char_map = {
+      1: '추종자',
+      2: '아뮬렛',
+      3: '카운트다운 아뮬렛',
+      4: '스펠',
+    };
+
+    for (const payload of card_payloads.slice(0, 50)) {
+      if (payload.card_name === null) continue;
+
       await add_all(
         this.id_map.cards,
         { name: 'card_id', type: 'number', value: payload.card_id },
-        { name: 'name', type: 'title', value: payload.name },
+        { name: 'name', type: 'title', value: payload.card_name },
         { name: 'cost', type: 'number', value: payload.cost },
-        { name: 'type', type: 'select', value: payload.char_type },
+        { name: 'type', type: 'select', value: char_map[payload.char_type] },
         { name: 'atk', type: 'number', value: payload.atk },
         { name: 'life', type: 'number', value: payload.life },
         { name: 'desc', type: 'rich_text', value: payload.skill_disc },
