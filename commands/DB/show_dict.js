@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, ChatInputCommandInteraction, APIEmbedField } = require('discord.js');
 
 const { detect } = require('../../database');
+const { reply } = require('../../util');
 const { StudiedEmbedView: EmbedView } = require('../../util/View');
 
 module.exports = {
@@ -27,7 +28,7 @@ module.exports = {
           inline: true,
         })),
     );
-    await interaction.editReply(new EmbedView(
+    await reply(interaction, new EmbedView(
       'Studied_' + Date.now(),
       '감지 키워드 목록입니다!',
       '이 목록에 있는 키워드가 메시지의 내용과 일치하면, 해당 메시지를 보내줍니다.',

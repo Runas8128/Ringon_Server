@@ -1,6 +1,7 @@
 const https = require('https');
 const { SlashCommandBuilder, ChatInputCommandInteraction } = require('discord.js');
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const { reply } = require('../../util');
 
 const logger = require('../../util/Logger').getLogger(__filename);
 
@@ -36,7 +37,8 @@ module.exports = {
         resp.on('end', async () => {
           const deck_json = JSON.parse(rst).data;
           if (Object.keys(deck_json.errors).length > 0) {
-            await interaction.editReply(
+            await reply(
+              interaction,
               '덱 코드가 무효하거나, 잘못 입력되었습니다. 다시 입력해 주시기 바랍니다.',
             );
           }
@@ -48,7 +50,7 @@ module.exports = {
                   .setStyle(ButtonStyle.Link)
                   .setURL(`https://shadowverse-portal.com/deck/${deck_json.hash}?lang=ko`),
               );
-            await interaction.editReply({ components: [row] });
+            await reply(interaction, { components: [row] });
           }
         });
       },

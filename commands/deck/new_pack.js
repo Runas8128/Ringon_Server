@@ -2,6 +2,7 @@ const { SlashCommandBuilder, ChatInputCommandInteraction } = require('discord.js
 const { ActionRowBuilder, ButtonBuilder, EmbedBuilder, ComponentType } = require('discord.js');
 
 const { decklist } = require('../../database');
+const { reply } = require('../../util');
 
 module.exports = {
   perm: 'admin',
@@ -16,7 +17,7 @@ module.exports = {
   async execute(interaction) {
     const timestamp = Date.now();
 
-    await interaction.editReply({
+    await reply(interaction, {
       embeds: [new EmbedBuilder()
         .setTitle('⚠️ 해당 명령어 사용시, 현재 등록된 덱리가 모두 삭제됩니다.')
         .setDescription('사용하시려면 `확인`을 입력해주세요! 1분 후 자동으로 취소됩니다.'),
@@ -44,7 +45,7 @@ module.exports = {
       );
     }
     catch (err) {
-      await interaction.editReply({
+      await reply(interaction, {
         content: '팩 변경을 취소합니다.',
       });
     }

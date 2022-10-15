@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, ChatInputCommandInteraction } = require('discord.js');
 
 const { decklist } = require('../../database');
+const { reply } = require('../../util');
 const { DeckListView } = require('../../util/View');
 
 module.exports = {
@@ -15,8 +16,9 @@ module.exports = {
     const decks = decklist.decklist;
 
     // TODO: Fill this feature
-    await interaction.editReply(
-      await new DeckListView({
+    await reply(
+      interaction,
+      new DeckListView({
         customID: 'Decklist_' + Date.now(),
         decks: decks,
       })

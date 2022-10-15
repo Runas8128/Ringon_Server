@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, ChatInputCommandInteraction } = require('discord.js');
 
 const { decklist } = require('../../database');
+const { reply } = require('../../util');
 
 module.exports = {
   perm: 'member',
@@ -11,7 +12,7 @@ module.exports = {
    * @param {ChatInputCommandInteraction} interaction
    */
   async execute(interaction) {
-    await interaction.editReply({
+    reply(interaction, {
       embeds: [decklist.analyze()],
     });
   },
