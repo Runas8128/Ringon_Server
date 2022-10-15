@@ -1,5 +1,6 @@
 const Detect = require('./detect');
 const Decklist = require('./decklist');
+const Cards = require('./cards');
 const { catch_timeout } = require('../util');
 const logger = require('../util/Logger').getLogger(__filename);
 
@@ -7,10 +8,12 @@ class Manager {
   constructor() {
     this.detect = new Detect();
     this.decklist = new Decklist();
+    this.cards = new Cards();
 
     this.last_sync = {
       detect: 0,
       decklist: 0,
+      cards: 0,
     };
   }
 

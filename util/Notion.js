@@ -3,6 +3,32 @@ const { Client } = require('@notionhq/client');
 const notion = new Client({ auth: process.env.notion });
 
 /**
+ *  @typedef PropertyPayload
+ *    @property {string} name
+ *    @property {string|number} value
+ *    @property {'title'|'rich_text'|'select'|'number'} type
+ *
+ *  @param {PropertyPayload} prop
+ */
+function wrap_property(prop) {
+  let obj;
+  if (prop.type == 'title' || prop.type == 'rich_text') {
+    obj = [ { text: { content: prop.value } } ];
+  }
+  else if (prop.type == 'number') {
+    obj = { name: prop.value };
+  }
+  else if (prop.type == 'select') {
+    obj = prop.value;
+  }
+
+  const data = {};
+  data[prop.name] = {};
+  data[prop.name][prop.type] = obj;
+  return data;
+}
+
+/**
  *  @typedef RichText
  *    @property {string} plain_text
  *
@@ -71,6 +97,20 @@ async function load_all(database_id, ...properties) {
   return data;
 }
 
+/**
+ * @param {string} database_id
+ * @param {PropertyPayload[]} stuffs
+ */
+async function add_all(database_id, ...stuffs) {
+  await notion.pages.create({
+    parent: {
+      type: 'database_id',
+      database_id: database_id,
+    },
+    properties: stuffs.map(wrap_property),
+  });
+}
+
 async function delete_page(page_id) {
   await notion.blocks.delete({
     block_id: page_id,
@@ -94,6 +134,7 @@ async function update_block_string(block_id, new_string) {
 
 module.exports = {
   load_all: load_all,
+  add_all: add_all,
   delete_page: delete_page,
   load_block_string: load_block_string,
   update_block_string: update_block_string,
