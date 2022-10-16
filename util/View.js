@@ -129,38 +129,35 @@ class DeckListView {
     await i.deferUpdate();
 
     const customID = `DeckSelector_${Date.now()}`;
+    const options = this.decks.map(({ name, desc, clazz }, index) => {
+      const shrunk_desc = desc.length > 100 ?
+        desc.substring(0, 97) + '...' : desc;
+
+      return {
+        label: name,
+        description: shrunk_desc || '...',
+        emoji: config_common.classes[clazz],
+        value: index.toString(),
+      };
+    });
+
+    const select = new SelectMenuBuilder()
+      .setCustomId(customID)
+      .setPlaceholder('')
+      .addOptions(options);
+
     await i.message.edit({
       embeds: [],
-      components: [
-        new ActionRowBuilder()
-          .addComponents(
-            new SelectMenuBuilder()
-              .setCustomId(customID)
-              .setPlaceholder('')
-              .addOptions(
-                this.decks.map(({ name, desc, clazz }, index) => {
-                  if (desc === '') desc = '...';
-                  const shrunk_desc = desc.length > 100 ?
-                    desc.substring(0, 97) + '...' : desc;
-                  const emoji_id = config_common.classes[clazz];
-
-                  return {
-                    label: name,
-                    description: shrunk_desc,
-                    emoji: emoji_id,
-                    value: index.toString(),
-                  };
-                }),
-              ),
-          ),
-      ],
+      components: [ new ActionRowBuilder().addComponents(select) ],
     });
+
     const menu = await i.channel.awaitMessageComponent({
       componentType: ComponentType.SelectMenu,
       time: 10 * 1000,
       filter: menubar => menubar.customId === customID,
     });
 
+    await menu.deferUpdate();
     this.index = Number(menu.values[0]);
     await this.update_message(i);
   }
