@@ -94,20 +94,25 @@ class DeckListView {
     this.index = 0;
     this.decks = decks;
 
+    this.prev_button = eventHandler.register(async (i) => await this.prev(i))
+      .setLabel('≪ 이전 덱')
+      .setCustomId(customID + '_prev')
+      .setStyle(ButtonStyle.Primary)
+      .setDisabled(true);
+    this.next_button = eventHandler.register(async (i) => await this.next(i))
+      .setLabel('다음 덱 ≫')
+      .setCustomId(customID + '_next')
+      .setStyle(ButtonStyle.Primary);
+    if (this.decks.length == 1) this.next_button.setDisabled(true);
+
     this.actionRow = new ActionRowBuilder()
       .addComponents(
-        eventHandler.register(async (i) => await this.prev(i))
-          .setLabel('≪ 이전 덱')
-          .setCustomId(customID + '_prev')
-          .setStyle(ButtonStyle.Primary),
+        this.prev_button,
         eventHandler.register(async (i) => await this.select(i))
           .setLabel('메뉴')
           .setCustomId(customID + '_menu')
           .setStyle(ButtonStyle.Secondary),
-        eventHandler.register(async (i) => await this.next(i))
-          .setLabel('다음 덱 ≫')
-          .setCustomId(customID + '_next')
-          .setStyle(ButtonStyle.Primary),
+        this.next_button,
         eventHandler.register(async (i) => await this.delete(i))
           .setLabel('덱 삭제')
           .setCustomId(customID + '_delete')
@@ -118,7 +123,7 @@ class DeckListView {
   async prev(i) {
     await i.deferUpdate();
 
-    if (this.index != 0) this.index--;
+    this.index--;
     await this.update_message(i);
   }
 
@@ -165,7 +170,7 @@ class DeckListView {
   async next(i) {
     await i.deferUpdate();
 
-    if (this.index != this.decks.length - 1) this.index++;
+    this.index++;
     await this.update_message(i);
   }
 
@@ -174,6 +179,7 @@ class DeckListView {
    */
   async delete(i) {
     await decklist._delete_deck(this.decks[this.index], i.guild);
+    this.decks.splice(this.index, 1);
     await this.next(i);
   }
 
@@ -188,6 +194,12 @@ class DeckListView {
    * @param {ButtonInteraction} interaction
    */
   get_updated_msg(interaction) {
+    if (this.index <= 0) this.index = 0;
+    this.prev_button.setDisabled(this.index <= 0);
+
+    if (this.index >= this.decks.length - 1) this.index = this.decks.length - 1;
+    this.next_button.setDisabled(this.index >= this.decks.length - 1);
+
     return {
       embeds: [decklist.make_deck_embed(this.decks[this.index], interaction.guild)],
       components: [this.actionRow],
