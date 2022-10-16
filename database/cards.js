@@ -60,7 +60,7 @@ class Cards {
       { name: 'evo_atk', type: 'number' },
       { name: 'evo_life', type: 'number' },
       { name: 'evo_desc', type: 'rich_text' },
-    )).sort((a, b) => a.card_id < b.card_id);
+    )).sort((a, b) => a.card_id - b.card_id);
   }
 
   async update() {
