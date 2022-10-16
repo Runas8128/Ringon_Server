@@ -12,7 +12,7 @@ module.exports = {
    * @param {ChatInputCommandInteraction} interaction
    */
   async execute(interaction) {
-    reply(interaction, {
+    await reply(interaction, {
       embeds: [decklist.analyze()],
     });
   },

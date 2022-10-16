@@ -90,11 +90,11 @@ function add_command_listener(client, commands) {
       await command.execute(interaction);
     }
     catch (error) {
+      console.log(error);
       await reply(interaction, {
         content: `${interaction.commandName} 커맨드를 처리하는 동안 오류가 발생했습니다.`,
         ephemeral: true,
       });
-      console.log(error);
     }
   });
 }

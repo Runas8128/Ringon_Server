@@ -28,7 +28,7 @@ class Manager {
       const sync_start = Date.now();
       if (sync_start - this.last_sync[DB] <= 1 * 60 * 60 * 1000) return;
 
-      if (!interaction.deferred) interaction.deferReply();
+      if (!interaction.deferred) await interaction.deferReply();
       const is_success = await catch_timeout(interaction, async () => await this[DB].load());
 
       if (is_success) {

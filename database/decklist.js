@@ -121,7 +121,7 @@ class DeckList {
 
   async load() {
     /** @type {Deck[]} */
-    this.decklist = await load_all(
+    this.decklist = (await load_all(
       this.id_map.list,
       { name: 'page_id', type: 'page_id' },
       { name: 'deck_id', type: 'number' },
@@ -132,7 +132,7 @@ class DeckList {
       { name: 'image_url', type: 'rich_text' },
       { name: 'timestamp', type: 'rich_text' },
       { name: 'version', type: 'number' },
-    ).sort((a, b) => a.deck_id < b.deck_id);
+    )).sort((a, b) => a.deck_id < b.deck_id);
 
     /** @type {Contrib[]} */
     this.contrib = await load_all(
