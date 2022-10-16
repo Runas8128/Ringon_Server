@@ -13,11 +13,10 @@ module.exports = {
   async execute(interaction) {
     const channel = interaction.channel;
     if (channel === null) return;
-    channel.bulkDelete(interaction.options.getInteger('갯수')).then(
-      async () => await interaction.reply({
-        content: 'Done!',
-        ephemeral: true,
-      }),
-    );
+    await channel.bulkDelete(interaction.options.getInteger('갯수'));
+    await interaction.reply({
+      content: 'Done!',
+      ephemeral: true,
+    });
   },
 };
