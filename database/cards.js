@@ -1,16 +1,17 @@
-const https = require('https');
 const axios = require('axios');
 
 const { config } = require('../config');
 const { load_all, delete_page, add_all } = require('../util/Notion');
 
 /**
+ *  @typedef {'추종자'|'아뮬렛'|'카운트다운 아뮬렛'|'스펠'} CardType
+ *
  *  @typedef Card
  *    @property {string} page_id
  *    @property {number} card_id
  *    @property {string} name
  *    @property {number} cost
- *    @property {string} type
+ *    @property {CardType} type
  *    @property {number} atk
  *    @property {number} life
  *    @property {string} desc
@@ -22,7 +23,7 @@ const { load_all, delete_page, add_all } = require('../util/Notion');
  *    @property {number} card_id
  *    @property {string} card_name
  *    @property {number} cost
- *    @property {string} char_type
+ *    @property {CardType} char_type
  *    @property {number} atk
  *    @property {number} life
  *    @property {string} skill_disc
