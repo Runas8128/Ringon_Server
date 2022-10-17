@@ -1,9 +1,9 @@
 {
   "commands": {
-    "simple": ["latency", "kill", "prune"],
+    "DB": ["IQ", "show_update", "update_card", "card_count", "search_card"],
     "deck": ["portallink", "analyze_deck", "search_deck"],
-    "DB": ["IQ", "show_dict", "update_card", "card_count"],
-    "other": ["check_reaction"]
+    "other": ["check_reaction"],
+    "simple": ["latency", "kill", "prune"]
   },
   "events": ["ready", "btnClick", "detect"],
   "pages": ["log"],
