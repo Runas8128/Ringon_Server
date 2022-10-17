@@ -19,15 +19,12 @@ const logger = require('../util/logger').getLogger(__filename);
  *    @param {AutocompleteInteraction} interaction
  *    @returns {Promise<void>}
  *
- *  @typedef Database
- *    @property {DB_Loader} load
- *
  *  @typedef Command
  *    @property {'member' | 'admin' | 'dev'} perm
  *    @property {SlashCommandBuilder} data
  *    @property {CommandExecute} execute
  *    @property {AutoCompleter?} autocompleter
- *    @property {Database[]?} database
+ *    @property {string?} database
  */
 
 /**
@@ -83,7 +80,7 @@ async function deploy_commands(commands, token) {
  */
 async function run_command(interaction, command) {
   try {
-    await DBManager.load(interaction, command.database);
+    await DBManager.load(interaction, [command.database]);
     await command.execute(interaction);
   }
   catch (error) {

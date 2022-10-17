@@ -31,7 +31,6 @@
       "  async execute(interaction) {",
       "    await interaction.reply('ping');$0",
       "  },",
-      "  database: []",
       "};",
       ""
     ]
@@ -104,4 +103,30 @@
       "$0"
     ]
   },
+
+  // add optional line
+
+  "add database line": {
+    "prefix": "add_database",
+    "body": [
+      "database: '${1|decklist,cards,detect|}',",
+      "$0"
+    ]
+  },
+
+  "add autocomplete function": {
+    "prefix": "add_autocomplete",
+    "body": [
+      "/**",
+      "* @param {AutocompleteInteraction} interaction",
+      "*/",
+      "async autocompleter(interaction) {",
+      "  const focusdVar = interaction.options.getFocused(true);",
+      "  if (focusdVar.name != '$1') return;",
+      "  $0",
+      "  await interaction.respond(",
+      "  );",
+      "},"
+    ]
+  }
 }

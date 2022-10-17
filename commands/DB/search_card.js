@@ -39,7 +39,7 @@ module.exports = {
       new CardView(result).get_updated_msg(interaction),
     );
   },
-  database: ['cards'],
+  database: 'cards',
   /**
    * @param {AutocompleteInteraction} interaction
    */

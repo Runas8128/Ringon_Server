@@ -61,7 +61,7 @@ module.exports = {
       new DecklistView(decks, interaction.guild).get_updated_msg(interaction),
     );
   },
-  database: ['decklist'],
+  database: 'decklist',
   /**
    * @param {AutocompleteInteraction} interaction
    */

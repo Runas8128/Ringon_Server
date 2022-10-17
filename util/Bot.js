@@ -1,4 +1,4 @@
-const { Client, GatewayIntentBits } = require('discord.js');
+const { Client, GatewayIntentBits, Partials } = require('discord.js');
 
 const setup_event = require('../events');
 const setup_commands = require('../commands');
@@ -11,8 +11,13 @@ class Bot {
       intents: [
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMessages,
-        GatewayIntentBits.MessageContent,
         GatewayIntentBits.GuildMembers,
+        GatewayIntentBits.GuildMessageReactions,
+        GatewayIntentBits.MessageContent,
+      ],
+      partials: [
+        Partials.Reaction,
+        Partials.Message,
       ],
     });
     setup_event(client);
