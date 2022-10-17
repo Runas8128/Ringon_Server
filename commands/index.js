@@ -1,5 +1,5 @@
 const path = require('path');
-const { Client, REST, Routes, PermissionFlagsBits, SlashCommandBuilder, ChatInputCommandInteraction } = require('discord.js');
+const { Client, REST, Routes, PermissionFlagsBits, SlashCommandBuilder, ChatInputCommandInteraction, AutocompleteInteraction } = require('discord.js');
 
 const { config, config_common } = require('../config');
 const DBManager = require('../database');
@@ -15,6 +15,10 @@ const logger = require('../util/logger').getLogger(__filename);
  *    @param {ChatInputCommandInteraction} interaction
  *    @returns {Promise<void>}
  *
+ *  @callback AutoCompleter
+ *    @param {AutocompleteInteraction} interaction
+ *    @returns {Promise<void>}
+ *
  *  @typedef Database
  *    @property {DB_Loader} load
  *
@@ -22,6 +26,7 @@ const logger = require('../util/logger').getLogger(__filename);
  *    @property {'member' | 'admin' | 'dev'} perm
  *    @property {SlashCommandBuilder} data
  *    @property {CommandExecute} execute
+ *    @property {AutoCompleter?} autocompleter
  *    @property {Database[]?} database
  */
 
@@ -72,29 +77,38 @@ async function deploy_commands(commands, token) {
 }
 
 /**
+ * @param {ChatInputCommandInteraction} interaction
+ * @param {Command} command
+ * @return {any}
+ */
+async function run_command(interaction, command) {
+  try {
+    await DBManager.load(interaction, command.database);
+    await command.execute(interaction);
+  }
+  catch (error) {
+    console.log(error);
+    await reply(interaction, {
+      content: `${interaction.commandName} 커맨드를 처리하는 동안 오류가 발생했습니다.`,
+      ephemeral: true,
+    });
+  }
+}
+
+/**
  * @param {Client} client
  * @param {Command[]} commands
  */
 function add_command_listener(client, commands) {
   client.on('interactionCreate', async (interaction) => {
-    if (!interaction.isChatInputCommand()) return;
-
-    /**
-     * @type {Command?}
-     */
-    const command = commands.find((cmd) => cmd.data.name == interaction.commandName);
-    if (!command) return;
-
-    try {
-      await DBManager.load(interaction, command.database);
-      await command.execute(interaction);
+    if (interaction.isChatInputCommand()) {
+      /** @type {Command?} */
+      const command = commands.find((cmd) => cmd.data.name == interaction.commandName);
+      if (command) return await run_command(interaction, command);
     }
-    catch (error) {
-      console.log(error);
-      await reply(interaction, {
-        content: `${interaction.commandName} 커맨드를 처리하는 동안 오류가 발생했습니다.`,
-        ephemeral: true,
-      });
+    else if (interaction.isAutocomplete()) {
+      const command = commands.find((cmd) => cmd.data.name == interaction.commandName);
+      if (command && command.autocompleter) return await command.autocompleter(interaction);
     }
   });
 }

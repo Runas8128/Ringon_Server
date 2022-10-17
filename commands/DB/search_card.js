@@ -1,17 +1,18 @@
-const { SlashCommandBuilder, ChatInputCommandInteraction } = require('discord.js');
+const { SlashCommandBuilder, ChatInputCommandInteraction, AutocompleteInteraction } = require('discord.js');
 const { cards } = require('../../database');
 const { reply } = require('../../util');
 
 const CardView = require('../../View/Cards');
-
-// TODO: Add Autocomplete
 
 module.exports = {
   perm: 'member',
   data: new SlashCommandBuilder()
     .setName('카드검색')
     .setDescription('카드를 검색해옵니다.')
-    .addStringOption(option => option.setName('키워드').setDescription('검색할 카드의 키워드입니다.')),
+    .addStringOption(option => option
+      .setName('키워드')
+      .setDescription('검색할 카드의 키워드입니다.')
+      .setAutocomplete(true)),
   /**
    * @param {ChatInputCommandInteraction} interaction
    */
@@ -39,4 +40,17 @@ module.exports = {
     );
   },
   database: ['cards'],
+  /**
+   * @param {AutocompleteInteraction} interaction
+   */
+  async autocompleter(interaction) {
+    const focusdVar = interaction.options.getFocused(true);
+    if (focusdVar.name != '키워드') return;
+
+    await interaction.respond(
+      cards.cards
+        .filter(card => card.name.includes(focusdVar.value))
+        .map(card => ({ name: card.name, value: card.name })),
+    );
+  },
 };

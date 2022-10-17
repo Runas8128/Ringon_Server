@@ -1,26 +1,28 @@
-const { SlashCommandBuilder, ChatInputCommandInteraction } = require('discord.js');
+const { SlashCommandBuilder, ChatInputCommandInteraction, AutocompleteInteraction } = require('discord.js');
 
 const { config_common } = require('../../config');
 const { decklist } = require('../../database');
 const { reply } = require('../../util');
 const DecklistView = require('../../View/Decklist');
 
-// TODO: Add autocomplete stuff
-
 module.exports = {
   perm: 'member',
   data: new SlashCommandBuilder()
     .setName('덱검색')
     .setDescription('덱을 검색해줍니다.')
-    .addStringOption(option =>
-      option.setName('검색어').setDescription('검색 대상: 이름, 해시태그'))
-    .addUserOption(option =>
-      option.setName('제작자').setDescription('검색 대상: 제작자'))
-    .addStringOption(option =>
-      option.setName('클래스').setDescription('검색 대상: 클래스')
-        .addChoices(...Object.keys(config_common.classes)
-          .map(clazz => ({ name: clazz, value: clazz })),
-        )),
+    .addStringOption(option => option
+      .setName('검색어')
+      .setDescription('검색 대상: 이름, 해시태그')
+      .setAutocomplete(true))
+    .addUserOption(option => option
+      .setName('제작자')
+      .setDescription('검색 대상: 제작자'))
+    .addStringOption(option => option
+      .setName('클래스')
+      .setDescription('검색 대상: 클래스')
+      .addChoices(...Object.keys(config_common.classes)
+        .map(clazz => ({ name: clazz, value: clazz })),
+      )),
   /**
    * @param {ChatInputCommandInteraction} interaction
    */
@@ -60,4 +62,17 @@ module.exports = {
     );
   },
   database: ['decklist'],
+  /**
+   * @param {AutocompleteInteraction} interaction
+   */
+  async autocompleter(interaction) {
+    const focusdVar = interaction.options.getFocused(true);
+    if (focusdVar.name != '검색어') return;
+
+    await interaction.respond(
+      decklist.decklist
+        .filter(deck => deck.name.includes(focusdVar.value))
+        .map(deck => ({ name: deck.name, value: deck.name })),
+    );
+  },
 };
