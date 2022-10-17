@@ -10,7 +10,6 @@ module.exports = {
    * @param {ChatInputCommandInteraction} interaction
    */
   async execute(interaction) {
-    // TODO: Fill this feature
     const start_time = Date.now();
     await interaction.reply({
       embeds: [

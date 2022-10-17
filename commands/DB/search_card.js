@@ -16,7 +16,6 @@ module.exports = {
    * @param {ChatInputCommandInteraction} interaction
    */
   async execute(interaction) {
-    // TODO: Fill this feature
     await interaction.deferReply();
 
     const kw = interaction.options.getString('키워드');
