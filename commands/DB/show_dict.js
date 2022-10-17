@@ -3,6 +3,7 @@ const { SlashCommandBuilder, ChatInputCommandInteraction, APIEmbedField } = requ
 const { detect } = require('../../database');
 const { reply } = require('../../util');
 const { StudiedEmbedView: EmbedView } = require('../../util/View');
+const StudiedView = require('../../View/Studied');
 
 module.exports = {
   perm: 'member',
@@ -28,10 +29,7 @@ module.exports = {
           inline: true,
         })),
     );
-    await reply(interaction, new EmbedView(
-      'Studied_' + Date.now(),
-      '감지 키워드 목록입니다!',
-      '이 목록에 있는 키워드가 메시지의 내용과 일치하면, 해당 메시지를 보내줍니다.',
+    await reply(interaction, new StudiedView(
       fields.length > 0 ?
         fields :
         [{ name: '엥 비어있네요', value: '왜지...', inline: true }],
