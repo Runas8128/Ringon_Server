@@ -1,4 +1,4 @@
-const { EmbedBuilder, ActionRowBuilder } = require('discord.js');
+const { EmbedBuilder, ActionRowBuilder, ButtonInteraction } = require('discord.js');
 
 class View {
   constructor() {
@@ -14,9 +14,10 @@ class View {
    * @param {IndexModifier} modify_index
    */
   async update_message(interaction, modify_index) {
-    await interaction.deferUpdate();
+    if (!interaction.deferred && !interaction.replied) {
+      await interaction.deferUpdate();
+    }
     this.index = modify_index(this.index);
-    this.check_range();
     await interaction.message.edit(this.get_updated_msg());
   }
 
@@ -33,6 +34,7 @@ class View {
   }
 
   get_updated_msg() {
+    this.check_range();
     return {
       embeds: [this.build_embed()],
       components: [this.build_actionrow()],

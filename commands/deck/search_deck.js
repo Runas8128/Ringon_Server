@@ -3,7 +3,7 @@ const { SlashCommandBuilder, ChatInputCommandInteraction } = require('discord.js
 const { config_common } = require('../../config');
 const { decklist } = require('../../database');
 const { reply } = require('../../util');
-const { DeckListView } = require('../../util/View');
+const DecklistView = require('../../View/Decklist');
 
 // TODO: Add autocomplete stuff
 
@@ -56,11 +56,7 @@ module.exports = {
 
     await reply(
       interaction,
-      new DeckListView({
-        customID: 'Decklist_' + Date.now(),
-        decks: decks,
-      })
-        .get_updated_msg(interaction),
+      new DecklistView(decks, interaction.guild).get_updated_msg(interaction),
     );
   },
   database: ['decklist'],
