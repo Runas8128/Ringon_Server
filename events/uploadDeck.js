@@ -22,6 +22,8 @@ class DeckUploader {
         prompt: ':ledger: 덱의 설명을 입력해주세요!',
         subprompt: '시간 제한 X\n덱 설명을 생략하려면 생략을 입력해주세요.',
       });
+
+      // TODO: add deck uploader
     }
     catch (error) {
       await this.origin.channel.send('시간 초과, 덱 등록을 취소합니다.');

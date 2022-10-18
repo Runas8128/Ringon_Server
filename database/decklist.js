@@ -70,6 +70,28 @@ class DeckList {
   }
 
   /**
+   * @param {Guild} guild
+   * @param {number} id
+   * @param {string} updater
+   * @param {string?} desc
+   * @param {string?} image_url
+   */
+  async update_deck(guild, id, updater, desc, image_url) {
+    if (!desc && !image_url) return;
+
+    const deck = this.decklist.find(_deck => _deck.deck_id == id);
+    const org_deck = Object.assign({}, deck);
+
+    if (desc) deck.desc = deck;
+    if (image_url) deck.image_url = image_url;
+    deck.version += 1;
+    // TODO: Add appending Contributor function
+
+    await this.history.send({ embeds: [this.make_deck_embed(org_deck, guild)] });
+    await this.upload(deck);
+  }
+
+  /**
    * @param {Deck} deck
    * @param {Guild} guild
    */
@@ -140,6 +162,13 @@ class DeckList {
       { name: 'DeckID', type: 'number' },
       { name: 'ContribID', type: 'rich_text' },
     );
+  }
+
+  /**
+   * @param {Deck} deck
+   */
+  async upload(deck) {
+    // TODO: Fill this feature
   }
 }
 
