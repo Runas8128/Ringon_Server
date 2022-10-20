@@ -2,7 +2,6 @@ const { SlashCommandBuilder, ChatInputCommandInteraction, APIEmbedField } = requ
 
 const { detect } = require('../../database');
 const { reply } = require('../../util');
-const { StudiedEmbedView: EmbedView } = require('../../util/View');
 const StudiedView = require('../../View/Studied');
 
 module.exports = {

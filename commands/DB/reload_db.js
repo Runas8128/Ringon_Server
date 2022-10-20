@@ -8,7 +8,7 @@ module.exports = {
     .setName('업데이트')
     .setDescription('DB를 다시 로드합니다.')
     .addStringOption(option => option
-      .setName('DB')
+      .setName('db')
       .setDescription('업데이트할 DB 이름을 공백으로 구분해주세요.')
       .setRequired(true)),
   /**
@@ -21,7 +21,7 @@ module.exports = {
         .setDescription('예상 시간: ~ 1분')],
     });
     const sync_start = Date.now();
-    await DBManager.load(interaction, interaction.options.getString('DB').split(' '));
+    await DBManager.load(interaction, interaction.options.getString('db').split(' '));
     const sync_end = Date.now();
     await interaction.editReply({
       embeds: [new EmbedBuilder()

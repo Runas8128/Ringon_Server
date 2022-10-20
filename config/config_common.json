@@ -1,6 +1,6 @@
 {
   "commands": {
-    "DB": ["IQ", "show_update", "update_card", "card_count", "search_card", "reload_db"],
+    "DB": ["card_count", "IQ", "reload_db", "search_card", "show_studied", "update_card"],
     "deck": ["portallink", "analyze_deck", "search_deck"],
     "other": ["check_reaction"],
     "simple": ["latency", "kill", "prune"]
