@@ -47,10 +47,10 @@ class DeckUploader {
     const embed = new EmbedBuilder().setTitle(prompt);
     if (subprompt) embed.setDescription(subprompt);
 
-    await this.origin.reply({ embeds: [embed] });
+    await this.origin.reply({ embeds: [embed], allowedMentions: { repliedUser: false } });
 
     const result = await this.origin.channel.awaitMessages({
-      filter: (msg) => msg.author.id == this.origin.id,
+      filter: (msg) => msg.author.id == this.origin.author.id,
       max: 1,
       time: timeout,
     });
