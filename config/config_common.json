@@ -5,7 +5,7 @@
     "other": ["check_reaction"],
     "simple": ["latency", "kill", "prune"]
   },
-  "events": ["ready", "btnClick", "detect"],
+  "events": ["ready", "btnClick", "detect", "detectDeckImg", "uploadDeck"],
   "pages": ["log"],
   "classes": {
     "엘프": "805678671527936010",
