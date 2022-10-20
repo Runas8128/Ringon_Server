@@ -1,6 +1,7 @@
 const { MessageReaction, User, Message, EmbedBuilder } = require('discord.js');
 
 const { config_common } = require('../config');
+const { decklist } = require('../database');
 
 class DeckUploader {
   /**
@@ -23,7 +24,13 @@ class DeckUploader {
         subprompt: '시간 제한 X\n덱 설명을 생략하려면 생략을 입력해주세요.',
       });
 
-      // TODO: add deck uploader
+      await decklist.upload({
+        name: name,
+        clazz: this.origin.channel.name,
+        desc: desc,
+        author: this.origin.author.id,
+        image_url: this.origin.attachments.first().url,
+      });
     }
     catch (error) {
       await this.origin.channel.send('시간 초과, 덱 등록을 취소합니다.');

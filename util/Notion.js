@@ -106,7 +106,7 @@ async function add_all(database_id, ...stuffs) {
     properties[stuff.name] = wrap_property(stuff);
   }
 
-  await notion.pages.create({
+  return await notion.pages.create({
     parent: {
       type: 'database_id',
       database_id: database_id,

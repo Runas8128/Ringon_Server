@@ -1,7 +1,7 @@
 const { EmbedBuilder, Guild, TextChannel } = require('discord.js');
 
 const { config, config_common } = require('../config');
-const { load_all, update_block_string, delete_page } = require('../util/Notion');
+const { load_all, update_block_string, delete_page, add_all } = require('../util/Notion');
 
 /**
  *  @typedef Deck
@@ -88,7 +88,7 @@ class DeckList {
     // TODO: Add appending Contributor function
 
     await this.history.send({ embeds: [this.make_deck_embed(org_deck, guild)] });
-    await this.upload(deck);
+    // TODO: Add update page function
   }
 
   /**
@@ -168,7 +168,23 @@ class DeckList {
    * @param {Deck} deck
    */
   async upload(deck) {
-    // TODO: Fill this feature
+    deck.deck_id = this.decklist.at(-1).deck_id;
+    deck.timestamp = new Date().toISOString().split('T')[0];
+
+    const resp = await add_all(
+      this.id_map.list,
+      { name: 'deck_id', type: 'number', value: deck.deck_id },
+      { name: 'name', type: 'title', value: deck.name },
+      { name: 'clazz', type: 'select', value: deck.clazz },
+      { name: 'desc', type: 'rich_text', value: deck.desc },
+      { name: 'author', type: 'rich_text', value: deck.author },
+      { name: 'image_url', type: 'rich_text', value: deck.image_url },
+      { name: 'timestamp', type: 'rich_text', value: deck.timestamp },
+      { name: 'version', type: 'number', value: deck.version },
+    );
+
+    deck.page_id = resp.id;
+    this.decklist.push(deck);
   }
 }
 
