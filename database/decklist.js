@@ -92,14 +92,21 @@ class DeckList {
     if (!desc && !image_url) return;
 
     const deck = this.decklist.find(_deck => _deck.deck_id == id);
-    const org_deck = Object.assign({}, deck);
+    await this.history.send({ embeds: [this.make_deck_embed(deck, guild)] });
 
     if (desc) deck.desc = deck;
     if (image_url) deck.image_url = image_url;
     deck.version += 1;
-    // TODO: Add appending Contributor function
+    if (
+      updater != deck.author &&
+      !(this.contrib.some(obj =>
+        obj.DeckID == deck.deck_id && obj.ContribID == updater))
+    ) {
+      const obj = { DeckID: deck.deck_id, ContribID: updater };
+      this.contrib.push(obj);
+      this.contrib_db.push(Object.entries(obj).map((key, value) => ({ name: key, value: value })));
+    }
 
-    await this.history.send({ embeds: [this.make_deck_embed(org_deck, guild)] });
     // TODO: Add update page function
   }
 
