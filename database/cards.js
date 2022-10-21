@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 const { config } = require('../config');
-const { load_all, delete_page, add_all } = require('../util/Notion');
+const { Database } = require('../util/Notion');
 
 /**
  *  @typedef {'추종자'|'아뮬렛'|'카운트다운 아뮬렛'|'스펠'} CardType
@@ -35,6 +35,14 @@ const { load_all, delete_page, add_all } = require('../util/Notion');
 class Cards {
   constructor() {
     this.id_map = config.id.notion.cards;
+    this.db = new Database(this.id_map.cards);
+
+    this.char_map = {
+      1: '추종자',
+      2: '아뮬렛',
+      3: '카운트다운 아뮬렛',
+      4: '스펠',
+    };
 
     /** @type {Card[]} */
     this.cards = [];
@@ -48,8 +56,7 @@ class Cards {
   }
 
   async load() {
-    this.cards = (await load_all(
-      this.id_map.cards,
+    this.cards = (await this.db.load(
       { name: 'page_id', type: 'page_id' },
       { name: 'card_id', type: 'number' },
       { name: 'name', type: 'title' },
@@ -67,36 +74,20 @@ class Cards {
   async update() {
     console.log('updating card db');
     const resp = await axios.get('https://shadowverse-portal.com/api/v1/cards?format=json&lang=ko');
+
     /** @type {card_payload[]} */
-    const result = resp.data.data.cards;
-    await this._update(result);
-    return this.cards.length;
-  }
+    const payloads = resp.data.data.cards.slice(0, 50);
 
-  /**
-   * @param {card_payload[]} card_payloads
-   */
-  async _update(card_payloads) {
-    for (const card of this.cards) {
-      await delete_page(card.page_id);
-    }
+    this.db.drop();
+    this.cards = [];
 
-    const char_map = {
-      1: '추종자',
-      2: '아뮬렛',
-      3: '카운트다운 아뮬렛',
-      4: '스펠',
-    };
-
-    for (const payload of card_payloads.slice(0, 50)) {
+    for (const payload of payloads) {
       if (payload.card_name === null) continue;
 
-      await add_all(
-        this.id_map.cards,
-        { name: 'card_id', type: 'number', value: payload.card_id },
+      const new_card = await this.db.push(
         { name: 'name', type: 'title', value: payload.card_name },
         { name: 'cost', type: 'number', value: payload.cost },
-        { name: 'type', type: 'select', value: char_map[payload.char_type] },
+        { name: 'type', type: 'select', value: this.char_map[payload.char_type] },
         { name: 'atk', type: 'number', value: payload.atk },
         { name: 'life', type: 'number', value: payload.life },
         { name: 'desc', type: 'rich_text', value: payload.skill_disc },
@@ -104,8 +95,11 @@ class Cards {
         { name: 'evo_life', type: 'number', value: payload.evo_life },
         { name: 'evo_desc', type: 'rich_text', value: payload.evo_skill_disc },
       );
+      payload.page_id = new_card.id;
+      this.cards.push(payload);
     }
-    await this.load();
+
+    return this.cards.length;
   }
 }
 

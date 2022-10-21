@@ -58,88 +58,125 @@ function unwrap_property(prop) {
   }
 }
 
-/**
- *  @typedef PropertyDiscriptor
- *    @property {string} name
- *    @property {PropertyType} type
- *
- *  @param {string} database_id
- *  @param {PropertyDiscriptor[]} properties
- *  @returns {Promise<Object[]>}
- */
-async function load_all(database_id, ...properties) {
-  let pages;
-  let start_cursor;
-  const data = [];
-
-  do {
-    pages = await notion.databases.query({
-      database_id: database_id,
-      start_cursor: start_cursor,
-    });
-    pages.results.forEach((result) => {
-      const obj = {};
-
-      properties.forEach((property) => {
-        if (property.type == 'page_id') {
-          obj[property.name] = result.id;
-        }
-        else {
-          obj[property.name] = unwrap_property(result.properties[property.name]);
-        }
-      });
-      data.push(obj);
-    });
-    start_cursor = pages.next_cursor;
-  } while (pages.has_more);
-
-  return data;
-}
-
-/**
- * @param {string} database_id
- * @param {PropertyPayload[]} stuffs
- */
-async function add_all(database_id, ...stuffs) {
-  const properties = {};
-  for (const stuff of stuffs) {
-    properties[stuff.name] = wrap_property(stuff);
+class Database {
+  /**
+   * @param {string} database_id
+   */
+  constructor(database_id) {
+    this.database_id = database_id;
   }
 
-  return await notion.pages.create({
-    parent: {
-      type: 'database_id',
-      database_id: database_id,
-    },
-    properties: properties,
-  });
+  /**
+   * @param {PropertyPayload[]} stuffs
+   */
+  async push(...stuffs) {
+    const properties = {};
+    for (const stuff of stuffs) {
+      properties[stuff.name] = wrap_property(stuff);
+    }
+
+    return await notion.pages.create({
+      parent: {
+        type: 'database_id',
+        database_id: this.database_id,
+      },
+      properties: properties,
+    });
+  }
+
+  /**
+   *  @typedef PropertyDiscriptor
+   *    @property {string} name
+   *    @property {PropertyType} type
+   *
+   *  @param {PropertyDiscriptor[]} properties
+   *  @returns {Promise<Object[]>}
+   */
+  async load(...properties) {
+    let pages;
+    let start_cursor;
+    const data = [];
+
+    do {
+      pages = await notion.databases.query({
+        database_id: this.database_id,
+        start_cursor: start_cursor,
+      });
+      pages.results.forEach((result) => {
+        const obj = {};
+
+        properties.forEach((property) => {
+          if (property.type == 'page_id') {
+            obj[property.name] = result.id;
+          }
+          else {
+            obj[property.name] = unwrap_property(result.properties[property.name]);
+          }
+        });
+        data.push(obj);
+      });
+      start_cursor = pages.next_cursor;
+    } while (pages.has_more);
+
+    return data;
+  }
+
+  /**
+   * @param {string} page_id
+   */
+  async delete(page_id) {
+    await notion.blocks.delete({ block_id: page_id });
+  }
+
+  /**
+   * @param {string} page_id
+   */
+  async drop() {
+    /**
+     *  @typedef PageObject
+     *    @property {string} page_id
+     */
+    /** @type {PageObject[]} */
+    const all_page = await this.load(
+      { name: 'page_id', type: 'page_id' },
+    );
+    for (const page of all_page) {
+      await this.delete(page.page_id);
+    }
+  }
 }
 
-async function delete_page(page_id) {
-  await notion.blocks.delete({
-    block_id: page_id,
-  });
-}
+class Block {
+  /**
+   * @param {string} block_id
+   */
+  constructor(block_id) {
+    this.block_id = block_id;
+  }
 
-async function load_block_string(block_id) {
-  const result = await notion.blocks.retrieve({
-    block_id: block_id,
-  });
+  /**
+   * @returns {string}
+   */
+  async get_text() {
+    const result = await notion.blocks.retrieve({
+      block_id: this.block_id,
+    });
 
-  return result.paragraph.rich_text[0].plain_text;
-}
+    return result.paragraph.rich_text[0].plain_text;
+  }
 
-async function update_block_string(block_id, new_string) {
-  await notion.blocks.update({
-    block_id: block_id,
-    paragraph: { 'rich_text': [{ 'text': { 'content': new_string } }] },
-  });
+  /**
+   * @param {string} new_string
+   */
+  async update(new_string) {
+    await notion.blocks.update({
+      block_id: this.block_id,
+      paragraph: { 'rich_text': [{ 'text': { 'content': new_string } }] },
+    });
+  }
 }
 
 module.exports = {
-  load_all: load_all,
-  add_all: add_all,
-  delete_page: delete_page,
-  load_block_string: load_block_string,
-  update_block_string: update_block_string,
+  Database,
+  Block,
 };

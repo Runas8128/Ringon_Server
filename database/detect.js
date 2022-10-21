@@ -1,5 +1,5 @@
 const { config } = require('../config');
-const { load_all } = require('../util/Notion');
+const Notion = require('../util/Notion');
 
 /**
  * @param {Array<T>} targets
@@ -35,6 +35,8 @@ function select_weight(targets, weights) {
 class Detect {
   constructor() {
     this.id_map = config.id.notion.detect;
+    this.full_db = new Notion.Database(this.id_map.full);
+    this.prob_db = new Notion.Database(this.id_map.prob);
 
     /** @type {FullDetectObj[]} */
     this.full = [];
@@ -63,14 +65,12 @@ class Detect {
   }
 
   async load() {
-    this.full = await load_all(
-      this.id_map.full,
+    this.full = await this.full_db.load(
       { name: 'target', type: 'title' },
       { name: 'result', type: 'rich_text' },
     );
 
-    this.prob = await load_all(
-      this.id_map.prob,
+    this.prob = await this.prob_db.load(
       { name: 'target', type: 'title' },
       { name: 'result', type: 'rich_text' },
       { name: 'ratio', type: 'number' },

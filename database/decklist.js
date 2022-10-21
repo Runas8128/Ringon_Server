@@ -1,7 +1,7 @@
 const { EmbedBuilder, Guild, TextChannel } = require('discord.js');
 
 const { config, config_common } = require('../config');
-const { load_all, update_block_string, delete_page, add_all } = require('../util/Notion');
+const Notion = require('../util/Notion');
 
 /**
  *  @typedef Deck
@@ -23,6 +23,16 @@ const { load_all, update_block_string, delete_page, add_all } = require('../util
 class DeckList {
   constructor() {
     this.id_map = config.id.notion.deck;
+
+    this.list_db = new Notion.Database(this.id_map.list);
+    this.contrib_db = new Notion.Database(this.id_map.contrib);
+    this.pack_block = new Notion.Block(this.id_map.pack);
+
+    /** @type {Deck[]} */
+    this.decklist = [];
+
+    /** @type {Contrib[]} */
+    this.contrib = [];
 
     /** @type {TextChannel} */
     this.history = undefined;
@@ -52,8 +62,10 @@ class DeckList {
    * @param {Guild} guild
    */
   async update_pack(new_pack, guild) {
-    this.decklist.forEach(async (deck) => await this._delete_deck(deck, guild));
-    update_block_string(this.id_map.pack, new_pack);
+    for (const deck of this.decklist) {
+      await this._delete_deck(deck, guild);
+    }
+    await this.pack_block.update(new_pack);
   }
 
   /**
@@ -66,7 +78,7 @@ class DeckList {
         ch.id == config.id.discord.channel.history);
     }
     await this.history.send({ embeds: [this.make_deck_embed(deck, guild)] });
-    await delete_page(deck.page_id);
+    await this.list_db.delete(deck.page_id);
   }
 
   /**
@@ -142,9 +154,7 @@ class DeckList {
   }
 
   async load() {
-    /** @type {Deck[]} */
-    this.decklist = (await load_all(
-      this.id_map.list,
+    this.decklist = (await this.list_db.load(
       { name: 'page_id', type: 'page_id' },
       { name: 'deck_id', type: 'number' },
       { name: 'name', type: 'title' },
@@ -157,8 +167,7 @@ class DeckList {
     )).sort((a, b) => a.deck_id - b.deck_id);
 
     /** @type {Contrib[]} */
-    this.contrib = await load_all(
-      this.id_map.contrib,
+    this.contrib = await this.contrib_db.load(
       { name: 'DeckID', type: 'number' },
       { name: 'ContribID', type: 'rich_text' },
     );
@@ -171,7 +180,7 @@ class DeckList {
     deck.deck_id = this.decklist.at(-1).deck_id;
     deck.timestamp = new Date().toISOString().split('T')[0];
 
-    const resp = await add_all(
+    const resp = await this.list_db.push(
       this.id_map.list,
       { name: 'deck_id', type: 'number', value: deck.deck_id },
       { name: 'name', type: 'title', value: deck.name },
