@@ -102,9 +102,11 @@ class DeckList {
       !(this.contrib.some(obj =>
         obj.DeckID == deck.deck_id && obj.ContribID == updater))
     ) {
-      const obj = { DeckID: deck.deck_id, ContribID: updater };
-      this.contrib.push(obj);
-      this.contrib_db.push(Object.entries(obj).map((key, value) => ({ name: key, value: value })));
+      this.contrib.push({ DeckID: deck.deck_id, ContribID: updater });
+      this.contrib_db.push(
+        { name: 'DeckID', value: deck.deck_id, type: 'title' },
+        { name: 'ContribID', value: updater, type: 'rich_text' },
+      );
     }
 
     // TODO: Add update page function
