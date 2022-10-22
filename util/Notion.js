@@ -85,6 +85,22 @@ class Database {
   }
 
   /**
+   * @param {string} page_id
+   * @param {PropertyPayload[]} stuffs
+   */
+  async update(page_id, ...stuffs) {
+    const properties = {};
+    for (const stuff of stuffs) {
+      properties[stuff.name] = wrap_property(stuff);
+    }
+
+    return await notion.pages.update({
+      page_id: page_id,
+      properties: properties,
+    });
+  }
+
+  /**
    *  @typedef PropertyDiscriptor
    *    @property {string} name
    *    @property {PropertyType} type

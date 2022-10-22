@@ -22,6 +22,8 @@ const Notion = require('../util/Notion');
 
 class DeckList {
   constructor() {
+    // TODO: make fields to static
+
     this.id_map = config.id.notion.deck;
 
     this.list_db = new Notion.Database(this.id_map.list);
@@ -92,11 +94,12 @@ class DeckList {
     if (!desc && !image_url) return;
 
     const deck = this.decklist.find(_deck => _deck.deck_id == id);
-    await this.history.send({ embeds: [this.make_deck_embed(deck, guild)] });
+    const history_embed = this.make_deck_embed(deck, guild);
 
-    if (desc) deck.desc = deck;
+    if (desc) deck.desc = desc;
     if (image_url) deck.image_url = image_url;
     deck.version += 1;
+
     if (
       updater != deck.author &&
       !(this.contrib.some(obj =>
@@ -109,7 +112,12 @@ class DeckList {
       );
     }
 
-    // TODO: Add update page function
+    await this.list_db.update(
+      deck.page_id,
+      ...this.propertify(deck),
+    );
+
+    await this.history.send({ embeds: [history_embed] });
   }
 
   /**
@@ -189,8 +197,18 @@ class DeckList {
     deck.deck_id = this.decklist.at(-1).deck_id;
     deck.timestamp = new Date().toISOString().split('T')[0];
 
-    const resp = await this.list_db.push(
-      this.id_map.list,
+    const resp = await this.list_db.push(...this.propertify(deck));
+
+    deck.page_id = resp.id;
+    this.decklist.push(deck);
+  }
+
+  /**
+   * @param {Deck} deck
+   * @returns {import('../util/Notion').PropertyPayload[]}
+   */
+  propertify(deck) {
+    return [
       { name: 'deck_id', type: 'number', value: deck.deck_id },
       { name: 'name', type: 'title', value: deck.name },
       { name: 'clazz', type: 'select', value: deck.clazz },
@@ -199,10 +217,7 @@ class DeckList {
       { name: 'image_url', type: 'rich_text', value: deck.image_url },
       { name: 'timestamp', type: 'rich_text', value: deck.timestamp },
       { name: 'version', type: 'number', value: deck.version },
-    );
-
-    deck.page_id = resp.id;
-    this.decklist.push(deck);
+    ];
   }
 }
 
