@@ -106,10 +106,18 @@ class View extends UpDownView {
   }
 
   check_range() {
-    if (this.index <= 0) this.index = 0;
-    this.prev.setDisabled(this.index == 0);
-    if (this.index >= this.decks.length - 1) this.index = this.decks.length - 1;
-    this.next.setDisabled(this.index == this.decks.length - 1);
+    if (this.decks.length == 0) {
+      this.prev.setDisabled(true);
+      this.menu.setDisabled(true);
+      this.next.setDisabled(true);
+      this.delete.setDisabled(true);
+    }
+    else {
+      if (this.index <= 0) this.index = 0;
+      this.prev.setDisabled(this.index == 0);
+      if (this.index >= this.decks.length - 1) this.index = this.decks.length - 1;
+      this.next.setDisabled(this.index == this.decks.length - 1);
+    }
   }
 }
 
