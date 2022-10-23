@@ -39,7 +39,7 @@ module.exports = {
       return kws.filter((kw) => deck.name.includes(kw) || deck.desc.includes('#' + kw)).length;
     }
 
-    let decks = decklist.decklist;
+    let decks = JSON.parse(JSON.stringify(decklist.decklist)); // Copy full decklist
 
     if (keyword) {
       const kws = keyword.split(' ');
