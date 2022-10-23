@@ -12,6 +12,7 @@ module.exports = {
     .addStringOption(option => option
       .setName('키워드')
       .setDescription('검색할 카드의 키워드입니다.')
+      .setRequired(true)
       .setAutocomplete(true)),
   /**
    * @param {ChatInputCommandInteraction} interaction
@@ -19,13 +20,10 @@ module.exports = {
   async execute(interaction) {
     await interaction.deferReply();
 
-    const kw = interaction.options.getString('키워드');
-    if (kw === null) {
-      await reply(interaction, '검색어를 입력해주세요.');
-      return;
-    }
+    const kws = interaction.options.getString('키워드').split(' ');
+    /** @type {import('../../database/cards').Card[]} */
+    let list = JSON.parse(JSON.stringify(cards.cards));
 
-    const kws = kw.split(' ');
     /**
      * @param {import('../../database/cards').Card} card
      */
@@ -33,10 +31,13 @@ module.exports = {
       return kws.filter(word => card.name.includes(word)).length;
     }
 
-    const result = cards.cards.sort((c1, c2) => kw_pred(c1) - kw_pred(c2));
+    list = list.sort((c1, c2) => kw_pred(c2) - kw_pred(c1));
+    const first_not_match_idx = list.findIndex(deck => kw_pred(deck, kws) == 0);
+    list.splice(first_not_match_idx);
+
     await reply(
       interaction,
-      new CardView(result).get_updated_msg(interaction),
+      new CardView(list).get_updated_msg(interaction),
     );
   },
   database: 'cards',

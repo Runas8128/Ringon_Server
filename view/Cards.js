@@ -35,8 +35,8 @@ class View extends UpDownView {
         { name: '비용', value: card.cost.toString(), inline: true },
         { name: '공격력/체력', value: `${card.atk}/${card.life}`, inline: true },
         { name: '진화 후 공격력/체력', value: `${card.evo_atk}/${card.evo_life}`, inline: true },
-        { name: '진화 전 설명', value: card.desc.replace('<br>', '\n') },
-        { name: '진화 후 설명', value: card.evo_desc.replace('<br>', '\n'), inline: true },
+        { name: '진화 전 설명', value: card.desc.replace('<br>', '\n') || '...' },
+        { name: '진화 후 설명', value: card.evo_desc.replace('<br>', '\n') || '...', inline: true },
       );
     }
     else {

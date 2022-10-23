@@ -85,6 +85,7 @@ class Cards {
       if (payload.card_name === null) continue;
 
       const new_card = await this.db.push(
+        { name: 'card_id', type: 'number', value: payload.card_id },
         { name: 'name', type: 'title', value: payload.card_name },
         { name: 'cost', type: 'number', value: payload.cost },
         { name: 'type', type: 'select', value: this.char_map[payload.char_type] },
