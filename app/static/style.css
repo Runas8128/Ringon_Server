@@ -1,4 +1,78 @@
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+div#navbar {
+  background-color: antiquewhite;
+  font-size: xx-large;
+}
+
+div#log {
+  box-sizing: border-box;
+  width: 95%;
+  display: flex;
+  flex-flow: column;
+  margin-left: 2.5%;
+  margin-top: 1%;
+}
+
+div#last-sync {
+  box-sizing: border-box;
+  position: relative;
+  top: 5%;
+  left: 2.5%;
+  padding-top: 1.25%;
+  padding-bottom: 2.5%;
+  padding-right: 2.5%;
+  border-radius: 25px;
+  border: 2px solid;
+  width: 30%;
+}
+
+div#sync-data {
+  border-radius: 25px;
+  position: relative;
+  left: 2.5%;
+  border: 2px solid;
+  font-size: large;
+  padding-left: 5%;
+  padding-right: 5%;
+  margin-left: 2.5%;
+  margin-top: 2.5%;
+}
+
+a {
+  text-decoration: none;
+}
+
+img#ringon_img {
+  padding: 10px 0;
+  vertical-align: middle;
+}
+
+a#home {
+  padding-left: 3%;
+}
+
 table, th, td {
+  box-sizing: border-box;
   border-bottom: 1px solid;
-  padding: 1px;
+}
+
+td#level {
+  width: 5%;
+  text-align: center;
+}
+td#label {
+  width: 10%;
+  text-align: center;
+}
+td#timestamp {
+  width: 10%;
+  text-align: center;
+}
+td#message {
+  width: 55%;
+  padding-left: 1%;
 }

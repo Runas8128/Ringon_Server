@@ -31,14 +31,11 @@ function get_state(db_name) {
 /**
  * @param {number} timestamp
  * @param {string} _default
- * @param {string?} postfix
  */
-function parse_timestamp(timestamp, _default, postfix) {
+function parse_timestamp(timestamp, _default) {
   if (timestamp == 0) return _default;
-  const target_date = new Date(timestamp);
-  let result = target_date.toISOString().replace('T', ' ').slice(0, -1);
-  if (postfix) result += postfix;
-  return result;
+  const target_date = new Date(timestamp + 9 * 60 * 60 * 1000);
+  return target_date.toISOString().replace('T', ' ').slice(0, -5);
 }
 
 function db_sync_data() {

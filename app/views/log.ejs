@@ -11,10 +11,10 @@
         </tr>
         <% for (const stuff of stuffs) { %>
           <tr>
-            <td><%= stuff.level %></td>
-            <td><%= stuff.label %></td>
-            <td><%= stuff.timestamp %></td>
-            <td><%= stuff.message %></td>
+            <td id="level"><%= stuff.level %></td>
+            <td id="label"><%= stuff.label %></td>
+            <td id="timestamp"><%= stuff.timestamp %></td>
+            <td id="message"><%= stuff.message %></td>
           </tr>
         <% } %>
       </table>
