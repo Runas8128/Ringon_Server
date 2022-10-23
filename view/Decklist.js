@@ -1,4 +1,4 @@
-const { ActionRowBuilder, ButtonStyle, Guild, SelectMenuBuilder, ComponentType } = require('discord.js');
+const { ActionRowBuilder, ButtonStyle, Guild, SelectMenuBuilder, ComponentType, EmbedBuilder } = require('discord.js');
 const { config_common } = require('../config');
 const { decklist } = require('../database');
 const { eventHandler } = require('../events/btnClick');
@@ -80,7 +80,13 @@ class View extends UpDownView {
   }
 
   build_embed() {
-    return decklist.make_deck_embed(this.decks[this.index], this.guild);
+    if (this.decks.length == 0) {
+      return new EmbedBuilder()
+        .setTitle('❌ 검색 결과가 없습니다.');
+    }
+    else {
+      return decklist.make_deck_embed(this.decks[this.index], this.guild);
+    }
   }
 
   build_actionrow() {
