@@ -29,10 +29,23 @@ class Manager {
 
     await Promise.all(DB_names.map(async (DB) => {
       const sync_start = Date.now();
-      if (sync_start - this.last_sync[DB] <= config_common.commands[DB] * 3600000) return;
+      if (sync_start - this.last_sync[DB] <= config_common.databases[DB] * 3600000) return;
 
-      if (!interaction.deferred) await interaction.deferReply();
-      const is_success = await catch_timeout(interaction, async () => await this[DB].load());
+      let is_success;
+
+      if (interaction.isRepliable()) {
+        if (!interaction.deferred) await interaction.deferReply();
+        is_success = await catch_timeout(interaction, async () => await this[DB].load());
+      }
+      else {
+        try {
+          await this[DB].load();
+          is_success = true;
+        }
+        catch (err) {
+          is_success = false;
+        }
+      }
 
       if (is_success) {
         const last_sync = Date.now();
