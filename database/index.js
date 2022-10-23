@@ -23,7 +23,7 @@ class Manager {
    * @param {('detect'|'decklist'|'cards')[]} DB_names
    */
   async load(interaction, DB_names) {
-    if (DB_names === undefined) return;
+    if (DB_names === undefined || DB_names[0] === undefined) return;
 
     DB_names = Array.from(new Set(DB_names));
 
