@@ -9,11 +9,11 @@ const logger = require('../util/Logger').getLogger(__filename);
  *  @typedef Page
  *    @property {string?} path
  *    @property {string[]} methods
- *    @property {import('express').RequestHandler?} get
- *    @property {import('express').RequestHandler?} post
- *    @property {import('express').RequestHandler?} put
- *    @property {import('express').RequestHandler?} patch
- *    @property {import('express').RequestHandler?} delete
+ *    @property {express.RequestHandler?} get
+ *    @property {express.RequestHandler?} post
+ *    @property {express.RequestHandler?} put
+ *    @property {express.RequestHandler?} patch
+ *    @property {express.RequestHandler?} delete
  */
 
 function get_state(db_name) {
