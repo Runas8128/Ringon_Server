@@ -36,7 +36,7 @@ function get_state(db_name) {
 function parse_timestamp(timestamp, _default, postfix) {
   if (timestamp == 0) return _default;
   const target_date = new Date(timestamp);
-  let result = target_date.toISOString().split('T').join(' ').slice(0, -1);
+  let result = target_date.toISOString().replace('T', ' ').slice(0, -1);
   if (postfix) result += postfix;
   return result;
 }
