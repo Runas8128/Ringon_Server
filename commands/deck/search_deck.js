@@ -36,14 +36,14 @@ module.exports = {
      * @param {string[]} kws
      */
     function kw_pred(deck, kws) {
-      return kws.map((kw) => deck.name.includes(kw) || deck.desc.includes('#' + kw)).length;
+      return kws.filter((kw) => deck.name.includes(kw) || deck.desc.includes('#' + kw)).length;
     }
 
     let decks = decklist.decklist;
 
     if (keyword) {
       const kws = keyword.split(' ');
-      decks = decks.sort((d1, d2) => kw_pred(d1, kws) - kw_pred(d2, kws));
+      decks = decks.sort((d1, d2) => kw_pred(d2, kws) - kw_pred(d1, kws));
       const first_not_match_idx = decks.findIndex(deck => kw_pred(deck, kws) == 0);
       decks.splice(first_not_match_idx);
     }
