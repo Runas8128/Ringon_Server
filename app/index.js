@@ -56,8 +56,6 @@ class App {
     this.app.set('view engine', 'ejs');
     this.app.set('views', path.join(__dirname, 'views'));
 
-    this.bot = require('../util/Bot');
-
     this.load_page();
   }
 
@@ -79,7 +77,7 @@ class App {
   start() {
     this.app.listen(8080, () => {
       console.log('Listening on 8080');
-      this.bot.login();
+      require('../util/Bot').login();
     });
   }
 }
