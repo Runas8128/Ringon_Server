@@ -111,12 +111,16 @@ function add_command_listener(client, commands) {
   });
 }
 
-/**
- * @param {Client} client
- * @param {string} token
- */
-module.exports = (client, token) => {
-  const commands = load_commands();
-  deploy_commands(commands, token);
-  add_command_listener(client, commands);
+module.exports = {
+  /**
+   * @param {Client} client
+   * @param {string} token
+   */
+  init: (client, token) => {
+    const commands = load_commands();
+    deploy_commands(commands, token);
+    add_command_listener(client, commands);
+  },
+
+  load_commands,
 };
