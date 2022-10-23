@@ -14,8 +14,8 @@ module.exports = {
     await interaction.reply({
       embeds: [
         new EmbedBuilder()
-          .setTitle('🔄 카드 DB를 업데이트하는 중입니다.')
-          .setDescription('예상 시간: 약 20~40초')
+          .setTitle('🔄 카드 DB를 업데이트하는 중입니다. (예상 시간: 약 20~40초)')
+          .setDescription('카드 관련 제외 다른 명령어를 사용할 수 있습니다.')
           .setTimestamp(start_time),
       ],
     });
