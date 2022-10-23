@@ -6,7 +6,7 @@
     "simple": ["latency", "kill", "prune"]
   },
   "events": ["ready", "btnClick", "detect", "detectDeckImg", "uploadDeck"],
-  "pages": ["log"],
+  "pages": ["index", "log"],
   "classes": {
     "엘프": "805678671527936010",
     "로얄": "1004600684517261422",
