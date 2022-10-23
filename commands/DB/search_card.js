@@ -50,6 +50,7 @@ module.exports = {
     await interaction.respond(
       cards.cards
         .filter(card => card.name.includes(focusdVar.value))
+        .slice(0, 25)
         .map(card => ({ name: card.name, value: card.name })),
     );
   },

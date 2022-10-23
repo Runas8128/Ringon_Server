@@ -72,6 +72,7 @@ module.exports = {
     await interaction.respond(
       decklist.decklist
         .filter(deck => deck.name.includes(focusdVar.value))
+        .slice(0, 25)
         .map(deck => ({ name: deck.name, value: deck.name })),
     );
   },

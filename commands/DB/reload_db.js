@@ -2,6 +2,8 @@ const { SlashCommandBuilder, ChatInputCommandInteraction, EmbedBuilder } = requi
 
 const DBManager = require('../../database');
 
+// TODO: add autocompleter
+
 module.exports = {
   perm: 'admin',
   data: new SlashCommandBuilder()
