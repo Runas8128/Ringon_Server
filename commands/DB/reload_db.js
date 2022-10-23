@@ -28,7 +28,7 @@ module.exports = {
     await interaction.editReply({
       embeds: [new EmbedBuilder()
         .setTitle('🔄 DB 업데이트 완료!')
-        .setDescription(`소요 시간: ${(sync_end - sync_start) / 1000}ms`),
+        .setDescription(`소요 시간: ${(sync_end - sync_start) / 1000}초`),
       ],
     });
   },
