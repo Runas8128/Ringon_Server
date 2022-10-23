@@ -74,38 +74,36 @@ async function deploy_commands(commands, token) {
 }
 
 /**
- * @param {ChatInputCommandInteraction} interaction
- * @param {Command} command
- * @return {any}
- */
-async function run_command(interaction, command) {
-  try {
-    await DBManager.load(interaction, [command.database]);
-    await command.execute(interaction);
-  }
-  catch (error) {
-    console.log(error);
-    await reply(interaction, {
-      content: `${interaction.commandName} 커맨드를 처리하는 동안 오류가 발생했습니다.`,
-      ephemeral: true,
-    });
-  }
-}
-
-/**
  * @param {Client} client
  * @param {Command[]} commands
  */
 function add_command_listener(client, commands) {
   client.on('interactionCreate', async (interaction) => {
-    if (interaction.isChatInputCommand()) {
-      /** @type {Command?} */
-      const command = commands.find((cmd) => cmd.data.name == interaction.commandName);
-      if (command) return await run_command(interaction, command);
+    if (
+      !interaction.isChatInputCommand() &&
+      !interaction.isAutocomplete()
+    ) return;
+
+    /** @type {Command?} */
+    const command = commands.find((cmd) => cmd.data.name == interaction.commandName);
+    if (!command) return;
+
+    await DBManager.load(interaction, [command.database]);
+
+    if (interaction.isAutocomplete()) {
+      if (command.autocompleter) await command.autocompleter(interaction);
     }
-    else if (interaction.isAutocomplete()) {
-      const command = commands.find((cmd) => cmd.data.name == interaction.commandName);
-      if (command && command.autocompleter) return await command.autocompleter(interaction);
+    else {
+      try {
+        await command.execute(interaction);
+      }
+      catch (error) {
+        console.log(error);
+        await reply(interaction, {
+          content: `${interaction.commandName} 커맨드를 처리하는 동안 오류가 발생했습니다.`,
+          ephemeral: true,
+        });
+      }
     }
   });
 }
