@@ -23,7 +23,7 @@ const { Database } = require('../util/Notion');
  *    @property {number} card_id
  *    @property {string} card_name
  *    @property {number} cost
- *    @property {CardType} char_type
+ *    @property {number} char_type
  *    @property {number} atk
  *    @property {number} life
  *    @property {string} skill_disc
@@ -96,9 +96,9 @@ class Cards {
         { name: 'evo_desc', type: 'rich_text', value: payload.evo_skill_disc },
       );
       payload.page_id = new_card.id;
-      this.cards.push(payload);
     }
 
+    await this.load();
     return this.cards.length;
   }
 }
