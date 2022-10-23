@@ -13,7 +13,7 @@ module.exports = {
    */
   async execute(interaction) {
     await reply(interaction, {
-      embeds: [decklist.analyze()],
+      embeds: [decklist.analyze(interaction.client)],
     });
   },
   database: 'decklist',

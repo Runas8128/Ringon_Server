@@ -1,4 +1,4 @@
-const { EmbedBuilder, Guild, TextChannel } = require('discord.js');
+const { EmbedBuilder, Guild, TextChannel, Client } = require('discord.js');
 
 const { config, config_common } = require('../config');
 const Notion = require('../util/Notion');
@@ -38,7 +38,10 @@ class DeckList {
     this.history = undefined;
   }
 
-  analyze() {
+  /**
+   * @param {Client} client
+   */
+  analyze(client) {
     const total_count = this.decklist.length;
     const embed = new EmbedBuilder()
       .setTitle(`총 ${total_count}개 덱 분석 결과`);
@@ -47,9 +50,10 @@ class DeckList {
       const count = this.decklist.filter((deck) => deck.clazz == clazz).length;
       if (count == 0) return;
 
+      const class_emoji = client.emojis.cache.find(emoji => emoji.id == config_common.classes[clazz]);
       embed.addFields({
-        name: (config_common.classes[clazz]) + clazz,
-        value: `${count}개 (점유율: ${(count / total_count * 100).toPrecision(2)}%)`,
+        name: `${class_emoji} ${clazz}`,
+        value: `${count}개 (점유율: ${(count / total_count * 100).toPrecision(4)}%)`,
         inline: true,
       });
     });
