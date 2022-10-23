@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+
+<html>
+  <%-include('base/meta.ejs')%>
+  <body>
+    <%-include('base/navbar.ejs')%>
+    <div id="log">
+      <table>
+        <tr>
+          <th>level</th><th>file</th><th>timestamp</th><th>message</th>
+        </tr>
+        <% for (const stuff of stuffs) { %>
+          <tr>
+            <td><%= stuff.level %></td>
+            <td><%= stuff.label %></td>
+            <td><%= stuff.timestamp %></td>
+            <td><%= stuff.message %></td>
+          </tr>
+        <% } %>
+      </table>
+    </div>
+  </body>
+</html>

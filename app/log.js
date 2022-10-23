@@ -1,12 +1,14 @@
 const { RequestHandler } = require('express');
 
+const log = [];
+
 module.exports = {
   path: '/log',
   methods: ['get', 'post'],
 
   /** @type {RequestHandler} */
   get: (req, resp) => {
-    resp.send(this.log);
+    resp.render('log', { stuffs: log });
   },
 
   /** @type {RequestHandler} */
@@ -20,8 +22,7 @@ module.exports = {
       }
     });
     req.on('end', () => {
-      const info = JSON.parse(new_log);
-      this.log += `[ ${info.label} ] ${[info.timestamp]} ${info.level}: ${info.message}<br>`;
+      log.push(JSON.parse(new_log));
     });
   },
 };

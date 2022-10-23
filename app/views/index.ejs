@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+
+<html>
+  <%-include('base/meta.ejs')%>
+  <body>
+    <%-include('base/navbar.ejs')%>
+    <div id="last-sync">
+      <% for (const data of sync_data) { %>
+        <div id="sync-data">
+          <p><%= data.name %>: <%= data.last_sync %> (<%= data.state %>)</p>
+        </div>
+      <% } %>
+    </div>
+  </body>
+</html>
