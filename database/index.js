@@ -21,15 +21,16 @@ class Manager {
   /**
    * @param {import('discord.js').ChatInputCommandInteraction} interaction
    * @param {('detect'|'decklist'|'cards')[]} DB_names
+   * @param {boolean?} force
    */
-  async load(interaction, DB_names) {
+  async load(interaction, DB_names, force) {
     if (DB_names === undefined || DB_names[0] === undefined) return;
 
     DB_names = Array.from(new Set(DB_names));
 
     await Promise.all(DB_names.map(async (DB) => {
       const sync_start = Date.now();
-      if (sync_start - this.last_sync[DB] <= config_common.databases[DB] * 3600000) return;
+      if (sync_start - this.last_sync[DB] <= config_common.databases[DB] * 3600000 && !force) return;
 
       let is_success;
 
