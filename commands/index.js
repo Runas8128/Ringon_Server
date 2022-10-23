@@ -79,6 +79,8 @@ async function deploy_commands(commands, token) {
  */
 function add_command_listener(client, commands) {
   client.on('interactionCreate', async (interaction) => {
+    logger.info(`Interaction created. name: ${interaction.commandName}`);
+
     if (
       !interaction.isChatInputCommand() &&
       !interaction.isAutocomplete()
@@ -91,14 +93,23 @@ function add_command_listener(client, commands) {
     await DBManager.load(interaction, [command.database]);
 
     if (interaction.isAutocomplete()) {
-      if (command.autocompleter) await command.autocompleter(interaction);
+      if (!command.autocompleter) return;
+
+      try {
+        await command.autocompleter(interaction);
+      }
+      catch (error) {
+        logger.error(`While autocompleting command ${interaction.commandName}, an error occured:`);
+        logger.error(error);
+      }
     }
     else {
       try {
         await command.execute(interaction);
       }
       catch (error) {
-        console.log(error);
+        logger.error(`While proceeding command ${interaction.commandName}, an error occured:`);
+        logger.error(error);
         await reply(interaction, {
           content: `${interaction.commandName} 커맨드를 처리하는 동안 오류가 발생했습니다.`,
           ephemeral: true,

@@ -37,7 +37,6 @@ module.exports = {
    * @param {import("discord.js").Interaction} interaction
    */
   async execute(interaction) {
-    console.log(interaction.type, interaction.customId, interaction.toString());
     if (!interaction.isButton()) return;
 
     const button = hdr.button_map.find((obj) => obj.button.data.custom_id === interaction.customId);
