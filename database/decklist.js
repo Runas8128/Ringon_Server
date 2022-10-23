@@ -22,8 +22,6 @@ const Notion = require('../util/Notion');
 
 class DeckList {
   constructor() {
-    // TODO: make fields to static
-
     this.id_map = config.id.notion.deck;
 
     this.list_db = new Notion.Database(this.id_map.list);
