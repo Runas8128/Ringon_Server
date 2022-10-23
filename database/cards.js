@@ -34,7 +34,7 @@ const { Database } = require('../util/Notion');
 
 class Cards {
   constructor() {
-    this.id_map = config.id.notion.cards;
+    this.id_map = config.notion.cards;
     this.db = new Database(this.id_map.cards);
 
     this.char_map = {

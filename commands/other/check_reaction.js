@@ -72,7 +72,7 @@ module.exports = {
 
     const indi_emoji = interaction.options.getString('emoji') || '👍 👎 ';
     const all_member = await interaction.guild.members.cache.filter(user =>
-      user.roles.cache.has(config.id.discord.role.all));
+      user.roles.cache.has(config.discord.role.all));
     const result = collect_reaction(message, indi_emoji.split(' '), all_member);
 
     const embed = new EmbedBuilder()

@@ -34,7 +34,7 @@ function select_weight(targets, weights) {
  */
 class Detect {
   constructor() {
-    this.id_map = config.id.notion.detect;
+    this.id_map = config.notion.detect;
     this.full_db = new Notion.Database(this.id_map.full);
     this.prob_db = new Notion.Database(this.id_map.prob);
 

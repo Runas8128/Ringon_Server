@@ -44,7 +44,7 @@
       "",
       "class $1 {",
       "  constructor() {",
-      "    this.id_map = config.id.notion.$0;",
+      "    this.id_map = config.notion.$0;",
       "  }",
       "",
       "  async load() {",

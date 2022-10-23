@@ -60,7 +60,7 @@ async function deploy_commands(commands, token) {
 
   try {
     const rest = new REST({ version: '10' }).setToken(token);
-    const { client, guild } = config.id.discord;
+    const { client, guild } = config.discord;
 
     const data = await rest.put(
       Routes.applicationGuildCommands(client, guild),

@@ -1,28 +1,26 @@
 {
-  "id": {
-    "discord": {
-      "client": "850019210867376158",
-      "guild": "823359663973072957",
-      "role": {
-        "all": "823388509670604840"
-      },
-      "channel": {
-        "history": "1004611688802287626"
-      }
+  "discord": {
+    "client": "850019210867376158",
+    "guild": "823359663973072957",
+    "role": {
+      "all": "823388509670604840"
     },
-    "notion": {
-      "deck": {
-        "list": "e03e004d47df40fe8377bfda713c5707",
-        "contrib": "89c22f42529a4401bff30369544e8e51",
-        "pack": "9672288b52f046729adc82fbdc71e9db"
-      },
-      "detect": {
-        "full": "10457888488b4c25901bd7568230d8dd",
-        "prob": "1f0ba8521472436390ce713b78eae2c0"
-      },
-      "cards": {
-        "cards": "a3a34462a7d04b8782fc3b476716fbdb"
-      }
+    "channel": {
+      "history": "1004611688802287626"
+    }
+  },
+  "notion": {
+    "deck": {
+      "list": "e03e004d47df40fe8377bfda713c5707",
+      "contrib": "89c22f42529a4401bff30369544e8e51",
+      "pack": "9672288b52f046729adc82fbdc71e9db"
+    },
+    "detect": {
+      "full": "10457888488b4c25901bd7568230d8dd",
+      "prob": "1f0ba8521472436390ce713b78eae2c0"
+    },
+    "cards": {
+      "cards": "a3a34462a7d04b8782fc3b476716fbdb"
     }
   }
 }

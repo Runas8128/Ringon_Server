@@ -22,7 +22,7 @@ const Notion = require('../util/Notion');
 
 class DeckList {
   constructor() {
-    this.id_map = config.id.notion.deck;
+    this.id_map = config.notion.deck;
 
     this.list_db = new Notion.Database(this.id_map.list);
     this.contrib_db = new Notion.Database(this.id_map.contrib);
@@ -79,7 +79,7 @@ class DeckList {
   async _delete_deck(deck, guild) {
     if (this.history === undefined) {
       this.history = guild.channels.cache.find((ch) =>
-        ch.id == config.id.discord.channel.history);
+        ch.id == config.discord.channel.history);
     }
     await this.history.send({ embeds: [this.make_deck_embed(deck, guild)] });
     await this.list_db.delete(deck.page_id);
