@@ -28,6 +28,11 @@ div#last-sync {
   border-radius: 25px;
   border: 2px solid;
   width: 30%;
+  font-size: large;
+}
+
+div#last-sync p {
+  padding-left: 5%;
 }
 
 div#sync-data {
@@ -40,6 +45,10 @@ div#sync-data {
   padding-right: 5%;
   margin-left: 2.5%;
   margin-top: 2.5%;
+}
+
+div#sync-data p {
+  padding-left: 0;
 }
 
 a {

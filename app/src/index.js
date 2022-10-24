@@ -11,7 +11,14 @@ module.exports = {
   /** @type {RequestHandler} */
   get: (req, resp) => {
     logger.info('GET /');
-    resp.render('index', { sync_data: db_sync_data() });
+    resp.render('index', {
+      sync_data: Object.keys(manager.last_sync)
+        .map(db_name => ({
+          name: db_name,
+          last_sync: parse_timestamp(manager.last_sync[db_name]),
+          state: get_state(db_name),
+        })),
+    });
   },
 };
 
@@ -35,15 +42,4 @@ function parse_timestamp(timestamp, _default) {
   if (timestamp == 0) return _default;
   const target_date = new Date(timestamp + 9 * 60 * 60 * 1000);
   return target_date.toISOString().replace('T', ' ').slice(0, -5);
-}
-
-function db_sync_data() {
-  return Object.keys(manager.last_sync)
-    .map(db_name => {
-      return {
-        name: db_name,
-        last_sync: parse_timestamp(manager.last_sync[db_name]),
-        state: get_state(db_name),
-      };
-    });
 }
