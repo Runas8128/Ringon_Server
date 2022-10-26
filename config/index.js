@@ -7,7 +7,7 @@ module.exports = {
     require('dotenv').config({
       path: path.join(
         __dirname, '..', 'env',
-        config_common.is_testing ? 'dev.env' : 'prod.env'
+        config_common.is_testing ? 'dev.env' : 'prod.env',
       ),
     });
   },
