@@ -1,20 +1,16 @@
-const fs = require('fs');
 const path = require('path');
 
-function is_testing() {
-  return fs.existsSync(path.join(__dirname, '..', '.env'));
-}
+const config_common = require('./config_common.json');
 
 module.exports = {
   init: () => {
-    if (is_testing()) {
-      console.log('.env detected. loading env vars...');
-      require('dotenv').config();
-    }
-    else {
-      console.log('no .env detected. running on production mode');
-    }
+    require('dotenv').config({
+      path: path.join(
+        __dirname, '..', 'env',
+        config_common.is_testing ? 'dev.env' : 'prod.env'
+      ),
+    });
   },
-  config: is_testing() ? require('./config_dev.json') : require('./config_prod.json'),
-  config_common: require('./config_common.json'),
+  config: config_common.is_testing ? require('./config_dev.json') : require('./config_prod.json'),
+  config_common: config_common,
 };
