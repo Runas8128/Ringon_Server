@@ -3,7 +3,7 @@ const { SlashCommandBuilder, ChatInputCommandInteraction, AutocompleteInteractio
 const { config_common } = require('../../config');
 const { decklist } = require('../../database');
 const { reply } = require('../../util');
-const DecklistView = require('../../View/Decklist');
+const DecklistView = require('../../view/Decklist');
 
 module.exports = {
   perm: 'member',

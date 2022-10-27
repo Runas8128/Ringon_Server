@@ -2,7 +2,7 @@ const { SlashCommandBuilder, ChatInputCommandInteraction, APIEmbedField } = requ
 
 const { detect } = require('../../database');
 const { reply } = require('../../util');
-const StudiedView = require('../../View/Studied');
+const StudiedView = require('../../view/Studied');
 
 module.exports = {
   perm: 'member',

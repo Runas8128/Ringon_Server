@@ -2,7 +2,7 @@ const { SlashCommandBuilder, ChatInputCommandInteraction, AutocompleteInteractio
 const { cards } = require('../../database');
 const { reply } = require('../../util');
 
-const CardView = require('../../View/Cards');
+const CardView = require('../../view/Cards');
 
 module.exports = {
   perm: 'member',
