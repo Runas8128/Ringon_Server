@@ -4,7 +4,7 @@ const { Client, REST, Routes, PermissionFlagsBits, SlashCommandBuilder, ChatInpu
 const { config, config_common } = require('../config');
 const DBManager = require('../database');
 const { reply } = require('../util');
-const logger = require('../util/logger').getLogger(__filename);
+const logger = require('../util/Logger').getLogger(__filename);
 
 /**
  *  @callback CommandExecute
