@@ -1,16 +1,15 @@
-const logger = require('../util/Logger').getLogger(__filename);
+const path = require('path');
+
+const config_common = require('./config_common.json');
 
 module.exports = {
   init: () => {
-    if (process.env.is_testing) {
-      logger.info('on development environment');
-      logger.info('loading additional dotenv stuffs');
-      require('dotenv').config();
-    }
-    else {
-      logger.info('on production environment');
-      logger.info('using AWS environment variables');
-    }
+    require('dotenv').config({
+      path: path.join(
+        __dirname, '..', 'env',
+        config_common.is_testing ? 'dev.env' : 'prod.env',
+      ),
+    });
   },
   config: process.env.is_testing ? require('./config_dev.json') : require('./config_prod.json'),
   config_common: require('./config_common.json'),
