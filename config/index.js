@@ -1,5 +1,4 @@
 const path = require('path');
-
 const config_common = require('./config_common.json');
 
 module.exports = {
@@ -11,6 +10,6 @@ module.exports = {
       ),
     });
   },
-  config: process.env.is_testing ? require('./config_dev.json') : require('./config_prod.json'),
-  config_common: require('./config_common.json'),
+  config: config_common.is_testing ? require('./config_dev.json') : require('./config_prod.json'),
+  config_common: config_common,
 };
