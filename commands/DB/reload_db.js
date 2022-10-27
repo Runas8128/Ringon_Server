@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, ChatInputCommandInteraction, EmbedBuilder } = require('discord.js');
 
 const DBManager = require('../../database');
+const { catch_timeout } = require('../../util');
 
 // TODO: add autocompleter
 
@@ -23,7 +24,10 @@ module.exports = {
         .setDescription('예상 시간: ~ 1분')],
     });
     const sync_start = Date.now();
-    await DBManager.load(interaction, interaction.options.getString('db').split(' '), true);
+    await DBManager.load(async (loader) => {
+      if (!interaction.deferred) await interaction.deferReply();
+      return await catch_timeout(interaction, async () => await loader());
+    }, interaction.options.getString('db').split(' '), true);
     const sync_end = Date.now();
     await interaction.editReply({
       embeds: [new EmbedBuilder()

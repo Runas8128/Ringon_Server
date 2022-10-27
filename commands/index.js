@@ -3,7 +3,7 @@ const { Client, REST, Routes, PermissionFlagsBits, SlashCommandBuilder, ChatInpu
 
 const { config, config_common } = require('../config');
 const DBManager = require('../database');
-const { reply } = require('../util');
+const { reply, catch_timeout } = require('../util');
 const logger = require('../util/Logger').getLogger(__filename);
 
 /**
@@ -90,14 +90,23 @@ function add_command_listener(client, commands) {
     const command = commands.find((cmd) => cmd.data.name == interaction.commandName);
     if (!command) return;
 
-    await DBManager.load(interaction, [command.database]);
-
     if (interaction.isAutocomplete()) {
+      await DBManager.load(async (loader) => {
+        try {
+          await loader();
+          return true;
+        }
+        catch (err) { return false; }
+      }, [command.database]);
       if (!command.autocompleter) return;
       await command.autocompleter(interaction);
     }
     else {
       try {
+        await DBManager.load(async (loader) => {
+          if (!interaction.deferred) await interaction.deferReply();
+          return await catch_timeout(interaction, async () => await loader());
+        }, [command.database]);
         await command.execute(interaction);
       }
       catch (error) {

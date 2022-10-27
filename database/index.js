@@ -19,11 +19,16 @@ class Manager {
   }
 
   /**
-   * @param {import('discord.js').ChatInputCommandInteraction} interaction
+   * @callback Load_Callback
+   *  @return {Promise<void>}
+   * @callback Loader
+   *  @param {Load_Callback} callback
+   *  @return {Promise<boolean>}
+   * @param {Loader} loader
    * @param {('detect'|'decklist'|'cards')[]} DB_names
    * @param {boolean?} force
    */
-  async load(interaction, DB_names, force) {
+  async load(loader, DB_names, force) {
     if (DB_names === undefined || DB_names[0] === undefined) return;
 
     DB_names = Array.from(new Set(DB_names));
@@ -32,23 +37,7 @@ class Manager {
       const sync_start = Date.now();
       if (sync_start - this.last_sync[DB] <= config_common.databases[DB] * 3600000 && !force) return;
 
-      let is_success;
-
-      if (interaction.isRepliable()) {
-        if (!interaction.deferred) await interaction.deferReply();
-        is_success = await catch_timeout(interaction, async () => await this[DB].load());
-      }
-      else {
-        try {
-          await this[DB].load();
-          is_success = true;
-        }
-        catch (err) {
-          is_success = false;
-        }
-      }
-
-      if (is_success) {
+      if (await loader(() => this[DB].load())) {
         const last_sync = Date.now();
         this.last_sync[DB] = last_sync;
         logger.info(`${DB} database syncing success. time duration: ${last_sync - sync_start}ms`);
