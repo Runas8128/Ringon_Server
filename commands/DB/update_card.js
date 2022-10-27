@@ -29,7 +29,7 @@ module.exports = {
         new EmbedBuilder()
           .setTitle('카드 DB 업데이트에 성공했습니다!')
           .setDescription(
-            `걸린 시간: ${(end_time - start_time) / 1000}초 / ` +
+            `걸린 시간: ${minute}분 ${second}초 / ` +
             `총 카드 수: ${card_count}개`,
           ).setTimestamp(end_time),
       ],
