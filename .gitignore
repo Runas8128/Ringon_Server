@@ -1,5 +1,5 @@
 node_modules/
 
 test.js
-.env
-Ringon.zip
+*.env
+*.zip
