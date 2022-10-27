@@ -76,7 +76,7 @@ class Cards {
     const resp = await axios.get('https://shadowverse-portal.com/api/v1/cards?format=json&lang=ko');
 
     /** @type {card_payload[]} */
-    const payloads = resp.data.data.cards.slice(0, 50);
+    const payloads = resp.data.data.cards;
 
     this.db.drop();
     this.cards = [];
