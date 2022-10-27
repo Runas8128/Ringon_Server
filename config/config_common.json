@@ -1,5 +1,4 @@
 {
-  "is_testing": true,
   "commands": {
     "DB": ["card_count", "IQ", "reload_db", "search_card", "show_studied", "update_card"],
     "deck": ["portallink", "analyze_deck", "search_deck"],
