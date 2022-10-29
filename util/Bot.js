@@ -2,6 +2,7 @@ const { Client, GatewayIntentBits, Partials } = require('discord.js');
 
 const setup_event = require('../events');
 const { init: setup_commands } = require('../commands');
+const { config_common } = require('../config');
 
 class Bot {
   constructor() {
@@ -28,6 +29,15 @@ class Bot {
 
   login() {
     this.client.login(this.token);
+
+    this.client.on('ready', () => {
+      if (config_common.is_testing) {
+        this.client.user.setPresence({
+          status: 'dnd',
+          activities: [{ name: '버그 수정' }],
+        });
+      }
+    });
   }
 }
 
