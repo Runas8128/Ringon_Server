@@ -61,4 +61,5 @@ function timer(ms) {
 module.exports = {
   catch_timeout: catch_timeout,
   reply: reply,
+  timer: timer,
 };

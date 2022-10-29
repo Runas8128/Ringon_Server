@@ -2,6 +2,7 @@ const axios = require('axios');
 
 const { config } = require('../config');
 const Manager = require('../database');
+const { timer } = require('../util');
 const { Database } = require('../util/Notion');
 const logger = require('../util/Logger').getLogger(__filename);
 
@@ -101,6 +102,8 @@ class Cards {
         { name: 'evo_desc', type: 'rich_text', value: payload.evo_skill_disc },
       );
       payload.page_id = new_card.id;
+
+      await timer(333);
     }
 
     logger.info('loading updated card info (4/4)');
