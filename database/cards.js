@@ -2,6 +2,7 @@ const axios = require('axios');
 
 const { config } = require('../config');
 const { Database } = require('../util/Notion');
+const logger = require('../util/Logger').getLogger(__filename);
 
 /**
  *  @typedef {'추종자'|'아뮬렛'|'카운트다운 아뮬렛'|'스펠'} CardType
@@ -72,15 +73,17 @@ class Cards {
   }
 
   async update() {
-    console.log('updating card db');
+    logger.info('fetching all card info (1/4)');
     const resp = await axios.get('https://shadowverse-portal.com/api/v1/cards?format=json&lang=ko');
 
     /** @type {card_payload[]} */
     const payloads = resp.data.data.cards;
 
+    logger.info('droping old database (2/4)');
     this.db.drop();
     this.cards = [];
 
+    logger.info('pushing new card info (3/4)');
     for (const payload of payloads) {
       if (payload.card_name === null) continue;
 
@@ -99,6 +102,7 @@ class Cards {
       payload.page_id = new_card.id;
     }
 
+    logger.info('loading updated card info (4/4)');
     await this.load();
     return this.cards.length;
   }
