@@ -25,27 +25,23 @@ class Manager {
    *  @param {Load_Callback} callback
    *  @return {Promise<boolean>}
    * @param {Loader} loader
-   * @param {('detect'|'decklist'|'cards')[]} DB_names
+   * @param {'detect'|'decklist'|'cards'} DB
    * @param {boolean?} force
    */
-  async load(loader, DB_names, force) {
-    if (DB_names === undefined || DB_names[0] === undefined) return;
+  async load(loader, DB, force) {
+    if (!Object.keys(this.last_sync).includes(DB)) return;
 
-    DB_names = Array.from(new Set(DB_names));
+    const sync_start = Date.now();
+    if (sync_start - this.last_sync[DB] <= config_common.databases[DB] * 3600000 && !force) return;
 
-    await Promise.all(DB_names.map(async (DB) => {
-      const sync_start = Date.now();
-      if (sync_start - this.last_sync[DB] <= config_common.databases[DB] * 3600000 && !force) return;
-
-      if (await loader(() => this[DB].load())) {
-        const last_sync = Date.now();
-        this.last_sync[DB] = last_sync;
-        logger.info(`${DB} database syncing success. time duration: ${last_sync - sync_start}ms`);
-      }
-      else {
-        logger.error(`Timeout or Rate limited while syncing ${DB} database`);
-      }
-    }));
+    if (await loader(() => this[DB].load())) {
+      const last_sync = Date.now();
+      this.last_sync[DB] = last_sync;
+      logger.info(`${DB} database syncing success. time duration: ${last_sync - sync_start}ms`);
+    }
+    else {
+      logger.error(`Timeout or Rate limited while syncing ${DB} database`);
+    }
   }
 }
 

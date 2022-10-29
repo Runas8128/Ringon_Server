@@ -3,8 +3,6 @@ const { SlashCommandBuilder, ChatInputCommandInteraction, EmbedBuilder } = requi
 const DBManager = require('../../database');
 const { catch_timeout } = require('../../util');
 
-// TODO: add autocompleter
-
 module.exports = {
   perm: 'admin',
   data: new SlashCommandBuilder()
@@ -12,8 +10,13 @@ module.exports = {
     .setDescription('DB를 다시 로드합니다.')
     .addStringOption(option => option
       .setName('db')
-      .setDescription('업데이트할 DB 이름을 공백으로 구분해주세요.')
-      .setRequired(true)),
+      .setDescription('업데이트할 DB를 선택해주세요.')
+      .setRequired(true)
+      .addChoices([
+        { name: '감지', value: 'detect' },
+        { name: '덱리', value: 'decklist' },
+        { name: '카드', value: 'cards' },
+      ])),
   /**
    * @param {ChatInputCommandInteraction} interaction
    */
@@ -21,13 +24,13 @@ module.exports = {
     await interaction.reply({
       embeds: [new EmbedBuilder()
         .setTitle('🔄 DB를 업데이트하는 중입니다')
-        .setDescription('예상 시간: ~ 1분')],
+        .setDescription('예상 시간: ~ 3분')],
     });
     const sync_start = Date.now();
     await DBManager.load(async (loader) => {
       if (!interaction.deferred) await interaction.deferReply();
       return await catch_timeout(interaction, async () => await loader());
-    }, interaction.options.getString('db').split(' '), true);
+    }, interaction.options.getString('db'), true);
     const sync_end = Date.now();
     await interaction.editReply({
       embeds: [new EmbedBuilder()

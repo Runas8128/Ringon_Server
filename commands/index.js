@@ -97,7 +97,7 @@ function add_command_listener(client, commands) {
           return true;
         }
         catch (err) { return false; }
-      }, [command.database]);
+      }, command.database);
       if (!command.autocompleter) return;
       await command.autocompleter(interaction);
     }
@@ -106,7 +106,7 @@ function add_command_listener(client, commands) {
         await DBManager.load(async (loader) => {
           if (!interaction.deferred) await interaction.deferReply();
           return await catch_timeout(interaction, async () => await loader());
-        }, [command.database]);
+        }, command.database);
         await command.execute(interaction);
       }
       catch (error) {

@@ -17,7 +17,7 @@ module.exports = {
         return true;
       }
       catch (err) { return false; }
-    }, ['detect']);
+    }, 'detect');
     const detect_result = Manager.detect.get_result(message.content);
     if (detect_result) {
       await message.channel.send(detect_result);
