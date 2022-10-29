@@ -91,22 +91,13 @@ function add_command_listener(client, commands) {
     if (!command) return;
 
     if (interaction.isAutocomplete()) {
-      await DBManager.load(async (loader) => {
-        try {
-          await loader();
-          return true;
-        }
-        catch (err) { return false; }
-      }, command.database);
+      await DBManager.load(DBManager.general_loader(), command.database);
       if (!command.autocompleter) return;
       await command.autocompleter(interaction);
     }
     else {
       try {
-        await DBManager.load(async (loader) => {
-          if (!interaction.deferred) await interaction.deferReply();
-          return await catch_timeout(interaction, async () => await loader());
-        }, command.database);
+        await DBManager.load(DBManager.command_loader(interaction), command.database);
         await command.execute(interaction);
       }
       catch (error) {

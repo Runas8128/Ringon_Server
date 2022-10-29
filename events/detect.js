@@ -11,13 +11,7 @@ module.exports = {
   async execute(message) {
     if (message.author.bot) return;
 
-    await Manager.load(async (loader) => {
-      try {
-        await loader();
-        return true;
-      }
-      catch (err) { return false; }
-    }, 'detect');
+    await Manager.load(Manager.general_loader(), 'detect');
     const detect_result = Manager.detect.get_result(message.content);
     if (detect_result) {
       await message.channel.send(detect_result);
