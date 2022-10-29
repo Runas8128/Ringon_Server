@@ -1,6 +1,7 @@
 const axios = require('axios');
 
 const { config } = require('../config');
+const Manager = require('../database');
 const { Database } = require('../util/Notion');
 const logger = require('../util/Logger').getLogger(__filename);
 
@@ -103,7 +104,7 @@ class Cards {
     }
 
     logger.info('loading updated card info (4/4)');
-    await this.load();
+    await Manager.load(Manager.general_loader(), 'cards', true);
     return this.cards.length;
   }
 }
