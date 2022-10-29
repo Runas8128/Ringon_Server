@@ -48,11 +48,13 @@ module.exports = {
     const focusdVar = interaction.options.getFocused(true);
     if (focusdVar.name != '키워드') return;
 
-    await interaction.respond(
-      cards.cards
-        .filter(card => card.name.includes(focusdVar.value))
-        .slice(0, 25)
-        .map(card => ({ name: card.name, value: card.name })),
-    );
+    const result = cards.cards
+      .filter(card => card.name.includes(focusdVar.value))
+      .slice(0, 25)
+      .map(card => ({ name: card.name, value: card.name }));
+
+    if (result.length > 0) {
+      await interaction.respond(result);
+    }
   },
 };
