@@ -27,15 +27,12 @@ class Manager {
   general_loader() {
     return async (loader) => {
       try {
-        await Promise.race([
-          loader(),
-          new Promise((resolve, reject) => setTimeout(reject, 2500)),
-        ]);
+        await loader();
         return true;
       }
       catch (err) {
-        logger.info('Rejected but still loading');
-        return true;
+        logger.error(err);
+        return false;
       }
     };
   }
@@ -68,18 +65,18 @@ class Manager {
     const sync_start = Date.now();
     if (sync_start - this.last_sync[DB] <= config_common.databases[DB] * 3600000 && !force) return;
 
+    logger.info(`Loading ${DB} database`);
     this.loading[DB] = true;
     const result = await loader(async () => await this[DB].load());
     if (result) {
       const last_sync = Date.now();
       this.last_sync[DB] = last_sync;
       logger.info(`${DB} database syncing success. time duration: ${last_sync - sync_start}ms`);
-      this.loading[DB] = false;
     }
     else {
       logger.error(`Timeout or Rate limited while syncing ${DB} database`);
-      this.loading[DB] = false;
     }
+    this.loading[DB] = false;
   }
 }
 

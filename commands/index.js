@@ -91,9 +91,11 @@ function add_command_listener(client, commands) {
     if (!command) return;
 
     if (interaction.isAutocomplete()) {
-      await DBManager.load(DBManager.general_loader(), command.database);
       if (!command.autocompleter) return;
-      await command.autocompleter(interaction);
+      await Promise.all([
+        DBManager.load(DBManager.general_loader(), command.database),
+        command.autocompleter(interaction),
+      ]);
     }
     else {
       try {
