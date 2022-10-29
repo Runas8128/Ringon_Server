@@ -82,7 +82,7 @@ class Cards {
     const payloads = resp.data.data.cards;
 
     logger.info('droping old database (2/4)');
-    this.db.drop();
+    await this.db.drop();
     this.cards = [];
 
     logger.info('pushing new card info (3/4)');
