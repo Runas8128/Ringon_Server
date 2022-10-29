@@ -12,11 +12,11 @@ module.exports = {
       .setName('db')
       .setDescription('업데이트할 DB를 선택해주세요.')
       .setRequired(true)
-      .addChoices([
+      .addChoices(
         { name: '감지', value: 'detect' },
         { name: '덱리', value: 'decklist' },
         { name: '카드', value: 'cards' },
-      ])),
+      )),
   /**
    * @param {ChatInputCommandInteraction} interaction
    */
@@ -27,10 +27,7 @@ module.exports = {
         .setDescription('예상 시간: ~ 3분')],
     });
     const sync_start = Date.now();
-    await DBManager.load(async (loader) => {
-      if (!interaction.deferred) await interaction.deferReply();
-      return await catch_timeout(interaction, async () => await loader());
-    }, interaction.options.getString('db'), true);
+    await DBManager.load(DBManager.command_loader(interaction), interaction.options.getString('db'), true);
     const sync_end = Date.now();
     await interaction.editReply({
       embeds: [new EmbedBuilder()
