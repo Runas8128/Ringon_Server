@@ -1,4 +1,6 @@
-const { Client } = require('@notionhq/client');
+const { Client, UnknownHTTPResponseError } = require('@notionhq/client');
+const { timer } = require('.');
+const logger = require('./Logger').getLogger(__filename);
 
 const notion = new Client({ auth: process.env.notion });
 
@@ -70,18 +72,32 @@ class Database {
    * @param {PropertyPayload[]} stuffs
    */
   async push(...stuffs) {
-    const properties = {};
-    for (const stuff of stuffs) {
-      properties[stuff.name] = wrap_property(stuff);
-    }
+    try {
+      const properties = {};
+      for (const stuff of stuffs) {
+        properties[stuff.name] = wrap_property(stuff);
+      }
 
-    return await notion.pages.create({
-      parent: {
-        type: 'database_id',
-        database_id: this.database_id,
-      },
-      properties: properties,
-    });
+      return await notion.pages.create({
+        parent: {
+          type: 'database_id',
+          database_id: this.database_id,
+        },
+        properties: properties,
+      });
+    }
+    catch (err) {
+      if (err instanceof UnknownHTTPResponseError) {
+        logger.warn(
+          `Unknown HTTP response error: code ${err.code}, retrying in 100ms`,
+        );
+        await timer(100);
+        this.push(...stuffs);
+      }
+      else {
+        throw err;
+      }
+    }
   }
 
   /**
@@ -141,7 +157,21 @@ class Database {
    * @param {string} page_id
    */
   async delete(page_id) {
-    await notion.blocks.delete({ block_id: page_id });
+    try {
+      await notion.blocks.delete({ block_id: page_id });
+    }
+    catch (err) {
+      if (err instanceof UnknownHTTPResponseError) {
+        logger.warn(
+          `Unknown HTTP response error: code ${err.code}, retrying in 100ms`,
+        );
+        await timer(100);
+        this.delete(page_id);
+      }
+      else {
+        throw err;
+      }
+    }
   }
 
   /**

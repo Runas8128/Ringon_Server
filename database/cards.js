@@ -103,8 +103,6 @@ class Cards {
         { name: 'evo_desc', type: 'rich_text', value: payload.evo_skill_disc },
       );
       payload.page_id = new_card.id;
-
-      await timer(333);
     }
 
     yield { msg: 'DB 캐시를 업데이트하는 중... (4/4)', time: Date.now() };
