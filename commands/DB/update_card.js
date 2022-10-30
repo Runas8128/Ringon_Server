@@ -1,5 +1,7 @@
 const { SlashCommandBuilder, ChatInputCommandInteraction, EmbedBuilder } = require('discord.js');
 const { cards } = require('../../database');
+const { reply } = require('../../util');
+const logger = require('../../util/Logger').getLogger(__filename);
 
 module.exports = {
   perm: 'admin',
@@ -11,28 +13,22 @@ module.exports = {
    */
   async execute(interaction) {
     const start_time = Date.now();
-    await interaction.reply({
-      embeds: [
-        new EmbedBuilder()
-          .setTitle('🔄 카드 DB를 업데이트하는 중입니다. (예상 시간: 약 1~5분)')
-          .setDescription('카드 관련 제외 다른 명령어를 사용할 수 있습니다.')
-          .setTimestamp(start_time),
-      ],
-    });
-    const card_count = await cards.update();
-    const end_time = Date.now();
-    let second = (end_time - start_time) / 1000;
-    const minute = Math.floor(second / 60);
-    second -= minute * 60;
-    await interaction.editReply({
-      embeds: [
-        new EmbedBuilder()
-          .setTitle('카드 DB 업데이트에 성공했습니다!')
-          .setDescription(
-            `걸린 시간: ${minute}분 ${second}초 / ` +
-            `총 카드 수: ${card_count}개`,
-          ).setTimestamp(end_time),
-      ],
-    });
+    const base = new EmbedBuilder()
+      .setTitle('🔄 카드 DB 업데이트')
+      .setTimestamp(start_time);
+
+    for await (const { msg, time } of cards.update()) {
+      logger.info(msg);
+      const dur = (time - start_time) / 1000;
+      const min = Math.floor(dur / 60);
+      const sec = Math.floor(dur - min * 60);
+      const embed = EmbedBuilder
+        .from(base.data)
+        .addFields({
+          name: msg,
+          value: `시간 경과: ${min}:${sec}`,
+        });
+      await reply(interaction, { embeds: [embed] });
+    }
   },
 };

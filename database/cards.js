@@ -74,18 +74,19 @@ class Cards {
     )).sort((a, b) => a.card_id - b.card_id);
   }
 
-  async update() {
-    logger.info('fetching all card info (1/4)');
+  async *update() {
+    yield { msg: '카드 정보를 받아오는 중... (1/4)', time: Date.now() };
     const resp = await axios.get('https://shadowverse-portal.com/api/v1/cards?format=json&lang=ko');
 
     /** @type {card_payload[]} */
     const payloads = resp.data.data.cards;
 
-    logger.info('droping old database (2/4)');
+    yield { msg: '기존 DB를 삭제하는 중... (2/4)', time: Date.now() };
     await this.db.drop();
     this.cards = [];
 
     logger.info('pushing new card info (3/4)');
+    yield { msg: '새 데이터를 추가하는 중... (3/4)', time: Date.now() };
     for (const payload of payloads) {
       if (payload.card_name === null) continue;
 
@@ -106,9 +107,10 @@ class Cards {
       await timer(333);
     }
 
-    logger.info('loading updated card info (4/4)');
+    yield { msg: 'DB 캐시를 업데이트하는 중... (4/4)', time: Date.now() };
     await Manager.load(Manager.general_loader(), 'cards', true);
-    return this.cards.length;
+
+    yield { msg: `총 ${this.cards.length}개의 카드를 로드했습니다!`, time: Date.now() };
   }
 }
 
