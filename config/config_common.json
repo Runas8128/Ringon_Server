@@ -1,7 +1,7 @@
 {
   "is_testing": true,
   "commands": {
-    "DB": ["card_count", "IQ", "reload_db", "search_card", "show_studied", "update_card"],
+    "DB": ["IQ", "show_studied"],
     "deck": ["portallink", "analyze_deck", "search_deck"],
     "other": ["check_reaction"],
     "simple": ["latency", "kill", "prune"]
