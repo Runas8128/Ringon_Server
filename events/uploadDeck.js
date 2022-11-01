@@ -1,4 +1,4 @@
-const { MessageReaction, User, Message, EmbedBuilder } = require('discord.js');
+const { MessageReaction, User, Message, EmbedBuilder, MessageMentions } = require('discord.js');
 
 const { config_common } = require('../config');
 const Manager = require('../database');
@@ -46,6 +46,12 @@ class DeckUploader {
         desc: desc,
         author: this.origin.author.id,
         image_url: this.origin.attachments.first().url,
+      });
+      await this.origin.reply({
+        content: '덱 등록을 성공적으로 마쳤습니다!',
+        allowedMentions: {
+          repliedUser: false,
+        },
       });
     }
   }
