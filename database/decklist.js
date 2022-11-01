@@ -196,7 +196,8 @@ class DeckList {
    * @param {Deck} deck
    */
   async upload(deck) {
-    deck.deck_id = this.decklist.at(-1).deck_id;
+    deck.version = 1;
+    deck.deck_id = this.decklist.at(-1).deck_id + 1;
     deck.timestamp = new Date().toISOString().split('T')[0];
 
     const resp = await this.list_db.push(...this.propertify(deck));
