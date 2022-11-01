@@ -1,5 +1,5 @@
 {
-  "is_testing": true,
+  "is_testing": false,
   "commands": {
     "DB": ["IQ", "show_studied"],
     "deck": ["portallink", "analyze_deck", "search_deck"],
