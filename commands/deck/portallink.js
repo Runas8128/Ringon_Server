@@ -3,8 +3,6 @@ const { SlashCommandBuilder, ChatInputCommandInteraction } = require('discord.js
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const { reply } = require('../../util');
 
-const logger = require('../../util/Logger').getLogger(__filename);
-
 module.exports = {
   perm: 'member',
   data: new SlashCommandBuilder()

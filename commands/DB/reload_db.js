@@ -1,7 +1,6 @@
 const { SlashCommandBuilder, ChatInputCommandInteraction, EmbedBuilder } = require('discord.js');
 
 const DBManager = require('../../database');
-const { catch_timeout } = require('../../util');
 
 module.exports = {
   perm: 'admin',

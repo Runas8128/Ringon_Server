@@ -1,9 +1,6 @@
-const { ChatInputCommandInteraction } = require('discord.js');
 const Detect = require('./detect');
 const Decklist = require('./decklist');
 const Cards = require('./cards');
-const { config_common } = require('../config');
-const { catch_timeout } = require('../util');
 const logger = require('../util/Logger').getLogger(__filename);
 
 class Manager {

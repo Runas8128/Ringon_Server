@@ -2,7 +2,6 @@ const axios = require('axios');
 
 const { config } = require('../config');
 const { Database } = require('../util/Notion');
-const logger = require('../util/Logger').getLogger(__filename);
 
 /**
  *  @typedef {'추종자'|'아뮬렛'|'카운트다운 아뮬렛'|'스펠'} CardType

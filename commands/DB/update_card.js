@@ -1,6 +1,5 @@
 const { SlashCommandBuilder, ChatInputCommandInteraction } = require('discord.js');
 const { cards } = require('../../database');
-const logger = require('../../util/Logger').getLogger(__filename);
 
 module.exports = {
   perm: 'admin',
