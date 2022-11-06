@@ -66,8 +66,7 @@ module.exports = {
     const URL = interaction.options.getString('url');
     const message = parseURL(URL, interaction.client.channels);
     if (!message) {
-      await interaction.reply('올바른 메시지 링크를 입력해주세요.');
-      return;
+      return interaction.reply('올바른 메시지 링크를 입력해주세요.');
     }
 
     const indi_emoji = interaction.options.getString('emoji') || '👍 👎 ';
@@ -88,6 +87,6 @@ module.exports = {
         value: result[emoji].join(', '),
       });
     });
-    await interaction.reply({ embeds: [embed] });
+    interaction.reply({ embeds: [embed] });
   },
 };
