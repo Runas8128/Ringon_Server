@@ -58,7 +58,7 @@ module.exports = {
       decks = decks.filter(deck => deck.clazz == clazz);
     }
 
-    await reply(
+    reply(
       interaction,
       new DecklistView(decks, interaction.guild).get_updated_msg(interaction),
     );

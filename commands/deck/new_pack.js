@@ -39,13 +39,13 @@ module.exports = {
       });
 
       await checker.deferUpdate();
-      await decklist.update_pack(
+      decklist.update_pack(
         interaction.options.getString('이름'),
         interaction.guild,
       );
     }
     catch (err) {
-      await reply(interaction, {
+      reply(interaction, {
         content: '팩 변경을 취소합니다.',
       });
     }
