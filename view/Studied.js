@@ -42,7 +42,7 @@ class StudiedEmbedView extends UpDownView {
     return new EmbedBuilder()
       .setTitle(this.title)
       .setDescription(this.desc)
-      .addFields(this.fields.slice(this.startIndex, this.startIndex + 10));
+      .addFields(this.fields.slice(this.index, this.index + 10));
   }
 
   build_actionrow() {
