@@ -139,7 +139,7 @@ class DeckList {
     if (author) {
       deck_info.setAuthor({
         name: author.displayName,
-        iconURL: author.displayAvatarURL,
+        iconURL: author.displayAvatarURL(),
       });
     }
     else {
