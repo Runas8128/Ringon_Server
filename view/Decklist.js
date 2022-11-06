@@ -1,13 +1,14 @@
 const { ActionRowBuilder, ButtonStyle, Guild, SelectMenuBuilder, ComponentType, EmbedBuilder, ButtonInteraction } = require('discord.js');
 const { config_common } = require('../config');
 const { decklist } = require('../database');
+const { Deck } = require('../database/decklist');
 const { eventHandler } = require('../events/btnClick');
 
 const UpDownView = require('./UpDownView');
 
 class View extends UpDownView {
   /**
-   * @param {import('../database/decklist').Deck[]} decks
+   * @param {Deck[]} decks
    * @param {Guild} guild
    */
   constructor(decks, guild) {

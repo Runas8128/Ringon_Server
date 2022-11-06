@@ -211,7 +211,7 @@ class DeckList {
 
   /**
    * @param {Deck} deck
-   * @returns {import('../util/Notion').PropertyPayload[]}
+   * @returns {Notion.PropertyPayload[]}
    */
   propertify(deck) {
     return [

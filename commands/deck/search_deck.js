@@ -2,6 +2,7 @@ const { SlashCommandBuilder, ChatInputCommandInteraction, AutocompleteInteractio
 
 const { config_common } = require('../../config');
 const { decklist } = require('../../database');
+const { Deck } = require('../../database/decklist');
 const { reply } = require('../../util');
 const DecklistView = require('../../view/Decklist');
 
@@ -32,14 +33,14 @@ module.exports = {
     const clazz = interaction.options.getString('클래스');
 
     /**
-     * @param {import('../../database/decklist').Deck} deck
+     * @param {Deck} deck
      * @param {string[]} kws
      */
     function kw_pred(deck, kws) {
       return kws.filter((kw) => deck.name.includes(kw) || deck.desc.includes('#' + kw)).length;
     }
 
-    /** @type {import('../../database/decklist').Deck[]} */
+    /** @type {Deck[]} */
     let decks = JSON.parse(JSON.stringify(decklist.decklist)); // Copy full decklist
 
     if (keyword) {

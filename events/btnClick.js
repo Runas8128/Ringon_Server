@@ -1,4 +1,4 @@
-const { ButtonInteraction, ButtonBuilder } = require('discord.js');
+const { ButtonInteraction, ButtonBuilder, Interaction } = require('discord.js');
 
 class ClickEventHandler {
   constructor() {
@@ -34,7 +34,7 @@ module.exports = {
   name: 'interactionCreate',
   once: false,
   /**
-   * @param {import("discord.js").Interaction} interaction
+   * @param {Interaction} interaction
    */
   async execute(interaction) {
     if (!interaction.isButton()) return;

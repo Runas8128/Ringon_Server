@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, ChatInputCommandInteraction, AutocompleteInteraction } = require('discord.js');
 const { cards } = require('../../database');
+const { Card } = require('../../database/cards');
 const { reply } = require('../../util');
 
 const CardView = require('../../view/Cards');
@@ -21,11 +22,11 @@ module.exports = {
     await interaction.deferReply();
 
     const kws = interaction.options.getString('키워드').split(' ');
-    /** @type {import('../../database/cards').Card[]} */
+    /** @type {Card[]} */
     let list = JSON.parse(JSON.stringify(cards.cards));
 
     /**
-     * @param {import('../../database/cards').Card} card
+     * @param {Card} card
      */
     function kw_pred(card) {
       return kws.filter(word => card.name.includes(word)).length;

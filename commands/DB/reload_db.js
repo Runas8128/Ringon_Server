@@ -26,7 +26,7 @@ module.exports = {
         .setDescription('예상 시간: ~ 3분')],
     });
     const sync_start = Date.now();
-    await DBManager.load(DBManager.command_loader(interaction), interaction.options.getString('db'), true);
+    await DBManager.load(interaction.options.getString('db'));
     const sync_end = Date.now();
     await interaction.editReply({
       embeds: [new EmbedBuilder()

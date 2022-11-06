@@ -1,11 +1,11 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const { eventHandler } = require('../events/btnClick');
-
+const { Card } = require('../database/cards');
 const UpDownView = require('./UpDownView');
 
 class View extends UpDownView {
   /**
-   * @param {import('../database/cards').Card[]} cards
+   * @param {Card[]} cards
    */
   constructor(cards) {
     super();
