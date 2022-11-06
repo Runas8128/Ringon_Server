@@ -17,6 +17,6 @@ module.exports = {
       Object.keys(config_common.classes).includes(message.channel.name)
     )) return;
 
-    await message.react(config_common.classes[message.channel.name]);
+    message.react(config_common.classes[message.channel.name]);
   },
 };

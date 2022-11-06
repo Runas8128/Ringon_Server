@@ -19,8 +19,7 @@ class DeckUploader {
       timeout: 60 * 1000,
     });
     if (name === undefined) {
-      await this.origin.channel.send('시간 초과, 덱 등록을 취소합니다.');
-      return;
+      return this.origin.channel.send('시간 초과, 덱 등록을 취소합니다.');
     }
 
     const desc = await this.collect({
@@ -28,7 +27,7 @@ class DeckUploader {
       subprompt: '시간 제한 X\n덱 설명을 생략하려면 생략을 입력해주세요.',
     });
 
-    await this.upload(name, desc, 0);
+    this.upload(name, desc, 0);
   }
 
   async upload(name, desc, try_count) {
@@ -40,19 +39,19 @@ class DeckUploader {
       await this.upload(name, desc, try_count + 1);
     }
     else {
-      await Manager.decklist.upload({
+      Manager.decklist.upload({
         name: name,
         clazz: this.origin.channel.name,
         desc: desc,
         author: this.origin.author.id,
         image_url: this.origin.attachments.first().url,
-      });
-      await this.origin.reply({
-        content: '덱 등록을 성공적으로 마쳤습니다!',
-        allowedMentions: {
-          repliedUser: false,
-        },
-      });
+      })
+        .then(() => this.origin.reply({
+          content: '덱 등록을 성공적으로 마쳤습니다!',
+          allowedMentions: {
+            repliedUser: false,
+          },
+        }));
     }
   }
 
@@ -97,6 +96,6 @@ module.exports = {
       user.id == message.author.id
     )) return;
 
-    await new DeckUploader(message).get_input();
+    new DeckUploader(message).get_input();
   },
 };

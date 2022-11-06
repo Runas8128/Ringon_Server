@@ -40,7 +40,7 @@ module.exports = {
     if (!interaction.isButton()) return;
 
     const button = hdr.button_map.find((obj) => obj.button.data.custom_id === interaction.customId);
-    await button.callback(interaction);
+    button.callback(interaction);
   },
   eventHandler: hdr,
 };
