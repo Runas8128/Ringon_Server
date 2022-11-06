@@ -1,8 +1,6 @@
 const axios = require('axios');
 
 const { config } = require('../config');
-const Manager = require('../database');
-const { timer } = require('../util');
 const { Database } = require('../util/Notion');
 const logger = require('../util/Logger').getLogger(__filename);
 
@@ -58,57 +56,33 @@ class Cards {
     return this.cards.filter((card) => card.name.includes(keyword));
   }
 
-  async load() {
-    this.cards = (await this.db.load(
-      { name: 'page_id', type: 'page_id' },
-      { name: 'card_id', type: 'number' },
-      { name: 'name', type: 'title' },
-      { name: 'cost', type: 'number' },
-      { name: 'type', type: 'select' },
-      { name: 'atk', type: 'number' },
-      { name: 'life', type: 'number' },
-      { name: 'desc', type: 'rich_text' },
-      { name: 'evo_atk', type: 'number' },
-      { name: 'evo_life', type: 'number' },
-      { name: 'evo_desc', type: 'rich_text' },
-    )).sort((a, b) => a.card_id - b.card_id);
+  /** @param {card_payload} payload */
+  parse_payload({
+    card_id, card_name, cost, char_type,
+    atk, life, skill_disc,
+    evo_atk, evo_life, evo_skill_disc,
+  }) {
+    return {
+      card_id,
+      name: card_name,
+      cost,
+      type: this.char_map[char_type],
+      atk,
+      life,
+      desc: skill_disc,
+      evo_atk,
+      evo_life,
+      evo_desc: evo_skill_disc,
+    };
   }
 
-  async *update() {
-    yield { msg: '카드 정보를 받아오는 중... (1/4)', time: Date.now() };
+  async load() {
     const resp = await axios.get('https://shadowverse-portal.com/api/v1/cards?format=json&lang=ko');
-
     /** @type {card_payload[]} */
     const payloads = resp.data.data.cards;
 
-    yield { msg: '기존 DB를 삭제하는 중... (2/4)', time: Date.now() };
-    await this.db.drop();
-    this.cards = [];
-
-    logger.info('pushing new card info (3/4)');
-    yield { msg: '새 데이터를 추가하는 중... (3/4)', time: Date.now() };
-    for (const payload of payloads) {
-      if (payload.card_name === null) continue;
-
-      const new_card = await this.db.push(
-        { name: 'card_id', type: 'number', value: payload.card_id },
-        { name: 'name', type: 'title', value: payload.card_name },
-        { name: 'cost', type: 'number', value: payload.cost },
-        { name: 'type', type: 'select', value: this.char_map[payload.char_type] },
-        { name: 'atk', type: 'number', value: payload.atk },
-        { name: 'life', type: 'number', value: payload.life },
-        { name: 'desc', type: 'rich_text', value: payload.skill_disc },
-        { name: 'evo_atk', type: 'number', value: payload.evo_atk },
-        { name: 'evo_life', type: 'number', value: payload.evo_life },
-        { name: 'evo_desc', type: 'rich_text', value: payload.evo_skill_disc },
-      );
-      payload.page_id = new_card.id;
-    }
-
-    yield { msg: 'DB 캐시를 업데이트하는 중... (4/4)', time: Date.now() };
-    await Manager.load(Manager.general_loader(), 'cards', true);
-
-    yield { msg: `총 ${this.cards.length}개의 카드를 로드했습니다!`, time: Date.now() };
+    this.cards = payloads.map(this.parse_payload)
+      .sort((card1, card2) => card1.card_id - card2.card_id);
   }
 }
 
