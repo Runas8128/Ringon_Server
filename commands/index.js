@@ -90,19 +90,17 @@ function add_command_listener(client, commands) {
 
     if (interaction.isAutocomplete()) {
       if (!command.autocompleter) return;
-      await command.autocompleter(interaction);
+      command.autocompleter(interaction);
     }
     else {
-      try {
-        await command.execute(interaction);
-      }
-      catch (error) {
-        await reply(interaction, {
-          content: `${interaction.commandName} 커맨드를 처리하는 동안 오류가 발생했습니다.`,
-          ephemeral: true,
+      command.execute(interaction)
+        .catch(err => {
+          reply(interaction, {
+            content: `${interaction.commandName} 커맨드를 처리하는 동안 오류가 발생했습니다.`,
+            ephemeral: true,
+          });
+          throw err;
         });
-        throw error;
-      }
     }
   });
 }
