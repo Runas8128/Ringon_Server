@@ -78,7 +78,7 @@ class Database {
         properties[stuff.name] = wrap_property(stuff);
       }
 
-      return await notion.pages.create({
+      return notion.pages.create({
         parent: {
           type: 'database_id',
           database_id: this.database_id,
@@ -110,7 +110,7 @@ class Database {
       properties[stuff.name] = wrap_property(stuff);
     }
 
-    return await notion.pages.update({
+    return notion.pages.update({
       page_id: page_id,
       properties: properties,
     });
@@ -158,7 +158,7 @@ class Database {
    */
   async delete(page_id) {
     try {
-      await notion.blocks.delete({ block_id: page_id });
+      notion.blocks.delete({ block_id: page_id });
     }
     catch (err) {
       if (err instanceof UnknownHTTPResponseError) {
@@ -187,7 +187,7 @@ class Database {
       { name: 'page_id', type: 'page_id' },
     );
     for (const page of all_page) {
-      await this.delete(page.page_id);
+      this.delete(page.page_id);
     }
   }
 }
@@ -215,7 +215,7 @@ class Block {
    * @param {string} new_string
    */
   async update(new_string) {
-    await notion.blocks.update({
+    notion.blocks.update({
       block_id: this.block_id,
       paragraph: { 'rich_text': [{ 'text': { 'content': new_string } }] },
     });

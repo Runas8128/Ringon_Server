@@ -12,10 +12,10 @@ function isRetryable(error) {
  */
 async function reply(interaction, msg) {
   if (interaction.replied || interaction.deferred) {
-    await interaction.editReply(msg);
+    interaction.editReply(msg);
   }
   else {
-    await interaction.reply(msg);
+    interaction.reply(msg);
   }
 }
 
@@ -27,7 +27,7 @@ async function reply(interaction, msg) {
  */
 async function catch_timeout(interaction, callback, try_count) {
   if (try_count > 5) {
-    await reply(interaction, {
+    reply(interaction, {
       content: '재시도 횟수가 5회를 초과했습니다. 요청을 취소합니다.',
       ephemeral: true,
     });
@@ -40,13 +40,13 @@ async function catch_timeout(interaction, callback, try_count) {
   }
   catch (err) {
     if (isRetryable(err)) {
-      await reply(interaction, {
+      reply(interaction, {
         content: `요청에 실패했습니다. 재시도중... (${try_count} / 5)`,
         ephemeral: true,
       });
 
       await timer(100);
-      return await catch_timeout(interaction, callback, try_count);
+      return catch_timeout(interaction, callback, try_count);
     }
     else {
       throw err;

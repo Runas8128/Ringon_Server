@@ -12,13 +12,13 @@ class View extends UpDownView {
     this.cards = cards;
 
     this.prev = eventHandler
-      .register(async (i) => await this.update_message(i, (index) => index - 1))
+      .register((i) => this.update_message(i, (index) => index - 1))
       .setStyle(ButtonStyle.Primary)
       .setLabel('≪ 이전 카드')
       .setCustomId(`Card_prev_${Date.now()}`);
 
     this.next = eventHandler
-      .register(async (i) => await this.update_message(i, (index) => index + 1))
+      .register((i) => this.update_message(i, (index) => index + 1))
       .setStyle(ButtonStyle.Primary)
       .setLabel('다음 카드 ≫')
       .setCustomId(`Card_next_${Date.now()}`);
