@@ -12,11 +12,6 @@ class Manager {
     this.decklist = new Decklist();
     this.cards = new Cards();
 
-    this.last_sync = {
-      detect: 0,
-      decklist: 0,
-      cards: 0,
-    };
     this.loading = {
       detect: false,
       decklist: false,
@@ -24,50 +19,22 @@ class Manager {
     };
   }
 
-  general_loader() {
-    return async (loader) => {
-      try {
-        await loader();
-        return true;
-      }
-      catch (err) {
-        logger.error(err);
-        return false;
-      }
-    };
-  }
-
-  /** @param {ChatInputCommandInteraction} interaction */
-  command_loader(interaction) {
-    return async (loader) => {
-      if (!interaction.deferred) await interaction.deferReply();
-      return await catch_timeout(interaction, async () => await loader());
-    };
-  }
-
   /**
-   * @callback Load_Callback
-   *  @return {Promise<void>}
-   * @callback Loader
-   *  @param {Load_Callback} callback
-   *  @return {Promise<boolean>}
-   * @param {Loader} loader
    * @param {'detect'|'decklist'|'cards'} DB
-   * @param {boolean?} force
    */
-  async load(loader, DB, force) {
-    if (!Object.keys(this.last_sync).includes(DB)) return;
+  async load(DB) {
+    if (!Object.keys(this.loading).includes(DB)) return;
     if (this.loading[DB]) {
       logger.warn(`${DB} database is already in loading state, skipping.`);
       return;
     }
 
     const sync_start = Date.now();
-    if (sync_start - this.last_sync[DB] <= config_common.databases[DB] * 3600000 && !force) return;
 
     logger.info(`Loading ${DB} database`);
     this.loading[DB] = true;
-    const result = await loader(async () => await this[DB].load());
+
+    const result = await this[DB].load();
     if (result) {
       const last_sync = Date.now();
       this.last_sync[DB] = last_sync;
