@@ -75,7 +75,7 @@ class Cards {
     const payloads = resp.data.data.cards;
 
     this.cards = payloads
-      .filter(card => card.card_name !== undefined)
+      .filter(card => card.card_name)
       .map(this.parse_payload)
       .sort((card1, card2) => card1.card_id - card2.card_id);
   }
