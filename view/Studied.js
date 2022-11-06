@@ -56,8 +56,8 @@ class StudiedEmbedView extends UpDownView {
     this.up.setDisabled(this.index == 0);
 
     if (this.index >= this.fields.length - 1) this.index = this.fields.length - 1;
-    this.down.setDisabled(this.fields.length - 1);
-    this.bottom.setDisabled(this.fields.length - 1);
+    this.down.setDisabled(this.index == this.fields.length - 1);
+    this.bottom.setDisabled(this.index == this.fields.length - 1);
   }
 }
 
