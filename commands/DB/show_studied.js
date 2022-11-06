@@ -28,7 +28,7 @@ module.exports = {
           inline: true,
         })),
     );
-    await reply(interaction, new StudiedView(
+    reply(interaction, new StudiedView(
       fields.length > 0 ?
         fields :
         [{ name: '엥 비어있네요', value: '왜지...', inline: true }],

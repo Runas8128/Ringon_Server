@@ -36,7 +36,7 @@ module.exports = {
     const first_not_match_idx = list.findIndex(deck => kw_pred(deck, kws) == 0);
     list.splice(first_not_match_idx);
 
-    await reply(
+    reply(
       interaction,
       new CardView(list).get_updated_msg(interaction),
     );

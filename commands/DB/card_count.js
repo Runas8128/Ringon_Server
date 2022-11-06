@@ -12,6 +12,6 @@ module.exports = {
    * @param {ChatInputCommandInteraction} interaction
    */
   async execute(interaction) {
-    await reply(interaction, `현재 로드된 카드는 총 ${cards.cards.length}개입니다.`);
+    reply(interaction, `현재 로드된 카드는 총 ${cards.cards.length}개입니다.`);
   },
 };
