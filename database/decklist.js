@@ -67,9 +67,9 @@ class DeckList {
    */
   async update_pack(new_pack, guild) {
     for (const deck of this.decklist) {
-      await this._delete_deck(deck, guild);
+      this._delete_deck(deck, guild);
     }
-    await this.pack_block.update(new_pack);
+    this.pack_block.update(new_pack);
   }
 
   /**
@@ -81,8 +81,8 @@ class DeckList {
       this.history = guild.channels.cache.find((ch) =>
         ch.id == config.discord.channel.history);
     }
-    await this.history.send({ embeds: [this.make_deck_embed(deck, guild)] });
-    await this.list_db.delete(deck.page_id);
+    this.history.send({ embeds: [this.make_deck_embed(deck, guild)] });
+    this.list_db.delete(deck.page_id);
   }
 
   /**
@@ -114,12 +114,12 @@ class DeckList {
       );
     }
 
-    await this.list_db.update(
+    this.list_db.update(
       deck.page_id,
       ...this.propertify(deck),
     );
 
-    await this.history.send({ embeds: [history_embed] });
+    this.history.send({ embeds: [history_embed] });
   }
 
   /**
@@ -203,10 +203,11 @@ class DeckList {
       .split('T')[0]
       .replace('-', '/');
 
-    const resp = await this.list_db.push(...this.propertify(deck));
-
-    deck.page_id = resp.id;
-    this.decklist.push(deck);
+    this.list_db.push(...this.propertify(deck))
+      .then(resp => {
+        deck.page_id = resp.id;
+        this.decklist.push(deck);
+      });
   }
 
   /**
