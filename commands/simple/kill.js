@@ -9,7 +9,7 @@ module.exports = {
    * @param {ChatInputCommandInteraction} interaction
    */
   async execute(interaction) {
-    await interaction.reply('강제종료중...');
+    interaction.reply('강제종료중...');
     interaction.client.destroy();
   },
 };
