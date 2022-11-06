@@ -49,13 +49,6 @@ class Cards {
     this.cards = [];
   }
 
-  /**
-   * @param {string} keyword
-   */
-  get_match_cards(keyword) {
-    return this.cards.filter((card) => card.name.includes(keyword));
-  }
-
   /** @param {card_payload} payload */
   parse_payload({
     card_id, card_name, cost, char_type,
