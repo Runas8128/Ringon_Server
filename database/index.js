@@ -29,21 +29,23 @@ class Manager {
       return;
     }
 
-    const sync_start = Date.now();
+    try {
+      const sync_start = Date.now();
 
-    logger.info(`Loading ${DB} database`);
-    this.loading[DB] = true;
+      logger.info(`Loading ${DB} database`);
+      this.loading[DB] = true;
 
-    const result = await this[DB].load();
-    if (result) {
+      await this[DB].load();
+
       const last_sync = Date.now();
-      this.last_sync[DB] = last_sync;
       logger.info(`${DB} database syncing success. time duration: ${last_sync - sync_start}ms`);
     }
-    else {
+    catch (err) {
       logger.error(`Timeout or Rate limited while syncing ${DB} database`);
     }
-    this.loading[DB] = false;
+    finally {
+      this.loading[DB] = false;
+    }
   }
 }
 
