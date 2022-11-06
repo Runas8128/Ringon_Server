@@ -97,7 +97,6 @@ module.exports = {
       user.id == message.author.id
     )) return;
 
-    Manager.load(Manager.general_loader(), 'decklist');
     await new DeckUploader(message).get_input();
   },
 };

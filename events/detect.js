@@ -1,6 +1,6 @@
 const { Message } = require('discord.js');
 
-const Manager = require('../database');
+const { detect } = require('../database');
 
 module.exports = {
   name: 'messageCreate',
@@ -11,9 +11,9 @@ module.exports = {
   async execute(message) {
     if (message.author.bot) return;
 
-    await Manager.load(Manager.general_loader(), 'detect');
-    const detect_result = Manager.detect.get_result(message.content);
+    const detect_result = detect.get_result(message.content);
     if (detect_result) {
+      // TODO: send typing
       await message.channel.send(detect_result);
     }
   },
