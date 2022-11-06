@@ -33,17 +33,17 @@ const logger = require('../util/Logger').getLogger(__filename);
  *    @property {string} evo_skill_disc
  */
 
+const char_map = {
+  1: '추종자',
+  2: '아뮬렛',
+  3: '카운트다운 아뮬렛',
+  4: '스펠',
+};
+
 class Cards {
   constructor() {
     this.id_map = config.notion.cards;
     this.db = new Database(this.id_map.cards);
-
-    this.char_map = {
-      1: '추종자',
-      2: '아뮬렛',
-      3: '카운트다운 아뮬렛',
-      4: '스펠',
-    };
 
     /** @type {Card[]} */
     this.cards = [];
@@ -66,7 +66,7 @@ class Cards {
       card_id,
       name: card_name,
       cost,
-      type: this.char_map[char_type],
+      type: char_map[char_type],
       atk,
       life,
       desc: skill_disc,
@@ -81,7 +81,9 @@ class Cards {
     /** @type {card_payload[]} */
     const payloads = resp.data.data.cards;
 
-    this.cards = payloads.map(this.parse_payload)
+    this.cards = payloads
+      .filter(card => card.card_name !== undefined)
+      .map(this.parse_payload)
       .sort((card1, card2) => card1.card_id - card2.card_id);
   }
 }
