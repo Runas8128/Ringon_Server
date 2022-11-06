@@ -38,10 +38,11 @@ class Manager {
       await this[DB].load();
 
       const last_sync = Date.now();
-      logger.info(`${DB} database syncing success. time duration: ${last_sync - sync_start}ms`);
+      logger.info(`${DB} database load success. time duration: ${last_sync - sync_start}ms`);
     }
     catch (err) {
-      logger.error(`Timeout or Rate limited while syncing ${DB} database`);
+      logger.error(`An error occured while loading ${DB} database`);
+      logger.error(err.stack);
     }
     finally {
       this.loading[DB] = false;
