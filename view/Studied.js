@@ -61,6 +61,4 @@ class StudiedEmbedView extends UpDownView {
   }
 }
 
-module.exports = {
-  StudiedEmbedView: StudiedEmbedView,
-};
+module.exports = StudiedEmbedView;
