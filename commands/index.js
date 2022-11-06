@@ -2,8 +2,7 @@ const path = require('path');
 const { Client, REST, Routes, PermissionFlagsBits, SlashCommandBuilder, ChatInputCommandInteraction, AutocompleteInteraction } = require('discord.js');
 
 const { config, config_common } = require('../config');
-const DBManager = require('../database');
-const { reply, catch_timeout } = require('../util');
+const { reply } = require('../util');
 const logger = require('../util/Logger').getLogger(__filename);
 
 /**
@@ -24,7 +23,6 @@ const logger = require('../util/Logger').getLogger(__filename);
  *    @property {SlashCommandBuilder} data
  *    @property {CommandExecute} execute
  *    @property {AutoCompleter?} autocompleter
- *    @property {string?} database
  */
 
 /**
@@ -92,14 +90,10 @@ function add_command_listener(client, commands) {
 
     if (interaction.isAutocomplete()) {
       if (!command.autocompleter) return;
-      await Promise.all([
-        DBManager.load(DBManager.general_loader(), command.database),
-        command.autocompleter(interaction),
-      ]);
+      await command.autocompleter(interaction);
     }
     else {
       try {
-        await DBManager.load(DBManager.command_loader(interaction), command.database);
         await command.execute(interaction);
       }
       catch (error) {

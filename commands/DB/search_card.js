@@ -40,7 +40,6 @@ module.exports = {
       new CardView(list).get_updated_msg(interaction),
     );
   },
-  database: 'cards',
   /**
    * @param {AutocompleteInteraction} interaction
    */

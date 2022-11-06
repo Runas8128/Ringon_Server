@@ -34,5 +34,4 @@ module.exports = {
         [{ name: '엥 비어있네요', value: '왜지...', inline: true }],
     ).get_updated_msg());
   },
-  database: 'detect',
 };

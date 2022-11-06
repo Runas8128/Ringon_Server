@@ -16,5 +16,4 @@ module.exports = {
       embeds: [decklist.analyze(interaction.client)],
     });
   },
-  database: 'decklist',
 };
