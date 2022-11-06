@@ -9,3 +9,6 @@ process.on('uncaughtException', (error) => {
 });
 
 require('./app').start();
+
+const DB_Manager = require('./database');
+Object.keys(DB_Manager.loading).forEach(DB_Manager.load);
