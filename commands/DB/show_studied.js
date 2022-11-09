@@ -15,17 +15,28 @@ module.exports = {
   async execute(interaction) {
     /** @type {APIEmbedField[]} */
     const fields = detect.full
-      .map(({ target, result }) => ({ name: target, value: result, inline: true }));
+      .map(({ target, result }) => ({
+        name: target,
+        value: result.length > 50 ?
+          result.substring(0, 47) + '...' :
+          result,
+        inline: true,
+      }));
+
+    const probIndex = [...new Set(
+      Object.keys(detect.prob)
+        .map(index => detect.prob[parseInt(index)].target),
+    )];
 
     fields.push(
-      ...Object.keys(detect.prob)
-        .map((target) => ({
+      ...probIndex
+        .map(target => ({
           name: target,
           value: detect.prob
             .filter((obj) => obj.target == target)
             .map(({ result, ratio }) => `${result} (가중치: ${ratio})`)
-            .join(', '),
-          inline: true,
+            .join('\n'),
+          inline: false,
         })),
     );
     reply(interaction, new StudiedView(
