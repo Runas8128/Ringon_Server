@@ -32,7 +32,7 @@ class StudiedEmbedView extends UpDownView {
       .setCustomId(`Studied_down_${Date.now()}`)
       .setStyle(ButtonStyle.Primary);
     this.bottom = eventHandler
-      .register(async (i) => await this.update_message(i, index => this.fields.length - 11))
+      .register(async (i) => await this.update_message(i, index => this.fields.length - 10))
       .setLabel('맨 뒤로 ≫')
       .setCustomId(`Studied_bottom_${Date.now()}`)
       .setStyle(ButtonStyle.Primary);
@@ -55,9 +55,9 @@ class StudiedEmbedView extends UpDownView {
     this.top.setDisabled(this.index == 0);
     this.up.setDisabled(this.index == 0);
 
-    if (this.index >= this.fields.length - 11) this.index = this.fields.length - 11;
-    this.down.setDisabled(this.index == this.fields.length - 11);
-    this.bottom.setDisabled(this.index == this.fields.length - 11);
+    if (this.index >= this.fields.length - 10) this.index = this.fields.length - 10;
+    this.down.setDisabled(this.index == this.fields.length - 10);
+    this.bottom.setDisabled(this.index == this.fields.length - 10);
   }
 }
 
