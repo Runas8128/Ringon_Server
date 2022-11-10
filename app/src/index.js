@@ -8,7 +8,6 @@ module.exports = {
 
   /** @type {RequestHandler} */
   get: (req, resp) => {
-    logger.info('GET /');
     resp.render('index');
   },
 };
