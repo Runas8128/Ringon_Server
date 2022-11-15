@@ -6,7 +6,9 @@ module.exports = {
   path: '/',
   methods: ['get'],
 
-  /** @type {RequestHandler} */
+  /**
+   * @type {RequestHandler}
+   */
   get: (req, resp) => {
     resp.render('index');
   },

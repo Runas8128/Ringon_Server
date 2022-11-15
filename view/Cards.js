@@ -19,7 +19,9 @@ const otherField = ({ cost, desc }) => [
 ];
 
 class View extends UpDownView {
-  /** @param {Card[]} cards */
+  /**
+   * @param {Card[]} cards
+   */
   constructor(cards) {
     super();
     this.cards = cards;

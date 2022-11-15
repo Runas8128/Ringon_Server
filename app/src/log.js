@@ -6,12 +6,16 @@ module.exports = {
   path: '/log',
   methods: ['get', 'post'],
 
-  /** @type {RequestHandler} */
+  /**
+   * @type {RequestHandler}
+   */
   get: (req, resp) => {
     resp.render('log', { stuffs: log });
   },
 
-  /** @type {RequestHandler} */
+  /**
+   * @type {RequestHandler}
+   */
   post: (req, resp) => {
     let new_log = '';
     req.on('readable', () => {

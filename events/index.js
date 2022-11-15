@@ -13,9 +13,7 @@ const { config_common: { events } } = require('../config');
  *    @property {EventExecute} execute
  */
 
-/**
- * @param {Client} client
- */
+/** @param {Client} client */
 module.exports = (client) => {
   for (const name of events) {
     /** @type {Event} */
