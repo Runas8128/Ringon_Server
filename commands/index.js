@@ -31,20 +31,20 @@ const logger = require('../util/Logger').getLogger(__filename);
 function load_commands() {
   /** @type {Command[]} */
   const commandList = [];
-
   logger.info('loading commands');
-  for (const [group, command_names] of Object.entries(commands)) {
-    for (const command_name of command_names) {
-      /**
-       *  @type {Command}
-       */
-      const command = require(path.join(__dirname, group, command_name));
-      if (command.perm == 'admin') {
-        command.data.setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
-      }
-      commandList.push(command);
-    }
-  }
+
+  Object.entries(commands)
+    .forEach(([group, command_names]) =>
+      command_names.forEach(command_name => {
+        /** @type {Command} */
+        const command = require(path.join(__dirname, group, command_name));
+
+        if (command.perm == 'admin') {
+          command.data.setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
+        }
+        commandList.push(command);
+      }),
+    );
   logger.info(`Successfully loaded ${commandList.length} commands.`);
   return commandList;
 }
@@ -104,9 +104,7 @@ function add_command_listener(client, commandList) {
 }
 
 module.exports = {
-  /**
-   * @param {Client} client
-   */
+  /** @param {Client} client */
   init: (client) => {
     const commandList = load_commands();
     deploy_commands(commandList, process.env.discord);

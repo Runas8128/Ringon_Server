@@ -71,11 +71,10 @@ class DeckList {
     if (image_url) deck.image_url = image_url;
     deck.version += 1;
 
-    if (
-      updater != deck.author &&
-      !(this.contrib.some(obj =>
-        obj.DeckID == deck.deck_id && obj.ContribID == updater))
-    ) {
+    const contribed = this.contrib.some(obj =>
+      obj.DeckID == deck.deck_id && obj.ContribID == updater);
+
+    if (updater != deck.author && !contribed) {
       this.contrib.push({ DeckID: deck.deck_id, ContribID: updater });
       this.contrib_db.push(
         { name: 'DeckID', value: deck.deck_id, type: 'title' },
@@ -105,17 +104,10 @@ class DeckList {
 
     const member_cache = guild.members.cache;
     const author = member_cache.find(member => member.id == deck.author);
-    if (author) {
-      deck_info.setAuthor({
-        name: author.displayName,
-        iconURL: author.displayAvatarURL(),
-      });
-    }
-    else {
-      deck_info.setAuthor({
-        name: '정보 없음',
-      });
-    }
+    deck_info.setAuthor({
+      name: author.displayName ?? '정보없음',
+      iconURL: author.displayAvatarURL?.(),
+    });
 
     if (deck.version > 1) {
       deck_info.addFields({ name: '업데이트 횟수', value: deck.version });
@@ -183,18 +175,16 @@ class DeckList {
    * @param {Deck} deck
    * @returns {Notion.PropertyPayload[]}
    */
-  propertify(deck) {
-    return [
-      { name: 'deck_id', type: 'number', value: deck.deck_id },
-      { name: 'name', type: 'title', value: deck.name },
-      { name: 'clazz', type: 'select', value: deck.clazz },
-      { name: 'desc', type: 'rich_text', value: deck.desc },
-      { name: 'author', type: 'rich_text', value: deck.author },
-      { name: 'image_url', type: 'rich_text', value: deck.image_url },
-      { name: 'timestamp', type: 'rich_text', value: deck.timestamp },
-      { name: 'version', type: 'number', value: deck.version },
-    ];
-  }
+  propertify = deck => [
+    { name: 'deck_id', type: 'number', value: deck.deck_id },
+    { name: 'name', type: 'title', value: deck.name },
+    { name: 'clazz', type: 'select', value: deck.clazz },
+    { name: 'desc', type: 'rich_text', value: deck.desc },
+    { name: 'author', type: 'rich_text', value: deck.author },
+    { name: 'image_url', type: 'rich_text', value: deck.image_url },
+    { name: 'timestamp', type: 'rich_text', value: deck.timestamp },
+    { name: 'version', type: 'number', value: deck.version },
+  ];
 }
 
 module.exports = DeckList;

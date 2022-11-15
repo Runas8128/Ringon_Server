@@ -14,15 +14,8 @@ const { config_common: { events } } = require('../config');
  */
 
 /** @param {Client} client */
-module.exports = (client) => {
-  for (const name of events) {
-    /** @type {Event} */
-    const event = require(path.join(__dirname, name));
-    if (event.once) {
-      client.once(event.name, event.execute);
-    }
-    else {
-      client.on(event.name, event.execute);
-    }
-  }
-};
+module.exports = (client) => events.forEach(event => {
+  /** @type {Event} */
+  const { once, name, execute } = require(path.join(__dirname, event));
+  client[once ? 'once' : 'on'](name, execute);
+});

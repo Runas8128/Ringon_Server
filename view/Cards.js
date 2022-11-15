@@ -39,32 +39,28 @@ class View extends UpDownView {
       .setCustomId(`Card_next_${Date.now()}`);
   }
 
-  build_embed() {
-    const card = this.cards[this.index];
+  build_embed = () => this._build_embed(this.cards[this.index]);
 
-    return new EmbedBuilder()
-      .setTitle(`카드 이름: ${card.name}`)
-      .setImage(`https://shadowverse-portal.com/image/card/phase2/common/C/C_${card.card_id}.png`)
-      .addFields((card.type == '추종자' ? followerField : otherField)(card));
-  }
+  _build_embed = card => new EmbedBuilder()
+    .setTitle(`카드 이름: ${card.name}`)
+    .setImage(`https://shadowverse-portal.com/image/card/phase2/common/C/C_${card.card_id}.png`)
+    .addFields((card.type == '추종자' ? followerField : otherField)(card));
 
-  build_actionrow() {
-    const { card_id } = this.cards[this.index];
+  build_actionrow = () => this._build_actionrow(this.cards[this.index].card_id);
 
-    return new ActionRowBuilder()
-      .addComponents(
-        this.prev,
-        this.next,
-        new ButtonBuilder()
-          .setStyle(ButtonStyle.Link)
-          .setLabel('포탈 바로가기')
-          .setURL(`https://shadowverse-portal.com/card/${card_id}?lang=ko`),
-        new ButtonBuilder()
-          .setStyle(ButtonStyle.Link)
-          .setLabel('일러스트 보기')
-          .setURL(`https://svgdb.me/assets/cardanim/${card_id}.mp4`),
-      );
-  }
+  _build_actionrow = card_id => new ActionRowBuilder()
+    .addComponents(
+      this.prev,
+      this.next,
+      new ButtonBuilder()
+        .setStyle(ButtonStyle.Link)
+        .setLabel('포탈 바로가기')
+        .setURL(`https://shadowverse-portal.com/card/${card_id}?lang=ko`),
+      new ButtonBuilder()
+        .setStyle(ButtonStyle.Link)
+        .setLabel('일러스트 보기')
+        .setURL(`https://svgdb.me/assets/cardanim/${card_id}.mp4`),
+    );
 
   check_range() {
     if (this.index <= 0) this.index = 0;

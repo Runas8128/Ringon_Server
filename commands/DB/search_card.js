@@ -28,9 +28,7 @@ module.exports = {
     /**
      * @param {Card} card
      */
-    function kw_pred(card) {
-      return kws.filter(word => card.name.includes(word)).length;
-    }
+    const kw_pred = card => kws.filter(word => card.name.includes(word)).length;
 
     list = list.sort((c1, c2) => kw_pred(c2) - kw_pred(c1));
     const first_not_match_idx = list.findIndex(deck => kw_pred(deck, kws) == 0);

@@ -39,8 +39,9 @@ module.exports = {
   async execute(interaction) {
     if (!interaction.isButton()) return;
 
-    const button = hdr.button_map.find((obj) => obj.button.data.custom_id === interaction.customId);
-    button.callback(interaction);
+    hdr.button_map
+      .find((obj) => obj.button.data.custom_id === interaction.customId)
+      ?.callback?.(interaction);
   },
   eventHandler: hdr,
 };

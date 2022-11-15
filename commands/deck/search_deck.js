@@ -36,9 +36,8 @@ module.exports = {
      * @param {Deck} deck
      * @param {string[]} kws
      */
-    function kw_pred(deck, kws) {
-      return kws.filter((kw) => deck.name.includes(kw) || deck.desc.includes('#' + kw)).length;
-    }
+    const kw_pred = (deck, kws) =>
+      kws.filter((kw) => deck.name.includes(kw) || deck.desc.includes('#' + kw)).length;
 
     /** @type {Deck[]} */
     let decks = JSON.parse(JSON.stringify(decklist.decklist)); // Copy full decklist

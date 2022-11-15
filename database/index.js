@@ -46,9 +46,7 @@ class Manager {
     }
   }
 
-  load_all() {
-    Object.keys(this.loading).forEach(DB => this.load(DB));
-  }
+  load_all = () => Object.keys(this.loading).forEach(DB => this.load(DB));
 }
 
 module.exports = new Manager();

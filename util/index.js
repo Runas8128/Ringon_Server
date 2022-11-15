@@ -1,15 +1,15 @@
 const { RequestTimeoutError, APIResponseError, APIErrorCode } = require('@notionhq/client');
 const { ChatInputCommandInteraction, MessagePayload, InteractionReplyOptions } = require('discord.js');
 
-function isRetryable(error) {
-  return (error instanceof RequestTimeoutError) ||
-    (error instanceof APIResponseError && error.code == APIErrorCode.RateLimited);
-}
+const isRetryable = error =>
+  (error instanceof RequestTimeoutError) ||
+  (error instanceof APIResponseError && error.code == APIErrorCode.RateLimited);
 
 /**
  * @param {ChatInputCommandInteraction} interaction
  * @param {string|MessagePayload|InteractionReplyOptions} msg
  */
+// TODO: Delete this method
 async function reply(interaction, msg) {
   if (interaction.replied || interaction.deferred) {
     interaction.editReply(msg);
@@ -54,9 +54,7 @@ async function catch_timeout(interaction, callback, try_count) {
   }
 }
 
-function timer(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
+const timer = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 module.exports = {
   catch_timeout: catch_timeout,

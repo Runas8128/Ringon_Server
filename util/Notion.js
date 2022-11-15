@@ -2,6 +2,13 @@ const { Client, UnknownHTTPResponseError } = require('@notionhq/client');
 const { timer } = require('.');
 const logger = require('./Logger').getLogger(__filename);
 
+/**
+ *  @typedef PropertyPayload
+ *    @property {string} name
+ *    @property {string|number} value
+ *    @property {'title'|'rich_text'|'select'|'number'} type
+ */
+
 const notion = new Client({ auth: process.env.notion });
 
 const wrapper = {
@@ -11,47 +18,16 @@ const wrapper = {
   'number': prop => prop.value,
 };
 
-/**
- *  @typedef PropertyPayload
- *    @property {string} name
- *    @property {string|number} value
- *    @property {'title'|'rich_text'|'select'|'number'} type
- *
- *  @param {PropertyPayload} prop
- */
-const wrap_property = prop =>
-  ({ [prop.type]: wrapper[prop.type]?.(prop) });
+const wrap_property = prop => ({ [prop.type]: wrapper[prop.type]?.(prop) });
 
-/**
- *  @typedef RichText
- *    @property {string} plain_text
- *
- *  @typedef Select
- *    @property {string} name
- *
- *  @typedef {'page_id' | 'rich_text' | 'title' | 'number' | 'select'} PropertyType
- *
- *  @typedef Property
- *    @property {PropertyType} type
- *    @property {RichText[]?} title
- *    @property {RichText[]?} rich_text
- *    @property {number?} number
- *    @property {Select?} select
- *
- *  @param {Property} prop
- *  @returns {string | number}
- */
-function unwrap_property(prop) {
-  if (prop.type == 'title' || prop.type == 'rich_text') {
-    return prop[prop.type][0].plain_text;
-  }
-  else if (prop.type == 'number') {
-    return prop.number;
-  }
-  else if (prop.type == 'select') {
-    return prop.select.name;
-  }
-}
+const unwrapper = {
+  'title': prop => prop.title[0].plain_text,
+  'rich_text': prop => prop.rich_text[0].plain_text,
+  'number': prop => prop.number,
+  'select': prop => prop.select.name,
+};
+
+const unwrap_property = prop => unwrapper[prop.type]?.(prop);
 
 class Database {
   /**
@@ -66,30 +42,23 @@ class Database {
    */
   async push(...stuffs) {
     try {
-      const properties = {};
-      for (const stuff of stuffs) {
-        properties[stuff.name] = wrap_property(stuff);
-      }
-
       return notion.pages.create({
         parent: {
           type: 'database_id',
           database_id: this.database_id,
         },
-        properties: properties,
+        properties: stuffs
+          .reduce((prev, curr) => ({ ...prev, [curr.name]: wrap_property(curr) })),
       });
     }
     catch (err) {
-      if (err instanceof UnknownHTTPResponseError) {
-        logger.warn(
-          `Unknown HTTP response error: code ${err.code}, retrying in 100ms`,
-        );
-        await timer(100);
-        this.push(...stuffs);
-      }
-      else {
-        throw err;
-      }
+      if (!(err instanceof UnknownHTTPResponseError)) throw err;
+
+      logger.warn(
+        `Unknown HTTP response error: code ${err.code}, retrying in 100ms`,
+      );
+      await timer(100);
+      this.push(...stuffs);
     }
   }
 
@@ -97,17 +66,12 @@ class Database {
    * @param {string} page_id
    * @param {PropertyPayload[]} stuffs
    */
-  async update(page_id, ...stuffs) {
-    const properties = {};
-    for (const stuff of stuffs) {
-      properties[stuff.name] = wrap_property(stuff);
-    }
-
-    return notion.pages.update({
+  update = (page_id, ...stuffs) =>
+    notion.pages.update({
       page_id: page_id,
-      properties: properties,
+      properties: stuffs
+        .reduce((prev, curr) => ({ ...prev, [curr.name]: wrap_property(curr) })),
     });
-  }
 
   /**
    *  @typedef PropertyDiscriptor
@@ -127,19 +91,17 @@ class Database {
         database_id: this.database_id,
         start_cursor: start_cursor,
       });
-      pages.results.forEach((result) => {
-        const obj = {};
 
-        properties.forEach((property) => {
-          if (property.type == 'page_id') {
-            obj[property.name] = result.id;
-          }
-          else {
-            obj[property.name] = unwrap_property(result.properties[property.name]);
-          }
-        });
-        data.push(obj);
-      });
+      pages.results
+        .forEach(result => data.push(
+          properties
+            .reduce((prev, { name, type }) => ({
+              ...prev,
+              [name]: type == 'page_id' ?
+                result.id :
+                unwrap_property(result.properties[name]),
+            })),
+        ));
       start_cursor = pages.next_cursor;
     } while (pages.has_more);
 
@@ -170,19 +132,9 @@ class Database {
   /**
    * @param {string} page_id
    */
-  async drop() {
-    /**
-     *  @typedef PageObject
-     *    @property {string} page_id
-     */
-    /** @type {PageObject[]} */
-    const all_page = await this.load(
-      { name: 'page_id', type: 'page_id' },
-    );
-    for (const page of all_page) {
-      this.delete(page.page_id);
-    }
-  }
+  drop = () => this
+    .load({ name: 'page_id', type: 'page_id' })
+    .then(pages => pages.forEach(({ page_id }) => this.delete(page_id)));
 }
 
 class Block {
@@ -194,25 +146,19 @@ class Block {
   }
 
   /**
-   * @returns {string}
+   * @returns {Promise<string>}
    */
-  async get_text() {
-    const result = await notion.blocks.retrieve({
-      block_id: this.block_id,
-    });
-
-    return result.paragraph.rich_text[0].plain_text;
-  }
+  get_text = () =>
+    notion.blocks.retrieve({ block_id: this.block_id })
+      .then(result => result.paragraph.rich_text[0].plain_text);
 
   /**
    * @param {string} new_string
    */
-  async update(new_string) {
-    notion.blocks.update({
-      block_id: this.block_id,
-      paragraph: { 'rich_text': [{ 'text': { 'content': new_string } }] },
-    });
-  }
+  update = new_string => notion.blocks.update({
+    block_id: this.block_id,
+    paragraph: { 'rich_text': [{ 'text': { 'content': new_string } }] },
+  });
 }
 
 module.exports = {

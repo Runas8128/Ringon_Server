@@ -12,8 +12,6 @@ module.exports = {
     if (message.author.bot) return;
 
     const detect_result = detect.get_result(message.content);
-    if (detect_result) {
-      message.channel.send(detect_result);
-    }
+    if (detect_result) message.channel.send(detect_result);
   },
 };
