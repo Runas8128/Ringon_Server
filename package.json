@@ -4,9 +4,10 @@
   "description": "The server for Ringon, discord bot for Shadowverse deck maintaining",
   "main": "index.js",
   "scripts": {
-    "test": "node test",
+    "build": "node build",
     "start": "node .",
-    "build": "node build"
+    "test": "node . --test",
+    "test-simple": "node test"
   },
   "author": "Runas",
   "license": "ISC",
@@ -18,7 +19,8 @@
     "ejs": "^3.1.8",
     "express": "^4.18.1",
     "jszip": "^3.10.1",
-    "winston": "^3.8.2"
+    "winston": "^3.8.2",
+    "yargs": "^17.6.2"
   },
   "devDependencies": {
     "@types/express": "^4.17.14",
