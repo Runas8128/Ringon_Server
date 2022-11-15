@@ -1,4 +1,4 @@
-const { MessageReaction, User, Message, EmbedBuilder, MessageMentions } = require('discord.js');
+const { MessageReaction, User, Message, EmbedBuilder } = require('discord.js');
 
 const { config_common: { classes } } = require('../config');
 const Manager = require('../database');
