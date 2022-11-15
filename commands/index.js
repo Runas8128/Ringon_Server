@@ -51,13 +51,12 @@ function load_commands() {
 
 /**
  * @param {Command[]} commands
- * @param {string} token
  */
-async function deploy_commands(commands, token) {
+async function deploy_commands(commands) {
   logger.info('deploying commands');
 
   try {
-    const rest = new REST({ version: '10' }).setToken(token);
+    const rest = new REST({ version: '10' }).setToken(process.env.discord);
     const { client, guild } = config.discord;
 
     const data = await rest.put(
@@ -108,11 +107,10 @@ function add_command_listener(client, commands) {
 module.exports = {
   /**
    * @param {Client} client
-   * @param {string} token
    */
-  init: (client, token) => {
+  init: (client) => {
     const commands = load_commands();
-    deploy_commands(commands, token);
+    deploy_commands(commands, process.env.discord);
     add_command_listener(client, commands);
   },
 

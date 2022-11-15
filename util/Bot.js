@@ -5,8 +5,6 @@ const { init: setup_commands } = require('../commands');
 
 class Bot {
   constructor() {
-    this.token = process.env.discord;
-
     const client = new Client({
       intents: [
         GatewayIntentBits.Guilds,
@@ -20,21 +18,20 @@ class Bot {
         Partials.Message,
       ],
     });
+
     setup_event(client);
-    setup_commands(client, this.token);
+    setup_commands(client);
 
     this.client = client;
   }
 
   login() {
     if (process.env.testing) {
-      this.client.login(this.token);
-      this.client.on('ready', () => {
-        this.client.user.setPresence({
-          status: 'dnd',
-          activities: [{ name: '버그 수정' }],
-        });
-      });
+      this.client.login(process.env.discord);
+      this.client.on('ready', ({ user }) => user.setPresence({
+        status: 'dnd',
+        activities: [{ name: '버그 수정' }],
+      }));
     }
   }
 }
