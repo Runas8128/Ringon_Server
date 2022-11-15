@@ -1,5 +1,5 @@
 const { ActionRowBuilder, ButtonStyle, Guild, SelectMenuBuilder, ComponentType, EmbedBuilder, ButtonInteraction } = require('discord.js');
-const { config_common } = require('../config');
+const { config_common: { classes } } = require('../config');
 const { decklist } = require('../database');
 const { Deck } = require('../database/decklist');
 const { eventHandler } = require('../events/btnClick');
@@ -57,7 +57,7 @@ class View extends UpDownView {
       return {
         label: name,
         description: shrunk_desc || '...',
-        emoji: config_common.classes[clazz],
+        emoji: classes[clazz],
         value: index.toString(),
       };
     });

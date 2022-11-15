@@ -1,7 +1,7 @@
 const path = require('path');
 const { Client } = require('discord.js');
 
-const { config_common } = require('../config');
+const { config_common: { events } } = require('../config');
 
 /**
  *  @callback EventExecute
@@ -17,7 +17,7 @@ const { config_common } = require('../config');
  * @param {Client} client
  */
 module.exports = (client) => {
-  for (const name of config_common.events) {
+  for (const name of events) {
     /** @type {Event} */
     const event = require(path.join(__dirname, name));
     if (event.once) {

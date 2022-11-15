@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, ChatInputCommandInteraction, AutocompleteInteraction } = require('discord.js');
 
-const { config_common } = require('../../config');
+const { config_common: { classes } } = require('../../config');
 const { decklist } = require('../../database');
 const { Deck } = require('../../database/decklist');
 const { reply } = require('../../util');
@@ -21,7 +21,7 @@ module.exports = {
     .addStringOption(option => option
       .setName('클래스')
       .setDescription('검색 대상: 클래스')
-      .addChoices(...Object.keys(config_common.classes)
+      .addChoices(...Object.keys(classes)
         .map(clazz => ({ name: clazz, value: clazz })),
       )),
   /**

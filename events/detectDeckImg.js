@@ -1,6 +1,6 @@
 const { Message, TextChannel } = require('discord.js');
 
-const { config_common } = require('../config');
+const { config_common: { classes } } = require('../config');
 
 module.exports = {
   name: 'messageCreate',
@@ -14,9 +14,9 @@ module.exports = {
       message.attachments.size > 0 &&
       message.channel instanceof TextChannel &&
       message.channel.parent?.name === 'Lab' &&
-      Object.keys(config_common.classes).includes(message.channel.name)
+      Object.keys(classes).includes(message.channel.name)
     )) return;
 
-    message.react(config_common.classes[message.channel.name]);
+    message.react(classes[message.channel.name]);
   },
 };

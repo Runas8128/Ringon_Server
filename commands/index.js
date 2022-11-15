@@ -1,7 +1,7 @@
 const path = require('path');
 const { Client, REST, Routes, PermissionFlagsBits, SlashCommandBuilder, ChatInputCommandInteraction, AutocompleteInteraction } = require('discord.js');
 
-const { config: { discord }, config_common } = require('../config');
+const { config: { discord }, config_common: { commands } } = require('../config');
 const { reply } = require('../util');
 const logger = require('../util/Logger').getLogger(__filename);
 
@@ -30,10 +30,10 @@ const logger = require('../util/Logger').getLogger(__filename);
  */
 function load_commands() {
   /** @type {Command[]} */
-  const commands = [];
+  const commandList = [];
 
   logger.info('loading commands');
-  for (const [group, command_names] of Object.entries(config_common.commands)) {
+  for (const [group, command_names] of Object.entries(commands)) {
     for (const command_name of command_names) {
       /**
        *  @type {Command}
@@ -42,17 +42,17 @@ function load_commands() {
       if (command.perm == 'admin') {
         command.data.setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
       }
-      commands.push(command);
+      commandList.push(command);
     }
   }
-  logger.info(`Successfully loaded ${commands.length} commands.`);
-  return commands;
+  logger.info(`Successfully loaded ${commandList.length} commands.`);
+  return commandList;
 }
 
 /**
- * @param {Command[]} commands
+ * @param {Command[]} commandList
  */
-async function deploy_commands(commands) {
+async function deploy_commands(commandList) {
   logger.info('deploying commands');
 
   try {
@@ -60,7 +60,7 @@ async function deploy_commands(commands) {
 
     const data = await rest.put(
       Routes.applicationGuildCommands(discord.client, discord.guild),
-      { body: commands.map(command => command.data.toJSON()) },
+      { body: commandList.map(command => command.data.toJSON()) },
     );
     logger.info(`Successfully deployed ${data.length} commands.`);
   }
@@ -71,9 +71,9 @@ async function deploy_commands(commands) {
 
 /**
  * @param {Client} client
- * @param {Command[]} commands
+ * @param {Command[]} commandList
  */
-function add_command_listener(client, commands) {
+function add_command_listener(client, commandList) {
   client.on('interactionCreate', async (interaction) => {
     logger.info(`Interaction created. name: ${interaction.commandName}`);
 
@@ -83,7 +83,7 @@ function add_command_listener(client, commands) {
     ) return;
 
     /** @type {Command?} */
-    const command = commands.find((cmd) => cmd.data.name == interaction.commandName);
+    const command = commandList.find((cmd) => cmd.data.name == interaction.commandName);
     if (!command) return;
 
     if (interaction.isAutocomplete()) {
@@ -108,9 +108,9 @@ module.exports = {
    * @param {Client} client
    */
   init: (client) => {
-    const commands = load_commands();
-    deploy_commands(commands, process.env.discord);
-    add_command_listener(client, commands);
+    const commandList = load_commands();
+    deploy_commands(commandList, process.env.discord);
+    add_command_listener(client, commandList);
   },
 
   load_commands,

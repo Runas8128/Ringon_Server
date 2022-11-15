@@ -1,6 +1,6 @@
 const { MessageReaction, User, Message, EmbedBuilder, MessageMentions } = require('discord.js');
 
-const { config_common } = require('../config');
+const { config_common: { classes } } = require('../config');
 const Manager = require('../database');
 const { timer } = require('../util');
 
@@ -91,8 +91,8 @@ module.exports = {
     if (message.partial) message = await message.fetch();
 
     if (!(
-      Object.keys(config_common.classes).includes(channel.name) &&
-      reaction.emoji.id === config_common.classes[channel.name] &&
+      Object.keys(classes).includes(channel.name) &&
+      reaction.emoji.id === classes[channel.name] &&
       user.id == message.author.id
     )) return;
 
