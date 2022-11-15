@@ -4,6 +4,13 @@ const logger = require('./Logger').getLogger(__filename);
 
 const notion = new Client({ auth: process.env.notion });
 
+const wrapper = {
+  'title': prop => [{ text: { content: prop.value } }],
+  'rich_text': prop => [{ text: { content: prop.value } }],
+  'select': prop => ({ name: prop.value }),
+  'number': prop => prop.value,
+};
+
 /**
  *  @typedef PropertyPayload
  *    @property {string} name
@@ -12,22 +19,8 @@ const notion = new Client({ auth: process.env.notion });
  *
  *  @param {PropertyPayload} prop
  */
-function wrap_property(prop) {
-  let obj;
-  if (prop.type == 'title' || prop.type == 'rich_text') {
-    obj = [ { text: { content: prop.value } } ];
-  }
-  else if (prop.type == 'select') {
-    obj = { name: prop.value };
-  }
-  else if (prop.type == 'number') {
-    obj = prop.value;
-  }
-
-  const data = {};
-  data[prop.type] = obj;
-  return data;
-}
+const wrap_property = prop =>
+  ({ [prop.type]: wrapper[prop.type]?.(prop) });
 
 /**
  *  @typedef RichText

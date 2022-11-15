@@ -25,13 +25,8 @@ class View {
     if (this.index <= 0) this.index = 0;
   }
 
-  build_embed() {
-    return new EmbedBuilder();
-  }
-
-  build_actionrow() {
-    return new ActionRowBuilder();
-  }
+  build_embed = () => new EmbedBuilder();
+  build_actionrow = () => new ActionRowBuilder();
 
   get_updated_msg() {
     this.check_range();

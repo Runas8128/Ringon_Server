@@ -39,7 +39,8 @@ class View extends UpDownView {
       .register(async (i) => await this._delete(i))
       .setStyle(ButtonStyle.Danger)
       .setLabel('삭제')
-      .setCustomId(`Deck_delete_${Date.now()}`);
+      .setCustomId(`Deck_delete_${Date.now()}`)
+      .setDisabled(this.decks.length == 0);
   }
 
   /**
@@ -91,34 +92,18 @@ class View extends UpDownView {
     await this.update_message(i, (index) => index + 1);
   }
 
-  build_embed() {
-    if (this.decks.length == 0) {
-      return new EmbedBuilder()
-        .setTitle('❌ 검색 결과가 없습니다.');
-    }
-    else {
-      return decklist.make_deck_embed(this.decks[this.index], this.guild);
-    }
-  }
+  build_embed = () => this.decks.length == 0 ?
+    new EmbedBuilder().setTitle('❌ 검색 결과가 없습니다.') :
+    decklist.make_deck_embed(this.decks[this.index], this.guild);
 
-  build_actionrow() {
-    return new ActionRowBuilder()
-      .addComponents(this.prev, this.menu, this.next, this.delete);
-  }
+  build_actionrow = () => new ActionRowBuilder()
+    .addComponents(this.prev, this.menu, this.next, this.delete);
 
   check_range() {
-    if (this.decks.length == 0) {
-      this.prev.setDisabled(true);
-      this.menu.setDisabled(true);
-      this.next.setDisabled(true);
-      this.delete.setDisabled(true);
-    }
-    else {
-      if (this.index <= 0) this.index = 0;
-      this.prev.setDisabled(this.index == 0);
-      if (this.index >= this.decks.length - 1) this.index = this.decks.length - 1;
-      this.next.setDisabled(this.index == this.decks.length - 1);
-    }
+    if (this.index <= 0) this.index = 0;
+    this.prev.setDisabled(this.index == 0);
+    if (this.index >= this.decks.length - 1) this.index = this.decks.length - 1;
+    this.next.setDisabled(this.index == this.decks.length - 1);
   }
 }
 

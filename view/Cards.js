@@ -3,10 +3,23 @@ const { eventHandler } = require('../events/btnClick');
 const { Card } = require('../database/cards');
 const UpDownView = require('./UpDownView');
 
+/** @param {Card}  */
+const followerField = ({ cost, atk, life, evo_atk, evo_life, desc, evo_desc }) => [
+  { name: '비용', value: cost.toString(), inline: true },
+  { name: '공격력/체력', value: `${atk}/${life}`, inline: true },
+  { name: '진화 후 공격력/체력', value: `${evo_atk}/${evo_life}`, inline: true },
+  { name: '진화 전 설명', value: desc.replace('<br>', '\n') || '...' },
+  { name: '진화 후 설명', value: evo_desc.replace('<br>', '\n') || '...', inline: true },
+];
+
+/** @param {Card} */
+const otherField = ({ cost, desc }) => [
+  { name: '비용', value: cost.toString() },
+  { name: '설명', value: desc.replace('<br>', '\n') },
+];
+
 class View extends UpDownView {
-  /**
-   * @param {Card[]} cards
-   */
+  /** @param {Card[]} cards */
   constructor(cards) {
     super();
     this.cards = cards;
@@ -27,44 +40,28 @@ class View extends UpDownView {
   build_embed() {
     const card = this.cards[this.index];
 
-    const embed = new EmbedBuilder()
+    return new EmbedBuilder()
       .setTitle(`카드 이름: ${card.name}`)
-      .setImage(`https://shadowverse-portal.com/image/card/phase2/common/C/C_${card.card_id}.png`);
-    if (card.type == '추종자') {
-      embed.addFields(
-        { name: '비용', value: card.cost.toString(), inline: true },
-        { name: '공격력/체력', value: `${card.atk}/${card.life}`, inline: true },
-        { name: '진화 후 공격력/체력', value: `${card.evo_atk}/${card.evo_life}`, inline: true },
-        { name: '진화 전 설명', value: card.desc.replace('<br>', '\n') || '...' },
-        { name: '진화 후 설명', value: card.evo_desc.replace('<br>', '\n') || '...', inline: true },
-      );
-    }
-    else {
-      embed.addFields(
-        { name: '비용', value: card.cost.toString() },
-        { name: '설명', value: card.desc.replace('<br>', '\n') },
-      );
-    }
-    return embed;
+      .setImage(`https://shadowverse-portal.com/image/card/phase2/common/C/C_${card.card_id}.png`)
+      .addFields((card.type == '추종자' ? followerField : otherField)(card));
   }
 
   build_actionrow() {
-    const card = this.cards[this.index];
+    const { card_id } = this.cards[this.index];
 
-    const row = new ActionRowBuilder()
+    return new ActionRowBuilder()
       .addComponents(
         this.prev,
         this.next,
         new ButtonBuilder()
           .setStyle(ButtonStyle.Link)
           .setLabel('포탈 바로가기')
-          .setURL(`https://shadowverse-portal.com/card/${card.card_id}?lang=ko`),
+          .setURL(`https://shadowverse-portal.com/card/${card_id}?lang=ko`),
         new ButtonBuilder()
           .setStyle(ButtonStyle.Link)
           .setLabel('일러스트 보기')
-          .setURL(`https://svgdb.me/assets/cardanim/${card.card_id}.mp4`),
+          .setURL(`https://svgdb.me/assets/cardanim/${card_id}.mp4`),
       );
-    return row;
   }
 
   check_range() {
