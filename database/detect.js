@@ -1,4 +1,4 @@
-const { config } = require('../config');
+const { config: { notion } } = require('../config');
 const Notion = require('../util/Notion');
 
 /**
@@ -34,7 +34,7 @@ function select_weight(targets, weights) {
  */
 class Detect {
   constructor() {
-    this.id_map = config.notion.detect;
+    this.id_map = notion.detect;
     this.full_db = new Notion.Database(this.id_map.full);
     this.prob_db = new Notion.Database(this.id_map.prob);
 
@@ -43,6 +43,11 @@ class Detect {
     /** @type {ProbDetectObj[]} */
     this.prob = [];
   }
+
+  get_full = target =>
+    this.full.find(({ target_ }) => target_ == target)?.result;
+  get_prob = target =>
+    this.prob.find(({ target_ }) => target_ == target);
 
   /**
    * @param {string} target

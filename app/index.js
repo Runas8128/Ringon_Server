@@ -1,7 +1,7 @@
 const path = require('path');
 const express = require('express');
 
-const { config_common } = require('../config');
+const { config_common: { pages } } = require('../config');
 
 /**
  *  @typedef Page
@@ -25,7 +25,7 @@ class App {
   }
 
   load_page() {
-    for (const page_name of config_common.pages) {
+    for (const page_name of pages) {
       /** @type {Page} */
       const page = require(path.join(__dirname, 'src', page_name));
       for (const method of page.methods) {

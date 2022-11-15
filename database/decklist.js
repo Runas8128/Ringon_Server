@@ -1,6 +1,6 @@
 const { EmbedBuilder, Guild, TextChannel, Client } = require('discord.js');
 
-const { config, config_common } = require('../config');
+const { config: { notion, discord }, config_common: { classes } } = require('../config');
 const Notion = require('../util/Notion');
 
 /**
@@ -22,7 +22,7 @@ const Notion = require('../util/Notion');
 
 class DeckList {
   constructor() {
-    this.id_map = config.notion.deck;
+    this.id_map = notion.deck;
 
     this.list_db = new Notion.Database(this.id_map.list);
     this.contrib_db = new Notion.Database(this.id_map.contrib);
@@ -39,51 +39,20 @@ class DeckList {
   }
 
   /**
-   * @param {Client} client
-   */
-  analyze(client) {
-    const total_count = this.decklist.length;
-    const embed = new EmbedBuilder()
-      .setTitle(`총 ${total_count}개 덱 분석 결과`);
-
-    Object.keys(config_common.classes).forEach((clazz) => {
-      const count = this.decklist.filter((deck) => deck.clazz == clazz).length;
-      if (count == 0) return;
-
-      const class_emoji = client.emojis.cache.find(emoji => emoji.id == config_common.classes[clazz]);
-      embed.addFields({
-        name: `${class_emoji} ${clazz}`,
-        value: `${count}개 (점유율: ${(count / total_count * 100).toPrecision(4)}%)`,
-        inline: true,
-      });
-    });
-
-    return embed;
-  }
-
-  /**
    * @param {string} new_pack
    * @param {Guild} guild
    */
   async update_pack(new_pack, guild) {
-    for (const deck of this.decklist) {
-      this._delete_deck(deck, guild);
-    }
+    this.decklist.forEach(this._delete_deck(guild));
     this.pack_block.update(new_pack);
   }
 
-  /**
-   * @param {Deck} deck
-   * @param {Guild} guild
-   */
-  async _delete_deck(deck, guild) {
-    if (this.history === undefined) {
-      this.history = guild.channels.cache.find((ch) =>
-        ch.id == config.discord.channel.history);
-    }
+  /** @param {Guild} guild */
+  _delete_deck = guild => deck => {
+    this.history ??= guild.channels.cache.find(({ id }) => id == discord.channel.history);
     this.history.send({ embeds: [this.make_deck_embed(deck, guild)] });
     this.list_db.delete(deck.page_id);
-  }
+  };
 
   /**
    * @param {Guild} guild

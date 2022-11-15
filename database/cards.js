@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const { config } = require('../config');
+const { config: { notion } } = require('../config');
 const { Database } = require('../util/Notion');
 
 /**
@@ -39,33 +39,34 @@ const char_map = {
   4: '스펠',
 };
 
+/**
+ * @param {card_payload} payload
+ * @return {Card}
+ */
+const parse_payload = ({
+  card_id, card_name, cost, char_type,
+  atk, life, skill_disc,
+  evo_atk, evo_life, evo_skill_disc,
+}) => ({
+  card_id,
+  name: card_name,
+  cost,
+  type: char_map[char_type],
+  atk,
+  life,
+  desc: skill_disc,
+  evo_atk,
+  evo_life,
+  evo_desc: evo_skill_disc,
+});
+
 class Cards {
   constructor() {
-    this.id_map = config.notion.cards;
+    this.id_map = notion.cards;
     this.db = new Database(this.id_map.cards);
 
     /** @type {Card[]} */
     this.cards = [];
-  }
-
-  /** @param {card_payload} payload */
-  parse_payload({
-    card_id, card_name, cost, char_type,
-    atk, life, skill_disc,
-    evo_atk, evo_life, evo_skill_disc,
-  }) {
-    return {
-      card_id,
-      name: card_name,
-      cost,
-      type: char_map[char_type],
-      atk,
-      life,
-      desc: skill_disc,
-      evo_atk,
-      evo_life,
-      evo_desc: evo_skill_disc,
-    };
   }
 
   async load() {
@@ -75,7 +76,7 @@ class Cards {
 
     this.cards = payloads
       .filter(card => card.card_name)
-      .map(this.parse_payload)
+      .map(parse_payload)
       .sort((card1, card2) => card1.card_id - card2.card_id);
   }
 }
