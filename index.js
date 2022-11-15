@@ -18,9 +18,7 @@ const argv = yargs
 
 console.log(argv);
 
-if (Object.keys(argv).includes('test')) {
-  process.env.testing = true;
-}
+process.env.testing = Object.keys(argv).includes('test');
 
 require('./config').init();
 require('./app').start();
