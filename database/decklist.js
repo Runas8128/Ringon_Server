@@ -1,6 +1,6 @@
-const { EmbedBuilder, Guild, TextChannel, Client } = require('discord.js');
+const { EmbedBuilder, Guild, TextChannel } = require('discord.js');
 
-const { config: { notion, discord }, config_common: { classes } } = require('../config');
+const { config: { notion, discord } } = require('../config');
 const Notion = require('../util/Notion');
 
 /**
