@@ -1,7 +1,7 @@
 const path = require('path');
 const { Client, REST, Routes, PermissionFlagsBits, SlashCommandBuilder, ChatInputCommandInteraction, AutocompleteInteraction } = require('discord.js');
 
-const { config, config_common } = require('../config');
+const { config: { discord }, config_common } = require('../config');
 const { reply } = require('../util');
 const logger = require('../util/Logger').getLogger(__filename);
 
@@ -57,10 +57,9 @@ async function deploy_commands(commands) {
 
   try {
     const rest = new REST({ version: '10' }).setToken(process.env.discord);
-    const { client, guild } = config.discord;
 
     const data = await rest.put(
-      Routes.applicationGuildCommands(client, guild),
+      Routes.applicationGuildCommands(discord.client, discord.guild),
       { body: commands.map(command => command.data.toJSON()) },
     );
     logger.info(`Successfully deployed ${data.length} commands.`);

@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, ChatInputCommandInteraction } = require('discord.js');
 const { ChannelManager, Message, User, EmbedBuilder } = require('discord.js');
 
-const { config } = require('../../config');
+const { config: { discord } } = require('../../config');
 
 /**
  * @param {string} URL
@@ -71,7 +71,7 @@ module.exports = {
 
     const indi_emoji = interaction.options.getString('emoji') || '👍 👎 ';
     const all_member = await interaction.guild.members.cache.filter(user =>
-      user.roles.cache.has(config.discord.role.all));
+      user.roles.cache.has(discord.role.all));
     const result = collect_reaction(message, indi_emoji.split(' '), all_member);
 
     const embed = new EmbedBuilder()
