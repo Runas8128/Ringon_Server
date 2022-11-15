@@ -2,7 +2,6 @@ const { SlashCommandBuilder, ChatInputCommandInteraction: Interaction, EmbedBuil
 
 const { config_common: { classes } } = require('../../config');
 const { decklist } = require('../../database');
-const { reply } = require('../../util');
 
 /** @param {string} clazz */
 const getClassCount = clazz =>
@@ -46,6 +45,6 @@ module.exports = {
         });
       });
 
-    reply(interaction, { embeds: [ embed ] });
+    interaction.reply({ embeds: [ embed ] });
   },
 };

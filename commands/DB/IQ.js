@@ -1,7 +1,6 @@
 const { SlashCommandBuilder, ChatInputCommandInteraction } = require('discord.js');
 
 const { detect } = require('../../database');
-const { reply } = require('../../util');
 
 module.exports = {
   perm: 'member',
@@ -11,9 +10,8 @@ module.exports = {
   /**
    * @param {ChatInputCommandInteraction} interaction
    */
-  async execute(interaction) {
+  execute(interaction) {
     const count = detect.full.length + new Set(detect.prob.map((obj) => obj.target)).size;
-    const msg = `링곤 사전을 보니, 저의 아이큐는 ${count}이라고 하네요!`;
-    reply(interaction, msg);
+    return interaction.reply(`링곤 사전을 보니, 저의 아이큐는 ${count}이라고 하네요!`);
   },
 };

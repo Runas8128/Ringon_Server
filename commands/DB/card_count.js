@@ -1,7 +1,6 @@
 const { SlashCommandBuilder, ChatInputCommandInteraction } = require('discord.js');
 
 const { cards } = require('../../database');
-const { reply } = require('../../util');
 
 module.exports = {
   perm: 'member',
@@ -11,7 +10,7 @@ module.exports = {
   /**
    * @param {ChatInputCommandInteraction} interaction
    */
-  async execute(interaction) {
-    reply(interaction, `현재 로드된 카드는 총 ${cards.cards.length}개입니다.`);
+  execute(interaction) {
+    return interaction.reply(`현재 로드된 카드는 총 ${cards.cards.length}개입니다.`);
   },
 };

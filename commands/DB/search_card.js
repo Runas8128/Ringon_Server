@@ -1,7 +1,6 @@
 const { SlashCommandBuilder, ChatInputCommandInteraction, AutocompleteInteraction } = require('discord.js');
 const { cards } = require('../../database');
 const { Card } = require('../../database/cards');
-const { reply } = require('../../util');
 
 const CardView = require('../../view/Cards');
 
@@ -34,10 +33,7 @@ module.exports = {
     const first_not_match_idx = list.findIndex(deck => kw_pred(deck, kws) == 0);
     list.splice(first_not_match_idx);
 
-    reply(
-      interaction,
-      new CardView(list).get_updated_msg(interaction),
-    );
+    interaction.reply(new CardView(list).get_updated_msg(interaction));
   },
   /**
    * @param {AutocompleteInteraction} interaction

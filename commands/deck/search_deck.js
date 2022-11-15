@@ -3,7 +3,6 @@ const { SlashCommandBuilder, ChatInputCommandInteraction, AutocompleteInteractio
 const { config_common: { classes } } = require('../../config');
 const { decklist } = require('../../database');
 const { Deck } = require('../../database/decklist');
-const { reply } = require('../../util');
 const DecklistView = require('../../view/Decklist');
 
 module.exports = {
@@ -57,8 +56,7 @@ module.exports = {
       decks = decks.filter(deck => deck.clazz == clazz);
     }
 
-    reply(
-      interaction,
+    interaction.reply(
       new DecklistView(decks, interaction.guild).get_updated_msg(interaction),
     );
   },

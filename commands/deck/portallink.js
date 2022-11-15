@@ -1,7 +1,6 @@
 const axios = require('axios');
 const { SlashCommandBuilder, ChatInputCommandInteraction } = require('discord.js');
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
-const { reply } = require('../../util');
 
 module.exports = {
   perm: 'member',
@@ -28,8 +27,7 @@ module.exports = {
       `https://shadowverse-portal.com/api/v1/deck/import?format=json&deck_code=${deck_code}`)).data;
 
     if (result.data.errors.length > 0) {
-      return reply(
-        interaction,
+      return interaction.reply(
         '덱 코드가 무효하거나, 잘못 입력되었습니다. 다시 입력해 주시기 바랍니다.',
       );
     }
@@ -40,6 +38,6 @@ module.exports = {
           .setStyle(ButtonStyle.Link)
           .setURL(`https://shadowverse-portal.com/deck/${result.data.hash}?lang=ko`),
       );
-    reply(interaction, { components: [row] });
+    interaction.reply({ components: [row] });
   },
 };

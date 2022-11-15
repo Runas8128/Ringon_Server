@@ -9,15 +9,8 @@ const isRetryable = error =>
  * @param {ChatInputCommandInteraction} interaction
  * @param {string|MessagePayload|InteractionReplyOptions} msg
  */
-// TODO: Delete this method
-async function reply(interaction, msg) {
-  if (interaction.replied || interaction.deferred) {
-    interaction.editReply(msg);
-  }
-  else {
-    interaction.reply(msg);
-  }
-}
+const reply = (interaction, msg) =>
+  interaction[interaction.replied || interaction.deferred ? 'editReply' : 'reply'](msg);
 
 /**
  * @param {ChatInputCommandInteraction} interaction
@@ -58,6 +51,5 @@ const timer = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 module.exports = {
   catch_timeout: catch_timeout,
-  reply: reply,
   timer: timer,
 };

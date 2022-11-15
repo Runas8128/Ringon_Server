@@ -39,7 +39,7 @@ module.exports = {
           inline: false,
         })),
     );
-    reply(interaction, new StudiedView(
+    interaction.reply(new StudiedView(
       fields.length > 0 ?
         fields :
         [{ name: '엥 비어있네요', value: '왜지...', inline: true }],
