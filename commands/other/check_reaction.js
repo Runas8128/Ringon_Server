@@ -65,12 +65,10 @@ module.exports = {
   async execute(interaction) {
     const URL = interaction.options.getString('url');
     const message = parseURL(URL, interaction.client.channels);
-    if (!message) {
-      return interaction.reply('올바른 메시지 링크를 입력해주세요.');
-    }
+    if (!message) return interaction.reply('올바른 메시지 링크를 입력해주세요.');
 
     const indi_emoji = interaction.options.getString('emoji') || '👍 👎 ';
-    const all_member = await interaction.guild.members.cache.filter(user =>
+    const all_member = interaction.guild.members.cache.filter(user =>
       user.roles.cache.has(discord.role.all));
     const result = collect_reaction(message, indi_emoji.split(' '), all_member);
 
