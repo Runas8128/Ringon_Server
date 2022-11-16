@@ -11,6 +11,6 @@ module.exports = {
    * @param {ChatInputCommandInteraction} interaction
    */
   execute(interaction) {
-    return interaction.reply(`현재 로드된 카드는 총 ${cards.cards.length}개입니다.`);
+    interaction.reply(`현재 로드된 카드는 총 ${cards.cards.length}개입니다.`);
   },
 };
