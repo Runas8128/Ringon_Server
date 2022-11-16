@@ -3,20 +3,6 @@ const { SlashCommandBuilder, ChatInputCommandInteraction: Interaction, EmbedBuil
 const { config_common: { classes } } = require('../../config');
 const { decklist } = require('../../database');
 
-/** @param {string} clazz */
-const getClassCount = clazz =>
-  decklist.decklist.filter((deck) => deck.clazz == clazz).length;
-
-/** @param {number} total_count */
-const shareFactory = total_count =>
-  /** @param {number} count */
-  count =>
-    (count / total_count * 100).toPrecision(4);
-
-/** @param {Interaction} interaction */
-const emojiCache = interaction =>
-  interaction.client.emojis.cache;
-
 module.exports = {
   perm: 'member',
   data: new SlashCommandBuilder()
@@ -25,7 +11,7 @@ module.exports = {
   /**
    * @param {Interaction} interaction
    */
-  async execute(interaction) {
+  execute(interaction) {
     const total_count = decklist.decklist.length;
     const getShare = shareFactory(total_count);
 
@@ -48,3 +34,17 @@ module.exports = {
     interaction.reply({ embeds: [ embed ] });
   },
 };
+
+/** @param {string} clazz */
+const getClassCount = clazz =>
+  decklist.decklist.filter((deck) => deck.clazz == clazz).length;
+
+/** @param {number} total_count */
+const shareFactory = total_count =>
+  /** @param {number} count */
+  count =>
+    (count / total_count * 100).toPrecision(4);
+
+/** @param {Interaction} interaction */
+const emojiCache = interaction =>
+  interaction.client.emojis.cache;
