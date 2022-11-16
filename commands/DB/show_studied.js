@@ -1,7 +1,6 @@
 const { SlashCommandBuilder, ChatInputCommandInteraction, APIEmbedField } = require('discord.js');
 
 const { detect } = require('../../database');
-const { reply } = require('../../util');
 const StudiedView = require('../../view/Studied');
 
 module.exports = {
