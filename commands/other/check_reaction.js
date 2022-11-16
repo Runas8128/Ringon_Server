@@ -10,7 +10,7 @@ const { config: { discord } } = require('../../config');
 function parseURL(URL, channel_manager) {
   if (!URL.includes('discord.com/channels')) return null;
 
-  const url_part = URL.slice('/');
+  const url_part = URL.split('/');
   url_part.splice(0, url_part.length - 2);
   const [channel_id, message_id] = url_part;
 
