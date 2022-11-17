@@ -69,17 +69,17 @@ class Detect {
     return null;
   }
 
-  async load() {
-    this.full = await this.full_db.load(
+  load() {
+    this.full_db.load(
       { name: 'target', type: 'title' },
       { name: 'result', type: 'rich_text' },
-    );
+    ).then(result => this.full = result);
 
-    this.prob = await this.prob_db.load(
+    this.prob_db.load(
       { name: 'target', type: 'title' },
       { name: 'result', type: 'rich_text' },
       { name: 'ratio', type: 'number' },
-    );
+    ).then(result => this.prob = result);
   }
 }
 

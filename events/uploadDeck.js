@@ -31,28 +31,25 @@ class DeckUploader {
   }
 
   async upload(name, desc, try_count) {
-    if (Manager.loading.decklist) {
+    while (Manager.loading.decklist) {
       if (try_count == 0) {
         await this.origin.channel.send('DB를 로드하는 중입니다. 잠시만 기다려주세요...');
       }
       await timer(100);
-      await this.upload(name, desc, try_count + 1);
     }
-    else {
-      Manager.decklist.upload({
-        name: name,
-        clazz: this.origin.channel.name,
-        desc: desc,
-        author: this.origin.author.id,
-        image_url: this.origin.attachments.first().url,
-      })
-        .then(() => this.origin.reply({
-          content: '덱 등록을 성공적으로 마쳤습니다!',
-          allowedMentions: {
-            repliedUser: false,
-          },
-        }));
-    }
+    Manager.decklist.upload({
+      name: name,
+      clazz: this.origin.channel.name,
+      desc: desc,
+      author: this.origin.author.id,
+      image_url: this.origin.attachments.first().url,
+    })
+      .then(() => this.origin.reply({
+        content: '덱 등록을 성공적으로 마쳤습니다!',
+        allowedMentions: {
+          repliedUser: false,
+        },
+      }));
   }
 
   /**
@@ -61,20 +58,15 @@ class DeckUploader {
     *    @param {string?} payload.subprompt
     *    @param {number?} payload.timeout
     */
-  async collect({ prompt, subprompt, timeout }) {
-    const embed = new EmbedBuilder().setTitle(prompt);
-    if (subprompt) embed.setDescription(subprompt);
-
-    await this.origin.reply({ embeds: [embed], allowedMentions: { repliedUser: false } });
-
-    const result = await this.origin.channel.awaitMessages({
+  collect = ({ prompt, subprompt, timeout }) =>
+    this.origin.reply({
+      embeds: [buildEmbed(prompt, subprompt)],
+      allowedMentions: { repliedUser: false },
+    }).then(() => this.origin.channel.awaitMessages({
       filter: (msg) => msg.author.id == this.origin.author.id,
       max: 1,
       time: timeout,
-    });
-
-    return result.first()?.content;
-  }
+    })).then(result => result.first()?.content);
 }
 
 module.exports = {
@@ -99,3 +91,9 @@ module.exports = {
     new DeckUploader(message).get_input();
   },
 };
+
+const buildEmbed = (prompt, subprompt) =>
+  new EmbedBuilder()
+    .setTitle(prompt)
+    .setDescription(subprompt);
+

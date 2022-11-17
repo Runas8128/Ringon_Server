@@ -19,22 +19,22 @@ class StudiedEmbedView extends UpDownView {
     this.fields = fields;
 
     this.top = eventHandler
-      .register(async (i) => await this.update_message(i, () => 0))
+      .register(i => this.update_message(i, () => 0))
       .setLabel('≪ 맨 앞으로')
       .setCustomId(`Studied_top_${Date.now()}`)
       .setStyle(ButtonStyle.Primary);
     this.up = eventHandler
-      .register(async (i) => await this.update_message(i, index => index - 10))
+      .register(i => this.update_message(i, index => index - 10))
       .setLabel('< 앞으로')
       .setCustomId(`Studied_up_${Date.now()}`)
       .setStyle(ButtonStyle.Primary);
     this.down = eventHandler
-      .register(async (i) => await this.update_message(i, index => index + 10))
+      .register(i => this.update_message(i, index => index + 10))
       .setLabel('뒤로 >')
       .setCustomId(`Studied_down_${Date.now()}`)
       .setStyle(ButtonStyle.Primary);
     this.bottom = eventHandler
-      .register(async (i) => await this.update_message(i, () => this.fields.length - 10))
+      .register(i => this.update_message(i, () => this.fields.length - 10))
       .setLabel('맨 뒤로 ≫')
       .setCustomId(`Studied_bottom_${Date.now()}`)
       .setStyle(ButtonStyle.Primary);

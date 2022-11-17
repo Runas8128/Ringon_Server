@@ -36,7 +36,7 @@ module.exports = {
   /**
    * @param {Interaction} interaction
    */
-  async execute(interaction) {
+  execute(interaction) {
     if (!interaction.isButton()) return;
 
     hdr.button_map

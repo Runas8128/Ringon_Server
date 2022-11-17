@@ -11,7 +11,7 @@ module.exports = {
   /**
    * @param {ChatInputCommandInteraction} interaction
    */
-  async execute(interaction) {
+  execute(interaction) {
     const fields = detect.full.map(full2Field);
     fields.push(
       ...unique(Object.values(detect.prob).map(({ target }) => target))

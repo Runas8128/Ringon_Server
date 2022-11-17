@@ -8,7 +8,7 @@ module.exports = {
   /**
    * @param {Message} message
    */
-  async execute(message) {
+  execute(message) {
     if (message.author.bot) return;
 
     const detect_result = detect.get_result(message.content);

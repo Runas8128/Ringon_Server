@@ -16,10 +16,8 @@ module.exports = {
    */
   execute(interaction) {
     interaction.deferReply()
-      .then(() => axios
-        .get(portalURL(interaction.options.getString('덱코드')))
-        .then(({ data }) =>
-          interaction.reply(buildMsg(data.data))));
+      .then(() => axios.get(portalURL(interaction.options.getString('덱코드'))))
+      .then(({ data }) => interaction.reply(buildMsg(data.data)));
   },
 };
 

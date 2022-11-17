@@ -23,7 +23,7 @@ module.exports = {
   /**
    * @param {ChatInputCommandInteraction} interaction
    */
-  async execute(interaction) {
+  execute(interaction) {
     const URL = interaction.options.getString('url');
     const message = parseURL(URL, interaction.client.channels);
     if (!message) return interaction.reply('올바른 메시지 링크를 입력해주세요.');

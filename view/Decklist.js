@@ -17,26 +17,26 @@ class View extends UpDownView {
     this.guild = guild;
 
     this.prev = eventHandler
-      .register(async (i) => await this.update_message(i, (index) => index - 1))
+      .register(i => this.update_message(i, (index) => index - 1))
       .setStyle(ButtonStyle.Primary)
       .setLabel('≪ 이전 덱')
       .setCustomId(`Deck_prev_${Date.now()}`);
 
     this.menu = eventHandler
-      .register(async (i) => await this.open_menu(i))
+      .register(i => this.open_menu(i))
       .setStyle(ButtonStyle.Secondary)
       .setLabel('메뉴')
       .setCustomId(`Deck_menu_${Date.now()}`)
       .setDisabled(this.decks.length == 0);
 
     this.next = eventHandler
-      .register(async (i) => await this.update_message(i, (index) => index + 1))
+      .register(i => this.update_message(i, (index) => index + 1))
       .setStyle(ButtonStyle.Primary)
       .setLabel('다음 덱 ≫')
       .setCustomId(`Deck_next_${Date.now()}`);
 
     this.delete = eventHandler
-      .register(async (i) => await this._delete(i))
+      .register(i => this._delete(i))
       .setStyle(ButtonStyle.Danger)
       .setLabel('삭제')
       .setCustomId(`Deck_delete_${Date.now()}`)
@@ -79,7 +79,7 @@ class View extends UpDownView {
     });
 
     await menu.deferUpdate();
-    await this.update_message(i, (index) => Number(menu.values[0]));
+    this.update_message(i, (index) => Number(menu.values[0]));
   }
 
   /**
@@ -87,9 +87,9 @@ class View extends UpDownView {
    */
   async _delete(i) {
     await i.deferUpdate();
-    await decklist._delete_deck(this.decks[this.index], i.guild);
+    decklist._delete_deck(this.decks[this.index], i.guild);
     this.decks.splice(this.index, 1);
-    await this.update_message(i, (index) => index + 1);
+    this.update_message(i, (index) => index + 1);
   }
 
   build_embed = () => this.decks.length == 0 ?

@@ -12,7 +12,7 @@ module.exports = {
   /**
    * @param {ChatInputCommandInteraction} interaction
    */
-  async execute(interaction) {
+  execute(interaction) {
     interaction.channel.bulkDelete(interaction.options.getInteger('갯수'))
       .then(() => interaction.reply({ content: 'Done!', ephemeral: true }));
   },

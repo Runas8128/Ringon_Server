@@ -8,7 +8,7 @@ module.exports = {
   /**
    * @param {Message} message
    */
-  async execute(message) {
+  execute(message) {
     if (!(
       !message.author.bot &&
       message.attachments.size > 0 &&

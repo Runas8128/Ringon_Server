@@ -16,14 +16,15 @@ module.exports = {
   /**
    * @param {ChatInputCommandInteraction} interaction
    */
-  async execute(interaction) {
-    await interaction.deferReply();
-    const kws = interaction.options.getString('키워드').split(' ');
-
-    interaction.reply(
-      new CardView(sort_filter(cards.cards, kw_pred(kws)))
-        .get_updated_msg(interaction),
-    );
+  execute(interaction) {
+    interaction.deferReply()
+      .then(() => interaction.reply(
+        new CardView(sort_filter(
+          cards.cards,
+          kw_pred(interaction.options.getString('키워드').split(' ')),
+        ))
+          .get_updated_msg(interaction),
+      ));
   },
   /**
    * @param {AutocompleteInteraction} interaction

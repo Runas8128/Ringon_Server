@@ -13,12 +13,9 @@ class View {
    * @param {ButtonInteraction} interaction
    * @param {IndexModifier} modify_index
    */
-  async update_message(interaction, modify_index) {
-    if (!interaction.deferred && !interaction.replied) {
-      await interaction.deferUpdate();
-    }
+  update_message(interaction, modify_index) {
     this.index = modify_index(this.index);
-    await interaction.message.edit(this.get_updated_msg());
+    interaction.message.edit(this.get_updated_msg());
   }
 
   check_range() {

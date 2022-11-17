@@ -26,7 +26,7 @@ module.exports = {
   /**
    * @param {ChatInputCommandInteraction} interaction
    */
-  async execute(interaction) {
+  execute(interaction) {
     const keyword = interaction.options.getString('검색어');
     const author = interaction.options.getUser('제작자');
     const clazz = interaction.options.getString('클래스');

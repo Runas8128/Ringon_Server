@@ -8,7 +8,7 @@ module.exports = {
   /**
    * @param {ChatInputCommandInteraction} interaction
    */
-  async execute(interaction) {
+  execute(interaction) {
     const APIlatency = Math.round(interaction.client.ws.ping);
 
     interaction.reply(`🏓 현재 레이턴시는 ${APIlatency}ms 입니다!`);

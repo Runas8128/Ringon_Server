@@ -42,7 +42,7 @@ class DeckList {
    * @param {string} new_pack
    * @param {Guild} guild
    */
-  async update_pack(new_pack, guild) {
+  update_pack(new_pack, guild) {
     this.decklist.forEach(this._delete_deck(guild));
     this.pack_block.update(new_pack);
   }
@@ -61,7 +61,7 @@ class DeckList {
    * @param {string?} desc
    * @param {string?} image_url
    */
-  async update_deck(guild, id, updater, desc, image_url) {
+  update_deck(guild, id, updater, desc, image_url) {
     if (!desc && !image_url) return;
 
     const deck = this.decklist.find(_deck => _deck.deck_id == id);
@@ -133,8 +133,8 @@ class DeckList {
     return deck_info;
   }
 
-  async load() {
-    this.decklist = (await this.list_db.load(
+  load() {
+    this.list_db.load(
       { name: 'page_id', type: 'page_id' },
       { name: 'deck_id', type: 'number' },
       { name: 'name', type: 'title' },
@@ -144,19 +144,20 @@ class DeckList {
       { name: 'image_url', type: 'rich_text' },
       { name: 'timestamp', type: 'rich_text' },
       { name: 'version', type: 'number' },
-    )).sort((a, b) => a.deck_id - b.deck_id);
+    ).then(result =>
+      this.decklist = result.sort((a, b) => a.deck_id - b.deck_id));
 
-    /** @type {Contrib[]} */
-    this.contrib = await this.contrib_db.load(
+    this.contrib_db.load(
       { name: 'DeckID', type: 'number' },
       { name: 'ContribID', type: 'rich_text' },
-    );
+    ).then(result =>
+      this.contrib = result);
   }
 
   /**
    * @param {Deck} deck
    */
-  async upload(deck) {
+  upload(deck) {
     deck.version = 1;
     deck.deck_id = this.decklist.at(-1).deck_id + 1;
     deck.timestamp = new Date()

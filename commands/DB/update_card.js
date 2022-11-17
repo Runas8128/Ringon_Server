@@ -9,12 +9,10 @@ module.exports = {
   /**
    * @param {ChatInputCommandInteraction} interaction
    */
-  async execute(interaction) {
+  execute(interaction) {
     interaction.reply('🔄 카드 DB를 업데이트하는 중입니다.')
-      .then(() => cards.load()
-        .then(() => {
-          interaction.editReply('카드 DB 업데이트가 끝났습니다!')
-            .catch(err => interaction.channel.send('카드 DB 업데이트가 끝났습니다!'));
-        }));
+      .then(() => cards.load())
+      .then(() => interaction.editReply('카드 DB 업데이트가 끝났습니다!'))
+      .catch(err => interaction.channel.send('카드 DB 업데이트가 끝났습니다!'));
   },
 };

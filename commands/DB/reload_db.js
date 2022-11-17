@@ -25,8 +25,8 @@ module.exports = {
    */
   execute(interaction) {
     interaction.reply({ embeds: [noticeEmbed] })
-      .then(() => getDuration(interaction.options.getString('db'))
-        .then(duration => interaction.editReply(buildEndEmbed(duration))));
+      .then(() => getDuration(interaction.options.getString('db')))
+      .then(duration => interaction.editReply(buildEndEmbed(duration)));
   },
 };
 

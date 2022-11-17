@@ -40,7 +40,7 @@ class Database {
   /**
    * @param {PropertyPayload[]} stuffs
    */
-  async push(...stuffs) {
+  push(...stuffs) {
     try {
       return notion.pages.create({
         parent: {
@@ -57,8 +57,7 @@ class Database {
       logger.warn(
         `Unknown HTTP response error: code ${err.code}, retrying in 100ms`,
       );
-      await timer(100);
-      this.push(...stuffs);
+      timer(100).then(() => this.push(...stuffs));
     }
   }
 
@@ -111,7 +110,7 @@ class Database {
   /**
    * @param {string} page_id
    */
-  async delete(page_id) {
+  delete(page_id) {
     try {
       notion.blocks.delete({ block_id: page_id });
     }
@@ -120,8 +119,7 @@ class Database {
         logger.warn(
           `Unknown HTTP response error: code ${err.code}, retrying in 100ms`,
         );
-        await timer(100);
-        this.delete(page_id);
+        timer(100).then(() => this.delete(page_id));
       }
       else {
         throw err;

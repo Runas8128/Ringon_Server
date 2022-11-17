@@ -57,29 +57,22 @@ function load_commands() {
 /**
  * @param {Command[]} commandList
  */
-async function deploy_commands(commandList) {
-  logger.info('deploying commands');
-
-  try {
-    const rest = new REST({ version: '10' }).setToken(process.env.discord);
-
-    const data = await rest.put(
+const deploy_commands = commandList =>
+  new REST({ version: '10' })
+    .setToken(process.env.discord)
+    .put(
       Routes.applicationGuildCommands(discord.client, discord.guild),
       { body: commandList.map(command => command.data.toJSON()) },
-    );
-    logger.info(`Successfully deployed ${data.length} commands.`);
-  }
-  catch (error) {
-    logger.error(`Something bad happened. ${error}`);
-  }
-}
+    )
+    .then(({ length }) => logger.info(`Successfully deployed ${length} commands.`))
+    .catch(error => logger.error(`Something bad happened. ${error}`));
 
 /**
  * @param {Client} client
  * @param {Command[]} commandList
  */
 const add_command_listener = (client, commandList) =>
-  client.on('interactionCreate', async (interaction) => {
+  client.on('interactionCreate', interaction => {
     logger.info(`Interaction created. name: ${interaction.commandName}`);
 
     if (
@@ -93,7 +86,7 @@ const add_command_listener = (client, commandList) =>
 
 module.exports = {
   /** @param {Client} client */
-  init: (client) => {
+  init: client => {
     const commandList = load_commands();
     deploy_commands(commandList, process.env.discord);
     add_command_listener(client, commandList);
