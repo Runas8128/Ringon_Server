@@ -11,7 +11,10 @@ module.exports = {
    * @param {ChatInputCommandInteraction} interaction
    */
   execute(interaction) {
-    const count = detect.full.length + new Set(detect.prob.map((obj) => obj.target)).size;
-    interaction.reply(`링곤 사전을 보니, 저의 아이큐는 ${count}이라고 하네요!`);
+    interaction.reply(`링곤 사전을 보니, 저의 아이큐는 ${getCount()}이라고 하네요!`);
   },
 };
+
+const getCount = () =>
+  detect.full.length +
+  new Set(detect.prob.map((obj) => obj.target)).size;

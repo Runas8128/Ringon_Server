@@ -2,6 +2,10 @@ const { SlashCommandBuilder, ChatInputCommandInteraction, EmbedBuilder } = requi
 
 const DBManager = require('../../database');
 
+const noticeEmbed = new EmbedBuilder()
+  .setTitle('🔄 DB를 업데이트하는 중입니다')
+  .setDescription('예상 시간: ~ 3분');
+
 module.exports = {
   perm: 'admin',
   data: new SlashCommandBuilder()
@@ -19,20 +23,23 @@ module.exports = {
   /**
    * @param {ChatInputCommandInteraction} interaction
    */
-  async execute(interaction) {
-    await interaction.reply({
-      embeds: [new EmbedBuilder()
-        .setTitle('🔄 DB를 업데이트하는 중입니다')
-        .setDescription('예상 시간: ~ 3분')],
-    });
-    const sync_start = Date.now();
-    await DBManager.load(interaction.options.getString('db'));
-    const sync_end = Date.now();
-    interaction.editReply({
-      embeds: [new EmbedBuilder()
-        .setTitle('🔄 DB 업데이트 완료!')
-        .setDescription(`소요 시간: ${(sync_end - sync_start) / 1000}초`),
-      ],
-    });
+  execute(interaction) {
+    interaction.reply({ embeds: [noticeEmbed] })
+      .then(() => getDuration(interaction.options.getString('db'))
+        .then(buildEndEmbed));
   },
 };
+
+async function getDuration(db) {
+  const sync_start = Date.now();
+  await DBManager.load(db);
+  const sync_end = Date.now();
+  return (sync_end - sync_start) / 1000;
+}
+
+const buildEndEmbed = duration => ({
+  embeds: [new EmbedBuilder()
+    .setTitle('🔄 DB 업데이트 완료!')
+    .setDescription(`소요 시간: ${duration}초`),
+  ],
+});

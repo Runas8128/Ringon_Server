@@ -12,36 +12,44 @@ module.exports = {
    * @param {ChatInputCommandInteraction} interaction
    */
   async execute(interaction) {
-    /** @type {APIEmbedField[]} */
-    const fields = detect.full
-      .map(({ target, result }) => ({
-        name: target,
-        value: result.length > 50 ?
-          result.substring(0, 47) + '...' :
-          result,
-        inline: true,
-      }));
-
-    const probIndex = [...new Set(
-      Object.keys(detect.prob)
-        .map(index => detect.prob[parseInt(index)].target),
-    )];
-
+    const fields = detect.full.map(full2Field);
     fields.push(
-      ...probIndex
-        .map(target => ({
-          name: target,
-          value: detect.prob
-            .filter((obj) => obj.target == target)
-            .map(({ result, ratio }) => `${result} (가중치: ${ratio})`)
-            .join('\n'),
-          inline: false,
-        })),
-    );
-    interaction.reply(new StudiedView(
-      fields.length > 0 ?
-        fields :
-        [{ name: '엥 비어있네요', value: '왜지...', inline: true }],
-    ).get_updated_msg());
+      ...unique(Object.values(detect.prob).map(({ target }) => target))
+        .map(prob2Field));
+
+    if (fields.length == 0) {
+      fields.push({ name: '엥 비어있네요', value: '왜지...', inline: true });
+    }
+
+    interaction.reply(new StudiedView(fields).get_updated_msg());
   },
 };
+
+/** @param {string} result @param {number} length */
+const fixLength = (result, length) =>
+  result.length > length ?
+    result.substring(0, length - 3) + '...' :
+    result;
+
+/** @param {import('../../database/detect').FullDetectObj} @return {APIEmbedField} */
+const full2Field = ({ target, result }) => ({
+  name: target,
+  value: fixLength(result, 50),
+  inline: true,
+});
+
+/** @template T @param {T[]} list @return {T[]} */
+const unique = list => [...new Set(list)];
+
+/** @param {string} target */
+const formatProb = target => detect.prob
+  .filter((obj) => obj.target == target)
+  .map(({ result, ratio }) => `${result} (가중치: ${ratio})`)
+  .join('\n');
+
+/** @param {string} target @return {APIEmbedField} */
+const prob2Field = target => ({
+  name: target,
+  value: formatProb(target),
+  inline: false,
+});

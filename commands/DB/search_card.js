@@ -1,6 +1,5 @@
 const { SlashCommandBuilder, ChatInputCommandInteraction, AutocompleteInteraction } = require('discord.js');
 const { cards } = require('../../database');
-const { Card } = require('../../database/cards');
 
 const CardView = require('../../view/Cards');
 
@@ -19,21 +18,12 @@ module.exports = {
    */
   async execute(interaction) {
     await interaction.deferReply();
-
     const kws = interaction.options.getString('키워드').split(' ');
-    /** @type {Card[]} */
-    let list = JSON.parse(JSON.stringify(cards.cards));
 
-    /**
-     * @param {Card} card
-     */
-    const kw_pred = card => kws.filter(word => card.name.includes(word)).length;
-
-    list = list.sort((c1, c2) => kw_pred(c2) - kw_pred(c1));
-    const first_not_match_idx = list.findIndex(deck => kw_pred(deck, kws) == 0);
-    list.splice(first_not_match_idx);
-
-    interaction.reply(new CardView(list).get_updated_msg(interaction));
+    interaction.reply(
+      new CardView(sort_filter(cards.cards, kw_pred(kws)))
+        .get_updated_msg(interaction),
+    );
   },
   /**
    * @param {AutocompleteInteraction} interaction
@@ -52,3 +42,20 @@ module.exports = {
     }
   },
 };
+
+const kw_pred = kws => card =>
+  kws.filter(word => card.name.includes(word)).length;
+
+/**
+ * @param {T[]} list
+ * @callback predicate
+ *  @param {T} tar
+ *  @return {number}
+ * @param {predicate} pred
+ * @return {T[]}
+ */
+const sort_filter = (list, pred) => list
+  .map(elem => ({ elem: elem, value: pred(elem) }))
+  .filter(obj => obj.value != 0)
+  .sort((o1, o2) => o2.value - o1.value)
+  .map(obj => obj.elem);

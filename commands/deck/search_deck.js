@@ -31,30 +31,12 @@ module.exports = {
     const author = interaction.options.getUser('제작자');
     const clazz = interaction.options.getString('클래스');
 
-    /**
-     * @param {Deck} deck
-     * @param {string[]} kws
-     */
-    const kw_pred = (deck, kws) =>
-      kws.filter((kw) => deck.name.includes(kw) || deck.desc.includes('#' + kw)).length;
-
     /** @type {Deck[]} */
     let decks = JSON.parse(JSON.stringify(decklist.decklist)); // Copy full decklist
 
-    if (keyword) {
-      const kws = keyword.split(' ');
-      decks = decks.sort((d1, d2) => kw_pred(d2, kws) - kw_pred(d1, kws));
-      const first_not_match_idx = decks.findIndex(deck => kw_pred(deck, kws) == 0);
-      decks.splice(first_not_match_idx);
-    }
-
-    if (author) {
-      decks = decks.filter(deck => deck.author == author.id);
-    }
-
-    if (clazz) {
-      decks = decks.filter(deck => deck.clazz == clazz);
-    }
+    if (keyword) decks = sort_filter(decks, kw_pred(keyword.split(' ')));
+    if (author) decks = decks.filter(deck => deck.author == author.id);
+    if (clazz) decks = decks.filter(deck => deck.clazz == clazz);
 
     interaction.reply(
       new DecklistView(decks, interaction.guild).get_updated_msg(interaction),
@@ -75,3 +57,21 @@ module.exports = {
     );
   },
 };
+
+
+const kw_pred = kws => deck =>
+  kws.filter(word => deck.name.includes(word)).length;
+
+/**
+ * @param {T[]} list
+ * @callback predicate
+ *  @param {T} tar
+ *  @return {number}
+ * @param {predicate} pred
+ * @return {T[]}
+ */
+const sort_filter = (list, pred) => list
+  .map(elem => ({ elem: elem, value: pred(elem) }))
+  .filter(obj => obj.value != 0)
+  .sort((o1, o2) => o2.value - o1.value)
+  .map(obj => obj.elem);

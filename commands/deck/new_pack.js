@@ -3,6 +3,10 @@ const { ActionRowBuilder, ButtonBuilder, EmbedBuilder, ComponentType } = require
 
 const { decklist } = require('../../database');
 
+const noticeEmbed = new EmbedBuilder()
+  .setTitle('⚠️ 해당 명령어 사용시, 현재 등록된 덱리가 모두 삭제됩니다.')
+  .setDescription('사용하시려면 `확인`을 입력해주세요! 1분 후 자동으로 취소됩니다.');
+
 module.exports = {
   perm: 'admin',
   data: new SlashCommandBuilder()
@@ -14,27 +18,18 @@ module.exports = {
    * @param {ChatInputCommandInteraction} interaction
    */
   async execute(interaction) {
-    const timestamp = Date.now();
+    const checkID = `PackChecker_${Date.now()}`;
 
     await interaction.reply({
-      embeds: [new EmbedBuilder()
-        .setTitle('⚠️ 해당 명령어 사용시, 현재 등록된 덱리가 모두 삭제됩니다.')
-        .setDescription('사용하시려면 `확인`을 입력해주세요! 1분 후 자동으로 취소됩니다.'),
-      ],
-      components: [new ActionRowBuilder()
-        .addComponents(
-          new ButtonBuilder()
-            .setCustomId(`PackChecker_${timestamp}`)
-            .setLabel('확인'),
-        ),
-      ],
+      embeds: [noticeEmbed],
+      components: [buildActionRow(checkID)],
     });
 
     try {
       const checker = await interaction.channel.awaitMessageComponent({
         componentType: ComponentType.Button,
         time: 60 * 1000,
-        filter: (button) => button.customId == `PackChecker_${timestamp}`,
+        filter: ({ customId }) => checkID == customId,
       });
 
       await checker.deferUpdate();
@@ -48,3 +43,11 @@ module.exports = {
     }
   },
 };
+
+const buildActionRow = customId =>
+  new ActionRowBuilder()
+    .addComponents(
+      new ButtonBuilder()
+        .setCustomId(customId)
+        .setLabel('확인'),
+    );
