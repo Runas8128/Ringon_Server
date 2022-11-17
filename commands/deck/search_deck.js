@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, ChatInputCommandInteraction, AutocompleteInteraction } = require('discord.js');
+const { SlashCommandBuilder } = require('discord.js');
 
 const { config_common: { classes } } = require('../../config');
 const { kw_pred, sort_filter } = require('../../util');
@@ -6,6 +6,7 @@ const { decklist } = require('../../database');
 const { Deck } = require('../../database/decklist');
 const DecklistView = require('../../view/Decklist');
 
+/** @type {import('..').Command} */
 module.exports = {
   perm: 'member',
   data: new SlashCommandBuilder()
@@ -24,9 +25,6 @@ module.exports = {
       .addChoices(...Object.keys(classes)
         .map(clazz => ({ name: clazz, value: clazz })),
       )),
-  /**
-   * @param {ChatInputCommandInteraction} interaction
-   */
   execute(interaction) {
     const keyword = interaction.options.getString('검색어');
     const author = interaction.options.getUser('제작자');
@@ -41,9 +39,6 @@ module.exports = {
 
     new DecklistView(decks, interaction.guild).send(interaction);
   },
-  /**
-   * @param {AutocompleteInteraction} interaction
-   */
   async autocompleter(interaction) {
     const focusdVar = interaction.options.getFocused(true);
     if (focusdVar.name != '검색어') return;

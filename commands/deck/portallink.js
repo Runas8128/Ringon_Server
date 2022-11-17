@@ -1,7 +1,8 @@
 const axios = require('axios');
-const { SlashCommandBuilder, ChatInputCommandInteraction } = require('discord.js');
+const { SlashCommandBuilder } = require('discord.js');
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 
+/** @type {import('..').Command} */
 module.exports = {
   perm: 'member',
   data: new SlashCommandBuilder()
@@ -11,9 +12,6 @@ module.exports = {
       .setName('덱코드')
       .setDescription('포탈 링크를 만들 덱 코드입니다.')
       .setRequired(true)),
-  /**
-   * @param {ChatInputCommandInteraction} interaction
-   */
   execute(interaction) {
     interaction.deferReply()
       .then(() => axios.get(portalURL(interaction.options.getString('덱코드'))))

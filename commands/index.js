@@ -1,32 +1,11 @@
 const path = require('path');
-const { Client, REST, Routes, PermissionFlagsBits, SlashCommandBuilder } = require('discord.js');
+const { Client, REST, Routes, PermissionFlagsBits } = require('discord.js');
 
 const { config: { discord }, config_common: { commands } } = require('../config');
 const { reply } = require('../util');
 const logger = require('../util/Logger').getLogger(__filename);
 
-/**
- *  @callback CommandExecute
- *    @param {ChatInputCommandInteraction} interaction
- *    @returns {Promise<any>}
- *
- *  @callback DB_Loader
- *    @param {ChatInputCommandInteraction} interaction
- *    @returns {Promise<void>}
- *
- *  @callback AutoCompleter
- *    @param {AutocompleteInteraction} interaction
- *    @returns {Promise<void>}
- *
- *  @typedef Command
- *    @property {'member' | 'admin' | 'dev'} perm
- *    @property {SlashCommandBuilder} data
- *    @property {CommandExecute} execute
- *    @property {AutoCompleter?} autocompleter
- */
-
 const load_command = group => command_name => {
-  /** @type {Command} */
   const command = require(path.join(__dirname, group, command_name));
 
   if (command.perm == 'admin') {
@@ -37,11 +16,7 @@ const load_command = group => command_name => {
   return command;
 };
 
-/**
- * @returns {Command[]}
- */
 function load_commands() {
-  /** @type {Command[]} */
   const commandList = [];
   logger.info('loading commands');
 
@@ -54,9 +29,6 @@ function load_commands() {
   return commandList;
 }
 
-/**
- * @param {Command[]} commandList
- */
 const deploy_commands = commandList =>
   new REST({ version: '10' })
     .setToken(process.env.discord)
@@ -67,10 +39,6 @@ const deploy_commands = commandList =>
     .then(({ length }) => logger.info(`Successfully deployed ${length} commands.`))
     .catch(error => logger.error(`Something bad happened. ${error}`));
 
-/**
- * @param {Client} client
- * @param {Command[]} commandList
- */
 const add_command_listener = (client, commandList) =>
   client.on('interactionCreate', interaction => {
     logger.info(`Interaction created. name: ${interaction.commandName}`);

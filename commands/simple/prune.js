@@ -1,5 +1,6 @@
-const { SlashCommandBuilder, ChatInputCommandInteraction } = require('discord.js');
+const { SlashCommandBuilder } = require('discord.js');
 
+/** @type {import('..').Command} */
 module.exports = {
   perm: 'admin',
   data: new SlashCommandBuilder()
@@ -9,9 +10,6 @@ module.exports = {
       .setName('갯수')
       .setDescription('삭제할 메시지 갯수입니다.')
       .setRequired(true)),
-  /**
-   * @param {ChatInputCommandInteraction} interaction
-   */
   execute(interaction) {
     interaction.channel.bulkDelete(interaction.options.getInteger('갯수'))
       .then(() => interaction.reply({ content: 'Done!', ephemeral: true }));
