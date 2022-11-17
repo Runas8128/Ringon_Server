@@ -1,4 +1,3 @@
-const { RequestTimeoutError, APIResponseError, APIErrorCode } = require('@notionhq/client');
 const { ChatInputCommandInteraction, MessagePayload, InteractionReplyOptions } = require('discord.js');
 
 /**
