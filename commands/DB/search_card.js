@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, ChatInputCommandInteraction, AutocompleteInteraction } = require('discord.js');
-const { cards } = require('../../database');
 
+const { kw_pred, sort_filter } = require('../../util');
+const { cards } = require('../../database');
 const CardView = require('../../view/Cards');
 
 module.exports = {
@@ -18,13 +19,11 @@ module.exports = {
    */
   execute(interaction) {
     interaction.deferReply()
-      .then(() => interaction.reply(
-        new CardView(sort_filter(
-          cards.cards,
-          kw_pred(interaction.options.getString('키워드').split(' ')),
-        ))
-          .get_updated_msg(interaction),
-      ));
+      .then(() => new CardView(sort_filter(
+        cards.cards,
+        kw_pred(interaction.options.getString('키워드').split(' ')),
+      )))
+      .then(result => result.send(interaction));
   },
   /**
    * @param {AutocompleteInteraction} interaction
@@ -43,20 +42,3 @@ module.exports = {
     }
   },
 };
-
-const kw_pred = kws => card =>
-  kws.filter(word => card.name.includes(word)).length;
-
-/**
- * @param {T[]} list
- * @callback predicate
- *  @param {T} tar
- *  @return {number}
- * @param {predicate} pred
- * @return {T[]}
- */
-const sort_filter = (list, pred) => list
-  .map(elem => ({ elem: elem, value: pred(elem) }))
-  .filter(obj => obj.value != 0)
-  .sort((o1, o2) => o2.value - o1.value)
-  .map(obj => obj.elem);

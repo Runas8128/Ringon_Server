@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, ChatInputCommandInteraction, AutocompleteInteraction } = require('discord.js');
 
 const { config_common: { classes } } = require('../../config');
+const { kw_pred, sort_filter } = require('../../util');
 const { decklist } = require('../../database');
 const { Deck } = require('../../database/decklist');
 const DecklistView = require('../../view/Decklist');
@@ -38,9 +39,7 @@ module.exports = {
     if (author) decks = decks.filter(deck => deck.author == author.id);
     if (clazz) decks = decks.filter(deck => deck.clazz == clazz);
 
-    interaction.reply(
-      new DecklistView(decks, interaction.guild).get_updated_msg(interaction),
-    );
+    new DecklistView(decks, interaction.guild).send(interaction);
   },
   /**
    * @param {AutocompleteInteraction} interaction
@@ -57,21 +56,3 @@ module.exports = {
     );
   },
 };
-
-
-const kw_pred = kws => deck =>
-  kws.filter(word => deck.name.includes(word)).length;
-
-/**
- * @param {T[]} list
- * @callback predicate
- *  @param {T} tar
- *  @return {number}
- * @param {predicate} pred
- * @return {T[]}
- */
-const sort_filter = (list, pred) => list
-  .map(elem => ({ elem: elem, value: pred(elem) }))
-  .filter(obj => obj.value != 0)
-  .sort((o1, o2) => o2.value - o1.value)
-  .map(obj => obj.elem);

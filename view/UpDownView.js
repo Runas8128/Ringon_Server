@@ -1,4 +1,4 @@
-const { EmbedBuilder, ActionRowBuilder, ButtonInteraction } = require('discord.js');
+const { EmbedBuilder, ActionRowBuilder, ButtonInteraction, ChatInputCommandInteraction } = require('discord.js');
 
 class View {
   constructor() {
@@ -32,6 +32,11 @@ class View {
       components: [this.build_actionrow()],
     };
   }
+
+  /**
+   * @param {ChatInputCommandInteraction} interaction
+   */
+  send = interaction => interaction.reply(this.get_updated_msg());
 }
 
 module.exports = View;

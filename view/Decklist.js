@@ -1,4 +1,6 @@
 const { ActionRowBuilder, ButtonStyle, Guild, SelectMenuBuilder, ComponentType, EmbedBuilder, ButtonInteraction } = require('discord.js');
+
+const { shrink } = require('../util');
 const { config_common: { classes } } = require('../config');
 const { decklist } = require('../database');
 const { Deck } = require('../database/decklist');
@@ -50,22 +52,16 @@ class View extends UpDownView {
     await i.deferUpdate();
 
     const customID = `DeckSelector_${Date.now()}`;
-    const options = this.decks.map(({ name, desc, clazz }, index) => {
-      const shrunk_desc = desc.length > 100 ?
-        desc.substring(0, 97) + '...' : desc;
-
-      return {
-        label: name,
-        description: shrunk_desc || '...',
-        emoji: classes[clazz],
-        value: index.toString(),
-      };
-    });
 
     const select = new SelectMenuBuilder()
       .setCustomId(customID)
       .setPlaceholder('')
-      .addOptions(options);
+      .addOptions(this.decks.map(({ name, desc, clazz }, index) => ({
+        label: name,
+        description: shrink(desc) || '...',
+        emoji: classes[clazz],
+        value: index.toString(),
+      })));
 
     await i.message.edit({
       embeds: [],

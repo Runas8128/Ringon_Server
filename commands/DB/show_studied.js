@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, ChatInputCommandInteraction, APIEmbedField } = require('discord.js');
 
+const { shrink } = require('../../util');
 const { detect } = require('../../database');
 const StudiedView = require('../../view/Studied');
 
@@ -21,20 +22,14 @@ module.exports = {
       fields.push({ name: '엥 비어있네요', value: '왜지...', inline: true });
     }
 
-    interaction.reply(new StudiedView(fields).get_updated_msg());
+    new StudiedView(fields).send(interaction);
   },
 };
-
-/** @param {string} result @param {number} length */
-const fixLength = (result, length) =>
-  result.length > length ?
-    result.substring(0, length - 3) + '...' :
-    result;
 
 /** @param {import('../../database/detect').FullDetectObj} @return {APIEmbedField} */
 const full2Field = ({ target, result }) => ({
   name: target,
-  value: fixLength(result, 50),
+  value: shrink(result, 50),
   inline: true,
 });
 

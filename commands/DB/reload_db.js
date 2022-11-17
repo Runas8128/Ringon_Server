@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, ChatInputCommandInteraction, EmbedBuilder } = require('discord.js');
 
 const DBManager = require('../../database');
+const { getDuration } = require('../../util');
 
 const noticeEmbed = new EmbedBuilder()
   .setTitle('🔄 DB를 업데이트하는 중입니다')
@@ -24,18 +25,13 @@ module.exports = {
    * @param {ChatInputCommandInteraction} interaction
    */
   execute(interaction) {
+    const DB = interaction.options.getString('db');
+
     interaction.reply({ embeds: [noticeEmbed] })
-      .then(() => getDuration(interaction.options.getString('db')))
+      .then(() => getDuration(() => DBManager.load(DB)))
       .then(duration => interaction.editReply(buildEndEmbed(duration)));
   },
 };
-
-async function getDuration(db) {
-  const sync_start = Date.now();
-  await DBManager.load(db);
-  const sync_end = Date.now();
-  return (sync_end - sync_start) / 1000;
-}
 
 const buildEndEmbed = duration => ({
   embeds: [new EmbedBuilder()

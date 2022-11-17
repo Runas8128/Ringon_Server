@@ -19,30 +19,22 @@ module.exports = {
   /**
    * @param {ChatInputCommandInteraction} interaction
    */
-  async execute(interaction) {
+  execute(interaction) {
     const checkID = `PackChecker_${Date.now()}`;
 
-    await interaction.reply({
+    interaction.reply({
       embeds: [noticeEmbed],
       components: [buildActionRow(checkID)],
-    });
-
-    try {
-      const checker = await interaction.channel.awaitMessageComponent({
-        componentType: ComponentType.Button,
-        time: 60 * 1000,
-        filter: ({ customId }) => checkID == customId,
-      });
-
-      await checker.deferUpdate();
-      decklist.update_pack(
+    }).then(() => interaction.channel.awaitMessageComponent({
+      componentType: ComponentType.Button,
+      time: 60 * 1000,
+      filter: ({ customId }) => checkID == customId,
+    })).then(checker => checker.deferUpdate())
+      .catch(err => interaction.editReply({ content: '팩 변경을 취소합니다.' }))
+      .then(() => decklist.update_pack(
         interaction.options.getString('이름'),
         interaction.guild,
-      );
-    }
-    catch (err) {
-      interaction.editReply({ content: '팩 변경을 취소합니다.' });
-    }
+      ));
   },
 };
 

@@ -1,6 +1,7 @@
 const Detect = require('./detect');
 const Decklist = require('./decklist');
 const Cards = require('./cards');
+const { getDuration } = require('../util');
 const logger = require('../util/Logger').getLogger(__filename);
 
 class Manager {
@@ -19,7 +20,7 @@ class Manager {
   /**
    * @param {'detect'|'decklist'|'cards'} DB
    */
-  async load(DB) {
+  load(DB) {
     if (!Object.keys(this.loading).includes(DB)) return;
     if (this.loading[DB]) {
       logger.warn(`${DB} database is already in loading state, skipping.`);
@@ -27,15 +28,11 @@ class Manager {
     }
 
     try {
-      const sync_start = Date.now();
-
       logger.info(`Loading ${DB} database`);
       this.loading[DB] = true;
 
-      await this[DB].load();
-
-      const last_sync = Date.now();
-      logger.info(`${DB} database load success. time duration: ${last_sync - sync_start}ms`);
+      getDuration(this[DB].load).then(dur =>
+        logger.info(`${DB} database load success. time duration: ${dur}ms`));
     }
     catch (err) {
       logger.error(`An error occured while loading ${DB} database`);
