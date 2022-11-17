@@ -28,7 +28,7 @@ const format_console = _label => combine(
     .colorize(info.level, `[ ${info.label} ] ${[info.timestamp]} ${info.level}: ${info.message}`)),
 );
 
-const _getLogger = _label => file => winston.createLogger({
+const _getLogger = _label => winston.createLogger({
   transports: [
     new winston.transports.Console({
       format: format_console,
