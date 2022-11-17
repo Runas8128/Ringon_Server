@@ -13,10 +13,13 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName('인원점검')
     .setDescription('특정 공지의 반응을 분석합니다.')
-    .addStringOption(option =>
-      option.setName('url').setDescription('대상 공지의 메시지 링크입니다.').setRequired(true))
-    .addStringOption(option =>
-      option.setName('emoji').setDescription('개별적으로 체크할 이모지들입니다. 공백으로 구분해 적어주시면 됩니다.')),
+    .addStringOption(option => option
+      .setName('url')
+      .setDescription('대상 공지의 메시지 링크입니다.')
+      .setRequired(true))
+    .addStringOption(option => option
+      .setName('emoji')
+      .setDescription('개별적으로 체크할 이모지들입니다. 공백으로 구분해 적어주시면 됩니다.')),
   /**
    * @param {ChatInputCommandInteraction} interaction
    */
