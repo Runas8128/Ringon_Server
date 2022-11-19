@@ -17,9 +17,6 @@ class Manager {
     };
   }
 
-  /**
-   * @param {'detect'|'decklist'|'cards'} DB
-   */
   load(DB) {
     if (!Object.keys(this.loading).includes(DB)) return;
     if (this.loading[DB]) {

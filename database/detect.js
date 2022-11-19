@@ -24,25 +24,15 @@ function select_weight(targets) {
   return targets[targets.length - 1];
 }
 
-/**
- *  @typedef FullDetectObj
- *    @property {string} target
- *    @property {string} result
- *
- *  @typedef ProbDetectObj
- *    @property {string} target
- *    @property {string} result
- *    @property {number} ratio
- */
 class Detect {
   constructor() {
     this.id_map = notion.detect;
     this.full_db = new Notion.Database(this.id_map.full);
     this.prob_db = new Notion.Database(this.id_map.prob);
 
-    /** @type {FullDetectObj[]} */
+    /** @type {import('./detect').FullDetectObj[]} */
     this.full = [];
-    /** @type {ProbDetectObj[]} */
+    /** @type {import('./detect').ProbDetectObj[]} */
     this.prob = [];
   }
 
