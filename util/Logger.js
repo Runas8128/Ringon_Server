@@ -22,36 +22,50 @@ const colorMap = {
 };
 
 /** @param {string} _label */
-const format_console = _label => combine(
-  format_base(_label),
-  printf(info => colorize({ colors: colorMap })
-    .colorize(info.level, `[ ${info.label} ] ${[info.timestamp]} ${info.level}: ${info.message}`)),
-);
+const build_console = _label =>
+  new winston.transports.Console({
+    format: combine(
+      format_base(_label),
+      printf(info => colorize({ colors: colorMap })
+        .colorize(info.level, `[ ${info.label} ] ${[info.timestamp]} ${info.level}: ${info.message}`)),
+    ),
+  });
 
-const _getLogger = _label => winston.createLogger({
-  transports: [
-    new winston.transports.Console({
-      format: format_console,
-    }),
-    new winston.transports.Http({
-      host: 'localhost',
-      port: 8080,
-      path: '/log',
-      format: format_base(_label),
-    }),
-  ],
-});
+/** @param {string} _label */
+const build_http = _label =>
+  new winston.transports.Http({
+    host: 'localhost',
+    port: 8080,
+    path: '/log',
+    format: format_base(_label),
+  });
+
+/** @param {string} _label */
+const build_logger = _label =>
+  winston.createLogger({
+    transports: [
+      build_console(_label),
+      build_http(_label),
+    ],
+  });
 
 class Logger {
+  /**
+   * @param {string} root
+   */
   constructor() {
     this.root = '';
   }
 
-  /** @param {string} root */
+  /**
+   * @param {string} root
+   */
   setRoot = root => this.root = root;
 
-  /** @param {string} file */
-  getLogger = file => _getLogger(path.relative(this.root, file));
+  /**
+   * @param {string} file
+   */
+  getLogger = file => build_logger(path.relative(this.root, file));
 }
 
 module.exports = new Logger();
