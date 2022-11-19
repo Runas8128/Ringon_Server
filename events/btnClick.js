@@ -30,7 +30,6 @@ class ClickEventHandler {
 
 const hdr = new ClickEventHandler();
 
-/** @type {import('.').Event} */
 module.exports = {
   name: 'interactionCreate',
   once: false,
