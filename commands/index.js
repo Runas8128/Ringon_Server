@@ -68,7 +68,7 @@ const autocomplete = (command, interaction) =>
 
 const run_command = (command, interaction) =>
   command?.execute?.(interaction)
-    .catch(err => {
+    ?.catch(err => {
       reply(interaction, {
         content: `${interaction.commandName} 커맨드를 처리하는 동안 오류가 발생했습니다.`,
         ephemeral: true,
