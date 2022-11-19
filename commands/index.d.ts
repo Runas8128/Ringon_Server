@@ -11,4 +11,5 @@ interface Command {
   autocompleter: AutoCompleter;
 }
 
-export function init(client: Client): void;
+function setup_commands(client: Client): void;
+export = setup_commands;

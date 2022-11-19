@@ -52,15 +52,11 @@ const add_command_listener = (client, commandList) =>
     (interaction.isAutocomplete() ? autocomplete : run_command)(command, interaction);
   });
 
-module.exports = {
-  /** @param {Client} client */
-  init: client => {
-    const commandList = load_commands();
-    deploy_commands(commandList, process.env.discord);
-    add_command_listener(client, commandList);
-  },
-
-  load_commands,
+/** @param {Client} client */
+module.exports = client => {
+  const commandList = load_commands();
+  deploy_commands(commandList, process.env.discord);
+  add_command_listener(client, commandList);
 };
 
 const autocomplete = (command, interaction) =>
