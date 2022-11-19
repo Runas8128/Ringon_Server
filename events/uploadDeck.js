@@ -69,6 +69,7 @@ class DeckUploader {
     })).then(result => result.first()?.content);
 }
 
+/** @type {import('.').Event} */
 module.exports = {
   name: 'messageReactionAdd',
   once: false,

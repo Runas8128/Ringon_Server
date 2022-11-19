@@ -1,10 +1,10 @@
 import { ChatInputApplicationCommandData, AutocompleteInteraction, SlashCommandBuilder, Client } from 'discord.js';
 
-type CommandExecute = (interaction: ChatInputApplicationCommandData) => Promise<any>;
-type DB_Loader = (interaction: ChatInputApplicationCommandData) => Promise<void>;
-type AutoCompleter = (interaction: AutocompleteInteraction) => Promise<void>;
+export type CommandExecute = (interaction: ChatInputApplicationCommandData) => Promise<any>;
+export type DB_Loader = (interaction: ChatInputApplicationCommandData) => Promise<void>;
+export type AutoCompleter = (interaction: AutocompleteInteraction) => Promise<void>;
 
-interface Command {
+export interface Command {
   perm: 'member' | 'admin' | 'dev';
   data: SlashCommandBuilder;
   execute: CommandExecute;
