@@ -1,7 +1,7 @@
-import { ChatInputApplicationCommandData, AutocompleteInteraction, SlashCommandBuilder, Client } from 'discord.js';
+import { AutocompleteInteraction, SlashCommandBuilder, Client, ChatInputCommandInteraction } from 'discord.js';
 
-export type CommandExecute = (interaction: ChatInputApplicationCommandData) => Promise<any>;
-export type DB_Loader = (interaction: ChatInputApplicationCommandData) => Promise<void>;
+export type CommandExecute = (interaction: ChatInputCommandInteraction) => Promise<any>;
+export type DB_Loader = (interaction: ChatInputCommandInteraction) => Promise<void>;
 export type AutoCompleter = (interaction: AutocompleteInteraction) => Promise<void>;
 
 export interface Command {
