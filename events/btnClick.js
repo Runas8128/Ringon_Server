@@ -1,4 +1,4 @@
-const { ButtonInteraction, ButtonBuilder, Interaction } = require('discord.js');
+const { ButtonInteraction, ButtonBuilder, Interaction, Events } = require('discord.js');
 
 class ClickEventHandler {
   constructor() {
@@ -31,7 +31,7 @@ class ClickEventHandler {
 const hdr = new ClickEventHandler();
 
 module.exports = {
-  name: 'interactionCreate',
+  name: Events.InteractionCreate,
   once: false,
   /**
    * @param {Interaction} interaction

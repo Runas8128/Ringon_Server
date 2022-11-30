@@ -1,4 +1,4 @@
-const { MessageReaction, User, Message, EmbedBuilder } = require('discord.js');
+const { MessageReaction, User, Message, EmbedBuilder, Events } = require('discord.js');
 
 const { config_common: { classes } } = require('../config');
 const Manager = require('../database');
@@ -32,11 +32,13 @@ class DeckUploader {
 
   async upload(name, desc, try_count) {
     while (Manager.loading.decklist) {
-      if (try_count == 0) {
+      if (try_count === 0) {
         await this.origin.channel.send('DB를 로드하는 중입니다. 잠시만 기다려주세요...');
       }
       await timer(100);
     }
+
+    // TODO: make `upload` function as async
     Manager.decklist.upload({
       name: name,
       clazz: this.origin.channel.name,
@@ -63,14 +65,14 @@ class DeckUploader {
       embeds: [buildEmbed(prompt, subprompt)],
       allowedMentions: { repliedUser: false },
     }).then(() => this.origin.channel.awaitMessages({
-      filter: (msg) => msg.author.id == this.origin.author.id,
+      filter: (msg) => msg.author.id === this.origin.author.id,
       max: 1,
       time: timeout,
     })).then(result => result.first()?.content);
 }
 
 module.exports = {
-  name: 'messageReactionAdd',
+  name: Events.MessageReactionAdd,
   once: false,
   /**
    * @param {MessageReaction} reaction
@@ -85,7 +87,7 @@ module.exports = {
     if (!(
       Object.keys(classes).includes(channel.name) &&
       reaction.emoji.id === classes[channel.name] &&
-      user.id == message.author.id
+      user.id === message.author.id
     )) return;
 
     new DeckUploader(message).get_input();

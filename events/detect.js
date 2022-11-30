@@ -1,9 +1,9 @@
-const { Message } = require('discord.js');
+const { Message, Events } = require('discord.js');
 
 const { detect } = require('../database');
 
 module.exports = {
-  name: 'messageCreate',
+  name: Events.MessageCreate,
   once: false,
   /**
    * @param {Message} message
