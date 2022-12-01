@@ -2,11 +2,13 @@ const { Client, UnknownHTTPResponseError } = require('@notionhq/client');
 const { timer } = require('.');
 const logger = require('./Logger').getLogger(__filename);
 
+/** @typedef {'title'|'rich_text'|'select'|'number'|'page_id'} PropertyType */
+
 /**
  *  @typedef PropertyPayload
  *    @property {string} name
  *    @property {string|number} value
- *    @property {'title'|'rich_text'|'select'|'number'} type
+ *    @property {PropertyType} type
  */
 
 const notion = new Client({ auth: process.env.notion });
@@ -38,7 +40,7 @@ class Database {
   }
 
   /**
-   * @param {PropertyPayload[]} stuffs
+   * @param {PropertyPayload} stuffs
    */
   push(...stuffs) {
     try {
@@ -63,7 +65,7 @@ class Database {
 
   /**
    * @param {string} page_id
-   * @param {PropertyPayload[]} stuffs
+   * @param {PropertyPayload} stuffs
    */
   update = (page_id, ...stuffs) =>
     notion.pages.update({
@@ -73,11 +75,12 @@ class Database {
     });
 
   /**
-   *  @typedef PropertyDiscriptor
+   *  @typedef PropertyDescriptor
    *    @property {string} name
    *    @property {PropertyType} type
-   *
-   *  @param {PropertyDiscriptor[]} properties
+   */
+  /**
+   *  @param {PropertyDescriptor} properties
    *  @returns {Promise<Object[]>}
    */
   async load(...properties) {
@@ -96,7 +99,7 @@ class Database {
           properties
             .reduce((prev, { name, type }) => ({
               ...prev,
-              [name]: type == 'page_id' ?
+              [name]: type === 'page_id' ?
                 result.id :
                 unwrap_property(result.properties[name]),
             })),
@@ -115,15 +118,10 @@ class Database {
       notion.blocks.delete({ block_id: page_id });
     }
     catch (err) {
-      if (err instanceof UnknownHTTPResponseError) {
-        logger.warn(
-          `Unknown HTTP response error: code ${err.code}, retrying in 100ms`,
-        );
-        timer(100).then(() => this.delete(page_id));
-      }
-      else {
-        throw err;
-      }
+      if (!(err instanceof UnknownHTTPResponseError)) throw err;
+
+      logger.warn(`Unknown HTTP response error: code ${err.code}, retrying in 100ms`);
+      timer(100).then(() => this.delete(page_id));
     }
   }
 

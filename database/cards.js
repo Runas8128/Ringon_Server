@@ -5,7 +5,8 @@ const { Database } = require('../util/Notion');
 
 /**
  *  @typedef {'추종자'|'아뮬렛'|'카운트다운 아뮬렛'|'스펠'} CardType
- *
+ */
+/**
  *  @typedef Card
  *    @property {string} page_id
  *    @property {number} card_id
@@ -18,7 +19,8 @@ const { Database } = require('../util/Notion');
  *    @property {number} evo_atk
  *    @property {number} evo_life
  *    @property {string} evo_desc
- *
+ */
+/**
  *  @typedef card_payload
  *    @property {number} card_id
  *    @property {string} card_name

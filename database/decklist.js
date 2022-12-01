@@ -49,8 +49,8 @@ class DeckList {
 
   /** @param {Guild} guild */
   _delete_deck = guild => deck => {
-    this.history ??= guild.channels.cache.find(({ id }) => id == discord.channel.history);
-    this.history.send({ embeds: [this.make_deck_embed(deck, guild)] });
+    this.history ??= guild.channels.cache.find(({ id }) => id === discord.channel.history);
+    this.history?.send({ embeds: [this.make_deck_embed(deck, guild)] });
     this.list_db.delete(deck.page_id);
   };
 
@@ -64,7 +64,7 @@ class DeckList {
   update_deck(guild, id, updater, desc, image_url) {
     if (!desc && !image_url) return;
 
-    const deck = this.decklist.find(_deck => _deck.deck_id == id);
+    const deck = this.decklist.find(_deck => _deck.deck_id === id);
     const history_embed = this.make_deck_embed(deck, guild);
 
     if (desc) deck.desc = desc;
@@ -72,9 +72,9 @@ class DeckList {
     deck.version += 1;
 
     const contribed = this.contrib.some(obj =>
-      obj.DeckID == deck.deck_id && obj.ContribID == updater);
+      obj.DeckID === deck.deck_id && obj.ContribID === updater);
 
-    if (updater != deck.author && !contribed) {
+    if (updater !== deck.author && !contribed) {
       this.contrib.push({ DeckID: deck.deck_id, ContribID: updater });
       this.contrib_db.push(
         { name: 'DeckID', value: deck.deck_id, type: 'title' },
@@ -103,7 +103,7 @@ class DeckList {
       );
 
     const member_cache = guild.members.cache;
-    const author = member_cache.find(member => member.id == deck.author);
+    const author = member_cache.find(member => member.id === deck.author);
     deck_info.setAuthor({
       name: author.displayName ?? '정보없음',
       iconURL: author.displayAvatarURL?.(),
@@ -111,11 +111,11 @@ class DeckList {
 
     if (deck.version > 1) {
       deck_info.addFields({ name: '업데이트 횟수', value: deck.version });
-      const contribs = this.contrib.filter(obj => obj.DeckID == deck.deck_id);
+      const contribs = this.contrib.filter(obj => obj.DeckID === deck.deck_id);
       if (contribs.length > 0) {
         deck_info.addFields({
           name: '기여자 목록',
-          value: contribs.map(obj => member_cache.find(m => m.id == obj.ContribID) ?? '(정보 없음)').join(', '),
+          value: contribs.map(obj => member_cache.find(m => m.id === obj.ContribID) ?? '(정보 없음)').join(', '),
         });
       }
     }
@@ -174,7 +174,7 @@ class DeckList {
 
   /**
    * @param {Deck} deck
-   * @returns {Notion.PropertyPayload[]}
+   * @returns {import('../util/Notion').PropertyPayload[]}
    */
   propertify = deck => [
     { name: 'deck_id', type: 'number', value: deck.deck_id },
