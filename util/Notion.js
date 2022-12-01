@@ -56,10 +56,8 @@ class Database {
     catch (err) {
       if (!(err instanceof UnknownHTTPResponseError)) throw err;
 
-      logger.warn(
-        `Unknown HTTP response error: code ${err.code}, retrying in 100ms`,
-      );
-      timer(100).then(() => this.push(...stuffs));
+      logger.warn(`Unknown HTTP response error: code ${err.code}, retrying in 100ms`);
+      return timer(100).then(() => this.push(...stuffs));
     }
   }
 
@@ -115,13 +113,13 @@ class Database {
    */
   delete(page_id) {
     try {
-      notion.blocks.delete({ block_id: page_id });
+      return notion.blocks.delete({ block_id: page_id });
     }
     catch (err) {
       if (!(err instanceof UnknownHTTPResponseError)) throw err;
 
       logger.warn(`Unknown HTTP response error: code ${err.code}, retrying in 100ms`);
-      timer(100).then(() => this.delete(page_id));
+      return timer(100).then(() => this.delete(page_id));
     }
   }
 
