@@ -85,7 +85,7 @@ class Database {
    */
   async load(...properties) {
     let pages;
-    let start_cursor;
+    let start_cursor = undefined;
     const data = [];
 
     do {
