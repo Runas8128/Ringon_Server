@@ -4,15 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0fa8701e-3484-4272-80fb-dc3de2ec730f" name="Changes" comment="refactor: change string literals to predefined constants">
+    <list default="true" id="0fa8701e-3484-4272-80fb-dc3de2ec730f" name="Changes" comment="chore: .eslintrc: sort fields alphabetically">
       <change afterPath="$PROJECT_DIR$/events/threadCreate.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/events/btnClick.js" beforeDir="false" afterPath="$PROJECT_DIR$/events/btnClick.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/events/detect.js" beforeDir="false" afterPath="$PROJECT_DIR$/events/detect.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/events/detectDeckImg.js" beforeDir="false" afterPath="$PROJECT_DIR$/events/detectDeckImg.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/events/ready.js" beforeDir="false" afterPath="$PROJECT_DIR$/events/ready.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/events/uploadDeck.js" beforeDir="false" afterPath="$PROJECT_DIR$/events/uploadDeck.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/cards.js" beforeDir="false" afterPath="$PROJECT_DIR$/database/cards.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/decklist.js" beforeDir="false" afterPath="$PROJECT_DIR$/database/decklist.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/util/Notion.js" beforeDir="false" afterPath="$PROJECT_DIR$/util/Notion.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,7 +20,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="stable" />
+        <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -92,7 +90,7 @@
       <workItem from="1669698561845" duration="112000" />
       <workItem from="1669787904753" duration="53000" />
       <workItem from="1669787976665" duration="1093000" />
-      <workItem from="1669848255370" duration="925000" />
+      <workItem from="1669848255370" duration="2597000" />
     </task>
     <task id="LOCAL-00001" summary="refactor: remove useless log message">
       <created>1669848661740</created>
@@ -115,7 +113,28 @@
       <option name="project" value="LOCAL" />
       <updated>1669848827546</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="refactor: change string literals to predefined constants">
+      <created>1669849218389</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1669849218389</updated>
+    </task>
+    <task id="LOCAL-00005" summary="chore: what is this">
+      <created>1669849250762</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1669849250762</updated>
+    </task>
+    <task id="LOCAL-00006" summary="chore: .eslintrc: sort fields alphabetically">
+      <created>1669849347423</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1669849347423</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -129,10 +148,10 @@
             <State>
               <option name="FILTERS">
                 <map>
-                  <entry key="text">
+                  <entry key="branch">
                     <value>
                       <list>
-                        <option value="log" />
+                        <option value="refactor/async" />
                       </list>
                     </value>
                   </entry>
@@ -148,8 +167,9 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="refactor: remove useless log message" />
     <MESSAGE value="what is this" />
-    <MESSAGE value="chore: what is this" />
     <MESSAGE value="refactor: change string literals to predefined constants" />
-    <option name="LAST_COMMIT_MESSAGE" value="refactor: change string literals to predefined constants" />
+    <MESSAGE value="chore: what is this" />
+    <MESSAGE value="chore: .eslintrc: sort fields alphabetically" />
+    <option name="LAST_COMMIT_MESSAGE" value="chore: .eslintrc: sort fields alphabetically" />
   </component>
 </project>
