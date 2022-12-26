@@ -5,6 +5,7 @@ const Notion = require('../util/Notion');
  * @param {Array<T>} targets
  * @param {Array<number>} weights
  * @returns {T}
+ * @template T
  */
 function select_weight(targets, weights) {
   const total_weight = weights.reduce((prev, curr) => prev + curr, 0);
