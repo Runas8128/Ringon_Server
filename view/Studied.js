@@ -1,14 +1,9 @@
-const { EmbedBuilder, ButtonStyle, ActionRowBuilder, APIEmbedField } = require('discord.js');
+const { EmbedBuilder, ButtonStyle, ActionRowBuilder } = require('discord.js');
 const { eventHandler } = require('../events/btnClick');
 
 const UpDownView = require('./UpDownView');
 
 class StudiedEmbedView extends UpDownView {
-  /**
-   * @param {string} title
-   * @param {string} desc
-   * @param {APIEmbedField[]} fields
-   */
   constructor(fields) {
     super();
 

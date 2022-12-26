@@ -2,6 +2,7 @@ const { Message, TextChannel, Events } = require('discord.js');
 
 const { config_common: { classes } } = require('../config');
 
+/** @type {import('.').Event} */
 module.exports = {
   name: Events.MessageCreate,
   once: false,

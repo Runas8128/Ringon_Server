@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, ChatInputCommandInteraction } = require('discord.js');
+const { SlashCommandBuilder } = require('discord.js');
 const { ChannelManager, Message, User, EmbedBuilder } = require('discord.js');
 
 const { config: { discord } } = require('../../config');
@@ -8,6 +8,7 @@ const emojiKey = {
   'none': '반응 안함',
 };
 
+/** @type {import('..').Command} */
 module.exports = {
   perm: 'admin',
   data: new SlashCommandBuilder()
@@ -20,9 +21,6 @@ module.exports = {
     .addStringOption(option => option
       .setName('emoji')
       .setDescription('개별적으로 체크할 이모지들입니다. 공백으로 구분해 적어주시면 됩니다.')),
-  /**
-   * @param {ChatInputCommandInteraction} interaction
-   */
   execute(interaction) {
     const URL = interaction.options.getString('url');
     const message = parseURL(URL, interaction.client.channels);

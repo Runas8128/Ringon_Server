@@ -45,9 +45,6 @@ class View extends UpDownView {
       .setDisabled(this.decks.length == 0);
   }
 
-  /**
-   * @param {ButtonInteraction} i
-   */
   async open_menu(i) {
     await i.deferUpdate();
 

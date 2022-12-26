@@ -1,24 +1,7 @@
-const { EmbedBuilder, Guild, TextChannel } = require('discord.js');
+const { EmbedBuilder, TextChannel } = require('discord.js');
 
 const { config: { notion, discord } } = require('../config');
 const Notion = require('../util/Notion');
-
-/**
- *  @typedef Deck
- *    @property {string} page_id
- *    @property {number} deck_id
- *    @property {string} name
- *    @property {string} clazz
- *    @property {string} desc
- *    @property {string} author
- *    @property {string} image_url
- *    @property {string} timestamp
- *    @property {number} version
- *
- *  @typedef Contrib
- *    @property {number} DeckID
- *    @property {string} ContribID
- */
 
 class DeckList {
   constructor() {
@@ -28,40 +11,27 @@ class DeckList {
     this.contrib_db = new Notion.Database(this.id_map.contrib);
     this.pack_block = new Notion.Block(this.id_map.pack);
 
-    /** @type {Deck[]} */
+    /** @type {import('./decklist').Deck[]} */
     this.decklist = [];
-
-    /** @type {Contrib[]} */
+    /** @type {import('./decklist').Contrib[]} */
     this.contrib = [];
 
     /** @type {TextChannel} */
     this.history = undefined;
   }
 
-  /**
-   * @param {string} new_pack
-   * @param {Guild} guild
-   */
   update_pack(new_pack, guild) {
     this.decklist.forEach(this._delete_deck(guild));
     this.pack_block.update(new_pack);
   }
 
-  /** @param {Guild} guild */
   _delete_deck = guild => deck => {
     this.history ??= guild.channels.cache.find(({ id }) => id == discord.channel.history);
     this.history.send({ embeds: [this.make_deck_embed(deck, guild)] });
     this.list_db.delete(deck.page_id);
   };
 
-  /**
-   * @param {Guild} guild
-   * @param {number} id
-   * @param {string} updater
-   * @param {string?} desc
-   * @param {string?} image_url
-   */
-  update_deck(guild, id, updater, desc, image_url) {
+  update_deck({ guild, id, updater, desc, image_url }) {
     if (!desc && !image_url) return;
 
     const deck = this.decklist.find(_deck => _deck.deck_id == id);
@@ -90,10 +60,6 @@ class DeckList {
     this.history.send({ embeds: [history_embed] });
   }
 
-  /**
-   * @param {Deck} deck
-   * @param {Guild} guild
-   */
   make_deck_embed(deck, guild) {
     const deck_info = new EmbedBuilder()
       .setTitle(deck.name)
@@ -154,9 +120,6 @@ class DeckList {
       this.contrib = result);
   }
 
-  /**
-   * @param {Deck} deck
-   */
   upload(deck) {
     deck.version = 1;
     deck.deck_id = this.decklist.at(-1).deck_id + 1;
@@ -172,10 +135,6 @@ class DeckList {
       });
   }
 
-  /**
-   * @param {Deck} deck
-   * @returns {Notion.PropertyPayload[]}
-   */
   propertify = deck => [
     { name: 'deck_id', type: 'number', value: deck.deck_id },
     { name: 'name', type: 'title', value: deck.name },

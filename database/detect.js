@@ -2,72 +2,50 @@ const { config: { notion } } = require('../config');
 const Notion = require('../util/Notion');
 
 /**
- * @param {Array<T>} targets
- * @param {Array<number>} weights
- * @returns {T}
+ * @param {Array<{ target: T, weight: number }>} targets
+ * @returns {T?}
+ * @template T
  */
-function select_weight(targets, weights) {
-  const total_weight = weights.reduce((prev, curr) => prev + curr, 0);
+function select_weight(targets) {
+  if (targets.length == 0) return null;
+
+  const total_weight = targets
+    .map(obj => obj.weight)
+    .reduce((prev, curr) => prev + curr, 0);
   const weighted_random = Math.random() * total_weight;
-  const last_index = targets.length - 1;
+
   let current_weight = 0;
 
-  for (let i = 0; i < last_index; ++i) {
-    current_weight += weights[i];
-    if (weighted_random < current_weight) {
-      return targets[i];
-    }
+  for (const { target, weight } of targets) {
+    current_weight += weight;
+    if (weighted_random < current_weight) return target;
   }
 
-  return targets[last_index];
+  return targets[targets.length - 1];
 }
 
-/**
- *  @typedef FullDetectObj
- *    @property {string} target
- *    @property {string} result
- *
- *  @typedef ProbDetectObj
- *    @property {string} target
- *    @property {string} result
- *    @property {number} ratio
- */
 class Detect {
   constructor() {
     this.id_map = notion.detect;
     this.full_db = new Notion.Database(this.id_map.full);
     this.prob_db = new Notion.Database(this.id_map.prob);
 
-    /** @type {FullDetectObj[]} */
+    /** @type {import('./detect').FullDetectObj[]} */
     this.full = [];
-    /** @type {ProbDetectObj[]} */
+    /** @type {import('./detect').ProbDetectObj[]} */
     this.prob = [];
   }
 
-  get_full = target =>
-    this.full.find(({ target_ }) => target_ == target)?.result;
-  get_prob = target =>
-    this.prob.find(({ target_ }) => target_ == target);
+  get_full = target => this.full
+    .find(obj => obj.target == target)
+    ?.result;
 
-  /**
-   * @param {string} target
-   * @return {string?}
-   */
-  get_result(target) {
-    const full_detect = this.full.find((obj) => obj.target == target);
-    if (full_detect) {
-      return full_detect.result;
-    }
+  get_prob = target => select_weight(this.prob
+    .filter(obj => obj.target == target)
+    .map(obj => ({ target: obj.result, weight: obj.ratio })));
 
-    const prob_detect = this.prob.filter((obj) => obj.target == target);
-    if (prob_detect) {
-      const result_list = prob_detect.map((obj) => obj.result);
-      const ratio_list = prob_detect.map((obj) => obj.ratio);
-      return select_weight(result_list, ratio_list);
-    }
-
-    return null;
-  }
+  get_result = target =>
+    this.get_full(target) ?? this.get_prob(target) ?? null;
 
   load() {
     this.full_db.load(

@@ -1,7 +1,7 @@
 const { Client, GatewayIntentBits, Partials } = require('discord.js');
 
 const setup_event = require('../events');
-const { init: setup_commands } = require('../commands');
+const setup_commands = require('../commands');
 
 class Bot {
   constructor() {

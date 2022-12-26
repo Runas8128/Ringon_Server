@@ -2,6 +2,7 @@ const { Message, Events } = require('discord.js');
 
 const { detect } = require('../database');
 
+/** @type {import('.').Event} */
 module.exports = {
   name: Events.MessageCreate,
   once: false,

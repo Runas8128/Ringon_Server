@@ -17,9 +17,6 @@ class Manager {
     };
   }
 
-  /**
-   * @param {'detect'|'decklist'|'cards'} DB
-   */
   load(DB) {
     if (!Object.keys(this.loading).includes(DB)) return;
     if (this.loading[DB]) {
@@ -31,7 +28,7 @@ class Manager {
       logger.info(`Loading ${DB} database`);
       this.loading[DB] = true;
 
-      getDuration(this[DB].load).then(dur =>
+      getDuration(() => this[DB].load()).then(dur =>
         logger.info(`${DB} database load success. time duration: ${dur}ms`));
     }
     catch (err) {

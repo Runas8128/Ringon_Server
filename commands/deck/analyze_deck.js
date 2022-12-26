@@ -1,16 +1,14 @@
-const { SlashCommandBuilder, ChatInputCommandInteraction: Interaction, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 const { config_common: { classes } } = require('../../config');
 const { decklist } = require('../../database');
 
+/** @type {import('..').Command} */
 module.exports = {
   perm: 'member',
   data: new SlashCommandBuilder()
     .setName('덱분석')
     .setDescription('덱을 분석해줍니다.'),
-  /**
-   * @param {Interaction} interaction
-   */
   execute(interaction) {
     interaction.reply({
       embeds: [buildEmbed(decklist.decklist.length, emojiCache(interaction))],

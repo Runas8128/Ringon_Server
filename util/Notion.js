@@ -99,7 +99,7 @@ class Database {
               [name]: type == 'page_id' ?
                 result.id :
                 unwrap_property(result.properties[name]),
-            })),
+            }), {}),
         ));
       start_cursor = pages.next_cursor;
     } while (pages.has_more);

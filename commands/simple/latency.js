@@ -1,13 +1,11 @@
-const { SlashCommandBuilder, ChatInputCommandInteraction } = require('discord.js');
+const { SlashCommandBuilder } = require('discord.js');
 
+/** @type {import('..').Command} */
 module.exports = {
   perm: 'member',
   data: new SlashCommandBuilder()
     .setName('지연시간')
     .setDescription('현재 봇의 레이턴시를 알려드려요!'),
-  /**
-   * @param {ChatInputCommandInteraction} interaction
-   */
   execute(interaction) {
     const APIlatency = Math.round(interaction.client.ws.ping);
 

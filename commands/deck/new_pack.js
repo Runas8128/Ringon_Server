@@ -1,5 +1,4 @@
-const { SlashCommandBuilder, ChatInputCommandInteraction } = require('discord.js');
-const { ActionRowBuilder, ButtonBuilder, EmbedBuilder, ComponentType } = require('discord.js');
+const { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, EmbedBuilder, ComponentType } = require('discord.js');
 
 const { decklist } = require('../../database');
 
@@ -7,6 +6,7 @@ const noticeEmbed = new EmbedBuilder()
   .setTitle('⚠️ 해당 명령어 사용시, 현재 등록된 덱리가 모두 삭제됩니다.')
   .setDescription('사용하시려면 `확인`을 입력해주세요! 1분 후 자동으로 취소됩니다.');
 
+/** @type {import('..').Command} */
 module.exports = {
   perm: 'admin',
   data: new SlashCommandBuilder()
@@ -16,9 +16,6 @@ module.exports = {
       .setName('이름')
       .setDescription('새로운 팩의 이름입니다.')
       .setRequired(true)),
-  /**
-   * @param {ChatInputCommandInteraction} interaction
-   */
   execute(interaction) {
     const checkID = `PackChecker_${Date.now()}`;
 

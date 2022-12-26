@@ -1,18 +1,10 @@
-const { EmbedBuilder, ActionRowBuilder, ButtonInteraction, ChatInputCommandInteraction } = require('discord.js');
+const { EmbedBuilder, ActionRowBuilder } = require('discord.js');
 
 class View {
   constructor() {
     this.index = 0;
   }
 
-  /**
-   *  @callback IndexModifier
-   *    @param {number} index
-   *    @returns {number}
-   *
-   * @param {ButtonInteraction} interaction
-   * @param {IndexModifier} modify_index
-   */
   update_message(interaction, modify_index) {
     this.index = modify_index(this.index);
     interaction.message.edit(this.get_updated_msg());
@@ -33,9 +25,6 @@ class View {
     };
   }
 
-  /**
-   * @param {ChatInputCommandInteraction} interaction
-   */
   send = interaction => interaction.reply(this.get_updated_msg());
 }
 

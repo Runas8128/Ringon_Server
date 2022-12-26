@@ -39,9 +39,12 @@ module.exports = {
   execute(interaction) {
     if (!interaction.isButton()) return;
 
-    hdr.button_map
-      .find((obj) => obj.button.data.custom_id === interaction.customId)
-      ?.callback?.(interaction);
+    const target = hdr.button_map
+      .find(obj => obj.button.data.custom_id === interaction.customId);
+
+    if (target) {
+      Promise.all([interaction.deferUpdate(), target.callback(interaction)]);
+    }
   },
   eventHandler: hdr,
 };
