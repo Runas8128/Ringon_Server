@@ -46,10 +46,10 @@ class Detect {
     this.prob = [];
   }
 
-  get_full = target =>
-    this.full.find(({ target_ }) => target_ == target)?.result;
-  get_prob = target =>
-    this.prob.find(({ target_ }) => target_ == target);
+  get_full = target_ =>
+    this.full.find(({ target }) => target_ === target)?.result;
+  get_prob = target_ =>
+    this.prob.find(({ target }) => target_ === target);
 
   /**
    * @param {string} target
