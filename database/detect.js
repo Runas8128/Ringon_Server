@@ -53,15 +53,15 @@ class Detect {
 
   /**
    * @param {string} target
-   * @return {string?}
+   * @return {string | null}
    */
   get_result(target) {
-    const full_detect = this.full.find((obj) => obj.target == target);
+    const full_detect = this.full.find((obj) => obj.target === target);
     if (full_detect) {
       return full_detect.result;
     }
 
-    const prob_detect = this.prob.filter((obj) => obj.target == target);
+    const prob_detect = this.prob.filter((obj) => obj.target === target);
     if (prob_detect) {
       const result_list = prob_detect.map((obj) => obj.result);
       const ratio_list = prob_detect.map((obj) => obj.ratio);
