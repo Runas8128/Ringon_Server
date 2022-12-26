@@ -71,14 +71,16 @@ class Cards {
     this.cards = [];
   }
 
-  load = () => axios
-    .get('https://shadowverse-portal.com/api/v1/cards?format=json&lang=ko')
-    .then(({ data: { data: { cards } } }) => {
-      this.cards = cards
-        .filter(card => card.card_name)
-        .map(parse_payload)
-        .sort((card1, card2) => card1.card_id - card2.card_id);
-    });
+  async load() {
+    const data = await axios.get('https://shadowverse-portal.com/api/v1/cards?format=json&lang=ko');
+
+    /** @type {card_payload[]} */
+    const cards = data.data.cards;
+    this.cards = cards
+      .filter(card => card.card_name)
+      .map(parse_payload)
+      .sort((card1, card2) => card1.card_id - card2.card_id);
+  }
 }
 
 module.exports = Cards;

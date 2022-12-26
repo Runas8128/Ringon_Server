@@ -123,12 +123,10 @@ class Database {
     }
   }
 
-  /**
-   * @param {string} page_id
-   */
-  drop = () => this
-    .load({ name: 'page_id', type: 'page_id' })
-    .then(pages => pages.forEach(({ page_id }) => this.delete(page_id)));
+  async drop() {
+    const pages = await this.load({ name: 'page_id', type: 'page_id' });
+    pages.forEach(({ page_id }) => this.delete(page_id));
+  }
 }
 
 class Block {
@@ -142,9 +140,10 @@ class Block {
   /**
    * @returns {Promise<string>}
    */
-  get_text = () =>
-    notion.blocks.retrieve({ block_id: this.block_id })
-      .then(result => result.paragraph.rich_text[0].plain_text);
+  async get_text() {
+    const result = await notion.blocks.retrieve({ block_id: this.block_id });
+    return result.paragraph.rich_text[0].plain_text;
+  }
 
   /**
    * @param {string} new_string

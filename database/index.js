@@ -20,7 +20,7 @@ class Manager {
   /**
    * @param {'detect'|'decklist'|'cards'} DB
    */
-  load(DB) {
+  async load(DB) {
     if (!Object.keys(this.loading).includes(DB)) return;
     if (this.loading[DB]) {
       logger.warn(`${DB} database is already in loading state, skipping.`);
@@ -31,8 +31,8 @@ class Manager {
       logger.info(`Loading ${DB} database`);
       this.loading[DB] = true;
 
-      getDuration(this[DB].load).then(dur =>
-        logger.info(`${DB} database load success. time duration: ${dur}ms`));
+      const dur = await getDuration(this[DB].load);
+      logger.info(`${DB} database load success. time duration: ${dur}ms`);
     }
     catch (err) {
       logger.error(`An error occured while loading ${DB} database`);
