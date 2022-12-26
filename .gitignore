@@ -4,4 +4,4 @@ test.js
 *.env
 *.zip
 
-.idea
+.idea/

@@ -1,7 +1,25 @@
-const { EmbedBuilder, TextChannel } = require('discord.js');
+const { EmbedBuilder, Guild, TextChannel } = require('discord.js');
 
 const { config: { notion, discord } } = require('../config');
 const Notion = require('../util/Notion');
+
+/**
+ *  @typedef Deck
+ *    @property {string} page_id
+ *    @property {number} deck_id
+ *    @property {string} name
+ *    @property {string} clazz
+ *    @property {string} desc
+ *    @property {string} author
+ *    @property {string} image_url
+ *    @property {string} timestamp
+ *    @property {number} version
+ */
+/**
+ *  @typedef Contrib
+ *    @property {number} DeckID
+ *    @property {string} ContribID
+ */
 
 class DeckList {
   constructor() {
@@ -11,30 +29,43 @@ class DeckList {
     this.contrib_db = new Notion.Database(this.id_map.contrib);
     this.pack_block = new Notion.Block(this.id_map.pack);
 
-    /** @type {import('./decklist').Deck[]} */
+    /** @type {Deck[]} */
     this.decklist = [];
-    /** @type {import('./decklist').Contrib[]} */
+
+    /** @type {Contrib[]} */
     this.contrib = [];
 
     /** @type {TextChannel} */
     this.history = undefined;
   }
 
+  /**
+   * @param {string} new_pack
+   * @param {Guild} guild
+   */
   update_pack(new_pack, guild) {
     this.decklist.forEach(this._delete_deck(guild));
     this.pack_block.update(new_pack);
   }
 
+  /** @param {Guild} guild */
   _delete_deck = guild => deck => {
-    this.history ??= guild.channels.cache.find(({ id }) => id == discord.channel.history);
-    this.history.send({ embeds: [this.make_deck_embed(deck, guild)] });
+    this.history ??= guild.channels.cache.find(({ id }) => id === discord.channel.history);
+    this.history?.send({ embeds: [this.make_deck_embed(deck, guild)] });
     this.list_db.delete(deck.page_id);
   };
 
-  update_deck({ guild, id, updater, desc, image_url }) {
+  /**
+   * @param {Guild} guild
+   * @param {number} id
+   * @param {string} updater
+   * @param {string?} desc
+   * @param {string?} image_url
+   */
+  update_deck(guild, id, updater, desc, image_url) {
     if (!desc && !image_url) return;
 
-    const deck = this.decklist.find(_deck => _deck.deck_id == id);
+    const deck = this.decklist.find(_deck => _deck.deck_id === id);
     const history_embed = this.make_deck_embed(deck, guild);
 
     if (desc) deck.desc = desc;
@@ -42,9 +73,9 @@ class DeckList {
     deck.version += 1;
 
     const contribed = this.contrib.some(obj =>
-      obj.DeckID == deck.deck_id && obj.ContribID == updater);
+      obj.DeckID === deck.deck_id && obj.ContribID === updater);
 
-    if (updater != deck.author && !contribed) {
+    if (updater !== deck.author && !contribed) {
       this.contrib.push({ DeckID: deck.deck_id, ContribID: updater });
       this.contrib_db.push(
         { name: 'DeckID', value: deck.deck_id, type: 'title' },
@@ -60,6 +91,10 @@ class DeckList {
     this.history.send({ embeds: [history_embed] });
   }
 
+  /**
+   * @param {Deck} deck
+   * @param {Guild} guild
+   */
   make_deck_embed(deck, guild) {
     const deck_info = new EmbedBuilder()
       .setTitle(deck.name)
@@ -69,7 +104,7 @@ class DeckList {
       );
 
     const member_cache = guild.members.cache;
-    const author = member_cache.find(member => member.id == deck.author);
+    const author = member_cache.find(member => member.id === deck.author);
     deck_info.setAuthor({
       name: author.displayName ?? '정보없음',
       iconURL: author.displayAvatarURL?.(),
@@ -77,11 +112,11 @@ class DeckList {
 
     if (deck.version > 1) {
       deck_info.addFields({ name: '업데이트 횟수', value: deck.version });
-      const contribs = this.contrib.filter(obj => obj.DeckID == deck.deck_id);
+      const contribs = this.contrib.filter(obj => obj.DeckID === deck.deck_id);
       if (contribs.length > 0) {
         deck_info.addFields({
           name: '기여자 목록',
-          value: contribs.map(obj => member_cache.find(m => m.id == obj.ContribID) ?? '(정보 없음)').join(', '),
+          value: contribs.map(obj => member_cache.find(m => m.id === obj.ContribID) ?? '(정보 없음)').join(', '),
         });
       }
     }
@@ -120,6 +155,9 @@ class DeckList {
       this.contrib = result);
   }
 
+  /**
+   * @param {Deck} deck
+   */
   upload(deck) {
     deck.version = 1;
     deck.deck_id = this.decklist.at(-1).deck_id + 1;
@@ -135,6 +173,10 @@ class DeckList {
       });
   }
 
+  /**
+   * @param {Deck} deck
+   * @returns {import('../util/Notion').PropertyPayload[]}
+   */
   propertify = deck => [
     { name: 'deck_id', type: 'number', value: deck.deck_id },
     { name: 'name', type: 'title', value: deck.name },
