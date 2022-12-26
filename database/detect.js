@@ -26,7 +26,8 @@ function select_weight(targets, weights) {
  *  @typedef FullDetectObj
  *    @property {string} target
  *    @property {string} result
- *
+ */
+/**
  *  @typedef ProbDetectObj
  *    @property {string} target
  *    @property {string} result

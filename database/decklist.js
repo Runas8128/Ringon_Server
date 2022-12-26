@@ -14,7 +14,8 @@ const Notion = require('../util/Notion');
  *    @property {string} image_url
  *    @property {string} timestamp
  *    @property {number} version
- *
+ */
+/**
  *  @typedef Contrib
  *    @property {number} DeckID
  *    @property {string} ContribID
