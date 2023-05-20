@@ -31,7 +31,7 @@ class Manager {
       logger.info(`Loading ${DB} database`);
       this.loading[DB] = true;
 
-      const dur = await getDuration(this[DB].load);
+      const dur = await getDuration(() => this[DB].load());
       logger.info(`${DB} database load success. time duration: ${dur}ms`);
     }
     catch (err) {

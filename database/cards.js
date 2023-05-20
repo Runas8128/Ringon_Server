@@ -75,7 +75,7 @@ class Cards {
     const data = await axios.get('https://shadowverse-portal.com/api/v1/cards?format=json&lang=ko');
 
     /** @type {card_payload[]} */
-    const cards = data.data.cards;
+    const cards = data.data.data.cards;
     this.cards = cards
       .filter(card => card.card_name)
       .map(parse_payload)
